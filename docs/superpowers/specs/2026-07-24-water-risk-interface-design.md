@@ -2,11 +2,11 @@
 
 **Date:** 24 July 2026
 
-**Status:** Design approved in wireframes; written specification pending final review
+**Status:** Approved with amendments, 24 July 2026 — map-first entry state, warm AI framing, calm-but-distinctive identity layer, AI proxy in scope
 
-**Scope:** Landing page, map workspace, information hierarchy, map-layer system, optional AI interpretation, responsive behaviour, visual system, and implementation architecture
+**Scope:** Entry state, map workspace, information hierarchy, map-layer system, optional AI interpretation, responsive behaviour, visual system, implementation architecture, and the serverless AI proxy
 
-**Out of scope:** Implementing the redesign, adding new data sources, authentication, saved searches, location comparison, and expanding detailed coverage beyond Andalucía
+**Out of scope:** Adding new data sources (owned by the concurrent data-source work streams — their output is integrated here), authentication, saved searches, location comparison, and expanding detailed coverage beyond Andalucía
 
 ## 1. Purpose
 
@@ -35,7 +35,7 @@ The current experience has several problems this design addresses:
 - AI appears too close to source data and is generated too readily;
 - the mobile layout becomes a vertical page rather than preserving the map workspace.
 
-The existing data-source work and any uncommitted changes remain separate from this redesign.
+Two data-source work streams proceed concurrently in separate worktrees (`worktree-new-water-data-sources`, `worktree-reservoir-data-audit`). Their commits are merged into the redesign branch as they land, and their datasets enter the interface as dataset-registry entries rather than additional hard-coded cards. The dataset registry and normalized result states (§9) are therefore built early, before dataset-specific UI.
 
 ## 3. Product Principles
 
@@ -70,7 +70,7 @@ The MVP uses the two confirmed audience lenses in `PERSONAS.md`:
 1. **Resident or owner** — someone living in or operating from the location and trying to understand ongoing exposure, daily implications, insurance or ownership concerns.
 2. **Buyer or investor** — someone considering a purchase or investment and assessing the location before deciding.
 
-The landing-page labels are written as actions rather than internal persona names:
+The search-card labels are written as actions rather than internal persona names:
 
 - **I live or own here**
 - **I’m considering buying or investing**
@@ -81,15 +81,17 @@ Policymaker and Farmer are not included in this redesign's MVP controls. The arc
 
 ## 5. Information Architecture
 
-The experience has two primary surfaces:
+The experience is one continuous surface — the map workspace — with two top-level states:
 
-1. **Landing**
-2. **Map workspace**
+1. **Entry** — regional map showing coverage, with a floating search card (§6)
+2. **Searched** — map focused on a result, with the data panel (§7)
 
-The workspace has two persistent information modes:
+There is no separate landing page and no page transition between the states; the search card morphs into the data panel.
+
+The searched state has two persistent information modes:
 
 - **Public data**
-- **AI interpretation · optional**
+- **What does this mean?** — AI-assisted, opt-in
 
 Within Public data, the panel has two depths:
 
@@ -99,66 +101,59 @@ Within Public data, the panel has two depths:
 AI interpretation is the third depth and preserves the dataset or location context that opened it.
 
 ```text
-Landing
-  ├─ Search postcode → Map workspace / Public data / Dataset list
-  └─ Explore map     → Map workspace / Regional coverage
-
 Map workspace
-  ├─ Public data
-  │   ├─ Dataset list
-  │   └─ Dataset detail
-  └─ AI interpretation
-      ├─ Location interpretation
-      └─ Selected-dataset interpretation
+  ├─ Entry state — regional coverage view + floating search card
+  │    └─ Search → Searched state / Public data / Dataset list
+  └─ Searched state
+      ├─ Public data
+      │   ├─ Dataset list
+      │   └─ Dataset detail
+      └─ What does this mean? (AI-assisted, opt-in)
+          ├─ Location interpretation
+          └─ Selected-dataset interpretation
 ```
 
-The Public data / AI interpretation control appears as soon as a search produces a supported result and remains in the same position at every panel depth.
+The Public data / What does this mean? control appears as soon as a search produces a supported result and remains in the same position at every panel depth.
 
-## 6. Landing Page
+## 6. Entry State
 
-### 6.1 Content
+There is no separate landing page. The entry surface is the map workspace itself at regional zoom, with a floating search card. The map behind the card is live from the first frame: Andalucía carries the coverage treatment (§8.3), the coverage key sits in a lower corner, and the person can pan and zoom before ever searching — exploring the map requires no dedicated link.
 
-Use literal, descriptive language:
+### 6.1 Composition
 
-- Heading: **Check water risks for a postcode**
-- Supporting text: **See available public data on flooding, drought, reservoirs and water quality for a specific area.**
+On desktop:
+
+- full-bleed map centred on southern Spain at regional zoom, with the coverage layer active;
+- a floating search card, left of centre, elevated above the map;
+- the coverage key (“Detailed data available” / “Not yet available”) in the lower right;
+- a faint water-toned wash over the canvas at the entry state only (§12.0);
+- a subtle hint near the card: **or just explore the map**.
+
+### 6.2 Search card content
+
+Use literal, descriptive language, short enough to float over a map:
+
+- Heading: **Check water risks for a place in Spain**
+- Supporting text: **Public data on flooding, drought, reservoirs and water quality.**
 - Location label: **Postcode, town or address**
 - Audience prompt: **What brings you here?**
-- Audience status: **Optional**
+- Audience status: **Optional** with “You can change this later” reassurance
 - Primary action: **Check this area**
-- Secondary route: **Explore the map without searching**
 
-Avoid slogans, broad promises and ambiguous headings such as “Understand risk and why it matters.”
+The audience controls sit inside the search card, directly beneath the location input. Avoid slogans, broad promises and ambiguous headings such as “Understand risk and why it matters.”
 
-### 6.2 Layout
-
-On desktop, use a two-part composition:
-
-- a focused search area on the left;
-- a quiet coverage map on the right.
-
-The search unit contains, in this order:
-
-1. location input;
-2. optional audience choices;
-3. “You can change this later” reassurance;
-4. primary submit action.
-
-The audience controls belong inside the same visual group as the location input. They must not be placed in a distant secondary section.
-
-The coverage map states:
+The coverage message near the map key states:
 
 > Detailed results are available for Andalucía. Other regions will be added over time.
-
-It includes a simple key for “Detailed data available” and “Not yet available.”
 
 ### 6.3 Behaviour
 
 - Valid search suggestions may be postcodes, towns or addresses, matching the current geocoder capability.
-- Submission navigates to the workspace and zooms to the selected result.
+- On submission the camera flies to the selected result while the search card morphs into the data panel in place — this transition is the product’s signature moment (§12.0). With reduced motion, both become immediate.
 - Audience is passed as optional context.
-- “Explore the map” opens a regional view centred on Andalucía without inventing a risk result.
-- If a search resolves outside supported coverage, the workspace still shows the location and explains that detailed data is not available there.
+- The entry wash fades out as the searched state begins; the coverage layer persists per §8.3.
+- If a search resolves outside supported coverage, the searched state still shows the location and explains that detailed data is not available there (§15.2).
+- A home control (and clearing the search) returns to the entry state at regional zoom. Entry and searched states map to distinct routes (§9.4).
 
 ## 7. Desktop Map Workspace
 
@@ -235,11 +230,11 @@ The limitation then explains that this does not cover surface-water flooding, pr
 
 ### 7.5 Persistent Public data / AI control
 
-The two modes remain visible in the same position in the list, detail and interpretation states.
+The two modes remain visible in the same position in the list, detail and interpretation states. The AI mode is labelled **What does this mean?** (Spanish: **¿Qué significa esto?**) — an invitation, not a warning. The AI-assisted disclosure lives on the generated content itself (§10.2), not on the tab.
 
 There are two routes into AI interpretation:
 
-1. select the **AI interpretation · optional** tab for a location-level explanation;
+1. select the **What does this mean?** tab for a location-level explanation;
 2. choose **Explain this result** from a dataset detail for a dataset-specific explanation.
 
 Returning to Public data restores the exact prior list or dataset-detail context.
@@ -433,7 +428,7 @@ Every dataset resolves to one explicit UI state:
 
 Represent the main interaction state explicitly:
 
-- surface: landing or workspace;
+- workspace state: entry or searched;
 - selected location;
 - selected audience or none;
 - coverage result;
@@ -463,14 +458,14 @@ The implementation should support direct links to a searched location and, where
 
 No AI request is made merely because a search completed. Generation starts only after the person:
 
-- selects the AI interpretation tab; or
+- selects the **What does this mean?** tab; or
 - chooses **Explain this result**.
 
 ### 10.2 Interpretation screen
 
 The screen contains:
 
-- label: **AI-assisted interpretation**;
+- an **AI-assisted** disclosure label on the generated content;
 - literal title, such as **What this flood result may mean**;
 - basis statement identifying the public dataset and selected audience;
 - concise interpretation;
@@ -495,7 +490,7 @@ AI must not produce a risk interpretation for a location outside detailed covera
 
 ### 10.4 Service boundary
 
-Move AI requests behind a serverless proxy before production. The client must not ship an API key. The proxy should accept structured, minimal source data and audience context rather than arbitrary client-authored system prompts.
+The app deploys as a public demo, so the serverless AI proxy is in scope for this build, not deferred to “before production.” AI requests go through a small serverless function (Vercel or Cloudflare Workers); the client never ships an API key. The proxy accepts structured, minimal source data and audience context rather than arbitrary client-authored system prompts.
 
 ## 11. Responsive Behaviour
 
@@ -523,12 +518,23 @@ Mobile interaction rules:
 - tapping a data row activates its map layer;
 - full dataset detail opens only when requested;
 - dragging or using the explicit map control returns to map emphasis;
-- the Public data / AI interpretation control remains persistent;
+- the Public data / What does this mean? control remains persistent;
 - the layer tray opens as a dedicated sheet above the results sheet and returns to the previous sheet position when closed.
 
 The mobile experience is not “map followed by all cards.”
 
 ## 12. Visual Design System
+
+### 12.0 Direction: calm but distinctive
+
+The system is calm but distinctive, not merely restrained. Evidence display stays quiet and literal; identity comes from a small set of deliberate, crafted moments rather than decoration spread everywhere:
+
+- the coverage treatment of Andalucía at the entry state — a soft, luminous emphasis that makes “where the data lives” the hero of the first impression;
+- the entry fly-in and search-card-to-panel morph as the product’s signature transition;
+- a faint water-toned wash (derived from Subtle cool) over the entry canvas instead of flat white;
+- warm, human microcopy within the literal content style of §13.
+
+These are the sanctioned flourishes. Everything else follows the restraint rules below, and none of them may compromise data legibility or the “missing data never looks safe” principle.
 
 ### 12.1 Typography
 
@@ -582,9 +588,10 @@ Use a simple 1.5 px line-icon family. Do not use emojis as interface icons. Ever
 
 - control feedback: approximately 150 ms;
 - panel and sheet transitions: approximately 240 ms;
-- map easing: no more than 450 ms;
+- map easing: no more than 450 ms for in-workspace moves;
+- the entry fly-in (search submission) may take up to 1200 ms as the signature transition;
 - no bounce or decorative motion;
-- honour `prefers-reduced-motion`.
+- honour `prefers-reduced-motion` — reduced motion replaces the fly-in and card morph with immediate transitions.
 
 ## 13. Content Style
 
@@ -596,6 +603,7 @@ Prefer:
 - “Source could not be reached.”
 - “Outside the mapped river-flood zones.”
 - “Explain this result.”
+- “What does this mean?”
 
 Avoid:
 
@@ -628,7 +636,7 @@ The map is an enhancement to, not the sole source of, the risk result.
 
 ### 15.1 Invalid or unresolved location
 
-Keep the landing or workspace search active, explain that the location could not be found, and offer nearby suggestions. Do not clear a previously valid workspace result until a new valid location is selected.
+Keep the search active in either workspace state, explain that the location could not be found, and offer nearby suggestions. Do not clear a previously valid workspace result until a new valid location is selected.
 
 ### 15.2 Search outside detailed coverage
 
@@ -660,7 +668,7 @@ The redesign should be implemented as bounded units:
 
 ### 16.1 Navigation shell
 
-Owns landing/workspace navigation, route state, top bar and language control.
+Owns entry/searched state navigation, route state, top bar and language control.
 
 ### 16.2 Search unit
 
@@ -711,7 +719,7 @@ Test:
 
 Test:
 
-- landing search with and without audience;
+- entry-state search with and without audience;
 - dataset list loading, available, unavailable, unsupported and error states;
 - dataset-detail source and limitation display;
 - persistent Public data / AI tabs;
@@ -755,9 +763,10 @@ Use representative flood rasters, drought rasters, dense point data and long Spa
 
 The redesign is complete when:
 
-- the landing page makes postcode search the clear primary action;
+- the entry state makes location search the clear primary action over a live coverage map;
+- the search card morphs into the data panel with no page transition;
 - optional audience selection is directly beneath the location input;
-- a person can enter the map without searching;
+- a person can explore the map without searching;
 - Andalucía coverage is clear and other regions are labelled unavailable rather than low risk;
 - the map defaults to Quiet Focus;
 - only one primary risk layer can be active;
@@ -765,14 +774,15 @@ The redesign is complete when:
 - the legend reflects visible data and includes source freshness;
 - dataset rows and map features synchronize;
 - public data and AI interpretation remain visibly separate;
+- the AI mode is labelled “What does this mean?” and generated content carries an AI-assisted disclosure;
 - no AI request occurs before explicit opt-in;
 - dataset detail contains source, freshness, geography and limitations;
 - unsupported, unavailable and error states are distinct;
 - the desktop panel progressively widens;
 - mobile uses the three-position bottom sheet;
-- the visual system uses Atkinson Hyperlegible, white canvas and mineral-blue accent;
+- the visual system uses Atkinson Hyperlegible, a calm canvas, mineral-blue accent and the §12.0 identity moments;
 - both English and Spanish experiences meet accessibility requirements;
-- AI credentials are no longer exposed in the browser in production.
+- AI requests run through the serverless proxy and no API key ships to the browser.
 
 ## 19. Deferred Work
 
@@ -786,7 +796,7 @@ The following are intentionally deferred:
 - generated aggregate risk scoring;
 - proactive chat or a default conversational interface;
 - automated expansion to new regions;
-- implementation of new public-data sources already described elsewhere.
+- implementation of new public-data sources — owned by the concurrent data-source work streams; their merged results are integrated here as registry entries (§2, §9.1).
 
 ## 20. Research References
 
