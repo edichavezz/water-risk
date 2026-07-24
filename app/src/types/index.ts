@@ -47,11 +47,31 @@ export interface Reservoir {
   basin: string
 }
 
+export interface WaterQualityResult {
+  municipio: string
+  compliance: 'compliant' | 'minor_issues' | 'non_compliant' | 'unknown'
+  sourceType: 'surface' | 'groundwater' | 'mixed' | 'desalination'
+  year: number
+  nitrates_mg_l?: number
+  turbidity_ntu?: number
+  ecoli?: string
+  source: 'SINAC'
+}
+
+export interface BathingWaterResult {
+  siteName: string
+  distanceKm: number
+  rating: 'excellent' | 'good' | 'sufficient' | 'poor' | 'unknown'
+  year: number
+  source: 'EEA'
+}
+
 export interface RiskProfile {
   location: SearchResult
   floodZone: FloodZoneResult | null
   drought: DroughtStatus | null
   reservoirs: Reservoir[]
+  bathingWater: BathingWaterResult | null
   aiSummary?: string
   aiQuestions?: string[]
   loading: boolean

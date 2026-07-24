@@ -48,6 +48,21 @@
       "historical": "historical mean: {{mean}}%",
       "noData": "No reservoir data available nearby"
     },
+    "waterQuality": {
+      "title": "Drinking Water",
+      "compliant": "Compliant",
+      "minor_issues": "Minor issues",
+      "non_compliant": "Non-compliant",
+      "unknown": "No data",
+      "source": "Source: SINAC (Ministry of Health) — {{year}} annual data",
+      "sourceType": {
+        "surface": "Surface water",
+        "groundwater": "Groundwater",
+        "mixed": "Mixed",
+        "desalination": "Desalination"
+      },
+      "noData": "Supply data not available for this municipality"
+    },
     "aiSummary": {
       "title": "What this means for you",
       "loading": "Generating your risk summary..."
@@ -55,6 +70,16 @@
     "questions": {
       "title": "Questions to ask",
       "loading": "Generating questions..."
+    },
+    "bathingWater": {
+      "title": "Bathing Water",
+      "excellent": "Excellent bathing water",
+      "good": "Good bathing water",
+      "sufficient": "Sufficient — meets minimum EU standards",
+      "poor": "Poor — may not meet EU standards",
+      "unknown": "Not assessed this season",
+      "distance": "{{distance}} km away",
+      "source": "Source: EEA Bathing Water Directive — {{year}} season"
     }
   },
   "attribution": "Map: OpenFreeMap / OpenStreetMap · Flood zones: MITERD SNCZI · Drought: Copernicus EDO",

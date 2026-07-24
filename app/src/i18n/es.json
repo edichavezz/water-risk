@@ -48,6 +48,21 @@
       "historical": "media histórica: {{mean}}%",
       "noData": "No hay datos de embalses disponibles en esta zona"
     },
+    "waterQuality": {
+      "title": "Agua Potable",
+      "compliant": "Conforme",
+      "minor_issues": "Incidencias menores",
+      "non_compliant": "No conforme",
+      "unknown": "Sin datos",
+      "source": "Fuente: SINAC (Ministerio de Sanidad) — datos anuales de {{year}}",
+      "sourceType": {
+        "surface": "Agua superficial",
+        "groundwater": "Agua subterránea",
+        "mixed": "Mixta",
+        "desalination": "Desalinización"
+      },
+      "noData": "Datos de suministro no disponibles para este municipio"
+    },
     "aiSummary": {
       "title": "Qué significa esto para ti",
       "loading": "Generando tu resumen de riesgo..."
@@ -55,6 +70,16 @@
     "questions": {
       "title": "Preguntas que deberías hacer",
       "loading": "Generando preguntas..."
+    },
+    "bathingWater": {
+      "title": "Calidad de Baño",
+      "excellent": "Excelente calidad de baño",
+      "good": "Buena calidad de baño",
+      "sufficient": "Suficiente — cumple los estándares mínimos de la UE",
+      "poor": "Deficiente — puede no cumplir los estándares de la UE",
+      "unknown": "No evaluado esta temporada",
+      "distance": "A {{distance}} km",
+      "source": "Fuente: Directiva de Aguas de Baño de la UE (EEA) — temporada {{year}}"
     }
   },
   "attribution": "Mapa: OpenFreeMap / OpenStreetMap · Zonas inundables: MITERD SNCZI · Sequía: Copernicus EDO",
