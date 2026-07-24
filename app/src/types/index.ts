@@ -42,9 +42,11 @@ export interface DroughtStatus {
 export interface Reservoir {
   name: string
   fillPercent: number
+  fillPercentAsOf: string
   historicalMeanPercent?: number
   distanceKm: number
   basin: string
+  systemName?: string
 }
 
 export interface RiskProfile {
