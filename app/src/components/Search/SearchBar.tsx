@@ -6,6 +6,10 @@ import { getFloodZoneStatus } from '../../services/floodZone'
 import { getDroughtStatus } from '../../services/drought'
 import { getNearbyReservoirs } from '../../services/reservoirs'
 import { generateRiskSummary, generateQuestions } from '../../services/ai'
+import { getWaterQualityByMunicipality } from '../../services/waterQuality'
+import { getCoastalFloodStatus, isCoastalProvincia } from '../../services/coastalFlood'
+import { getGroundwaterStatus } from '../../services/groundwater'
+import { getNearestBathingSite } from '../../services/bathingWater'
 import type { SearchResult } from '../../types'
 
 export default function SearchBar() {
@@ -64,25 +68,31 @@ export default function SearchBar() {
       loading: true,
     })
 
-    // Fetch all data in parallel
-    const [floodZone, drought] = await Promise.all([
+    const coastal = isCoastalProvincia(result.provincia)
+
+    const [floodZone, drought, coastalFlood, waterQuality] = await Promise.all([
       getFloodZoneStatus(result.coordinates).catch(() => null),
       getDroughtStatus(result.coordinates).catch(() => null),
+      coastal ? getCoastalFloodStatus(result.coordinates).catch(() => null) : Promise.resolve(null),
+      getWaterQualityByMunicipality(result.municipio ?? '').catch(() => null),
     ])
     const reservoirs = getNearbyReservoirs(result.coordinates)
+    const groundwater = getGroundwaterStatus(result.coordinates)
+    const bathingWater = await getNearestBathingSite(result.coordinates).catch(() => null)
 
-    updateProfile({ floodZone, drought, reservoirs, loading: false })
+    updateProfile({
+      floodZone, drought, reservoirs, waterQuality, coastalFlood, groundwater, bathingWater, loading: false,
+    })
 
-    // AI generation (non-blocking)
     const profileSnap = {
       location: result,
       floodZone,
       drought,
       reservoirs,
-      waterQuality: null,
-      coastalFlood: null,
-      groundwater: null,
-      bathingWater: null,
+      waterQuality,
+      coastalFlood,
+      groundwater,
+      bathingWater,
       loading: false,
     }
 

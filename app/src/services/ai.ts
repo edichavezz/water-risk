@@ -71,6 +71,29 @@ function buildContext(profile: RiskProfile, lang: Language): string {
     parts.push(`Nearest reservoirs:\n${resLines.join('\n')}`)
   }
 
+  if (profile.waterQuality) {
+    parts.push(`Drinking water: ${profile.waterQuality.compliance}, source: ${profile.waterQuality.sourceType}, last tested: ${profile.waterQuality.year}`)
+  }
+
+  if (profile.coastalFlood) {
+    const coastalLine = profile.coastalFlood.inServidumbre
+      ? 'in 20m servidumbre zone'
+      : profile.coastalFlood.inPolicia
+      ? 'in 100m policia zone'
+      : 'not in coastal zone'
+    parts.push(`Coastal zone: ${coastalLine}`)
+  }
+
+  if (profile.groundwater) {
+    parts.push(
+      `Groundwater: ${profile.groundwater.inOverexploitedUnit ? 'in overexploited unit: ' + profile.groundwater.unitName : 'not in overexploited unit'}`
+    )
+  }
+
+  if (profile.bathingWater) {
+    parts.push(`Nearest bathing site: ${profile.bathingWater.siteName} (${profile.bathingWater.distanceKm} km) — rated ${profile.bathingWater.rating} (${profile.bathingWater.year})`)
+  }
+
   return parts.join('\n')
 }
 
