@@ -48,6 +48,21 @@
       "historical": "historical mean: {{mean}}%",
       "noData": "No reservoir data available nearby"
     },
+    "waterQuality": {
+      "title": "Drinking Water",
+      "compliant": "Compliant",
+      "minor_issues": "Minor issues",
+      "non_compliant": "Non-compliant",
+      "unknown": "No data",
+      "source": "Source: SINAC (Ministry of Health) — {{year}} annual data",
+      "sourceType": {
+        "surface": "Surface water",
+        "groundwater": "Groundwater",
+        "mixed": "Mixed",
+        "desalination": "Desalination"
+      },
+      "noData": "Supply data not available for this municipality"
+    },
     "aiSummary": {
       "title": "What this means for you",
       "loading": "Generating your risk summary..."
