@@ -1,29 +1,23 @@
-import type { Coordinates, Reservoir } from '../types'
+import type { Coordinates, Reservoir, SearchResult } from '../types'
+import { SUPPLY_SYSTEMS } from '../data/supplySystems'
+import generated from '../data/reservoirs.generated.json'
 
-// Static dataset of major Andalucía reservoirs with coordinates
-// Source: MITERD/REDIAM public data
-// v1: static seed; v2: replace with live datos.gob.es API
-interface ReservoirSeed { name: string; lat: number; lng: number; fillPercent: number; historicalMeanPercent?: number; basin: string }
+interface GeneratedReservoir {
+  codEst: string
+  name: string
+  province: string
+  river: string
+  system: string
+  basin: string
+  lat: number
+  lng: number
+  fillPercent: number
+  storedHm3: number
+  capacityHm3: number
+}
 
-const ANDALUCIA_RESERVOIRS: ReservoirSeed[] = [
-  { name: 'Embalse del Guadalteba', lat: 36.9, lng: -4.85, fillPercent: 45, historicalMeanPercent: 58, basin: 'Sur' },
-  { name: 'Embalse del Guadalhorce', lat: 36.95, lng: -4.78, fillPercent: 38, historicalMeanPercent: 52, basin: 'Sur' },
-  { name: 'Embalse de La Viñuela', lat: 36.85, lng: -4.2, fillPercent: 22, historicalMeanPercent: 48, basin: 'Sur' },
-  { name: 'Embalse de Iznájar', lat: 37.26, lng: -4.31, fillPercent: 55, historicalMeanPercent: 62, basin: 'Guadalquivir' },
-  { name: 'Embalse del Tranco', lat: 38.05, lng: -2.81, fillPercent: 68, historicalMeanPercent: 70, basin: 'Guadalquivir' },
-  { name: 'Embalse de Béznar', lat: 36.93, lng: -3.59, fillPercent: 31, historicalMeanPercent: 55, basin: 'Sur' },
-  { name: 'Embalse de Rules', lat: 36.88, lng: -3.53, fillPercent: 44, historicalMeanPercent: 50, basin: 'Sur' },
-  { name: 'Embalse de Colomera', lat: 37.39, lng: -3.73, fillPercent: 29, historicalMeanPercent: 46, basin: 'Guadalquivir' },
-  { name: 'Embalse de Canales', lat: 37.18, lng: -3.51, fillPercent: 26, historicalMeanPercent: 44, basin: 'Guadalquivir' },
-  { name: 'Embalse de Cubillas', lat: 37.5, lng: -3.73, fillPercent: 33, historicalMeanPercent: 48, basin: 'Guadalquivir' },
-  { name: 'Embalse de Bermejales', lat: 37.05, lng: -3.75, fillPercent: 40, historicalMeanPercent: 54, basin: 'Sur' },
-  { name: 'Embalse de Negratín', lat: 37.58, lng: -2.97, fillPercent: 52, historicalMeanPercent: 60, basin: 'Guadalquivir' },
-  { name: 'Embalse de Beninar', lat: 36.95, lng: -2.65, fillPercent: 18, historicalMeanPercent: 42, basin: 'Sur' },
-  { name: 'Embalse del Guadalmellato', lat: 38.02, lng: -4.63, fillPercent: 47, historicalMeanPercent: 55, basin: 'Guadalquivir' },
-  { name: 'Embalse del Jándula', lat: 38.08, lng: -4.05, fillPercent: 62, historicalMeanPercent: 65, basin: 'Guadalquivir' },
-  { name: 'Embalse de El Pintado', lat: 37.81, lng: -6.0, fillPercent: 38, historicalMeanPercent: 52, basin: 'Guadalquivir' },
-  { name: 'Embalse de La Minilla', lat: 37.83, lng: -5.8, fillPercent: 42, historicalMeanPercent: 56, basin: 'Guadalquivir' },
-]
+const RESERVOIRS = generated.reservoirs as GeneratedReservoir[]
+const FETCHED_AT = generated.fetchedAt as string
 
 function haversineKm(a: Coordinates, b: { lat: number; lng: number }): number {
   const R = 6371
@@ -39,6 +33,33 @@ function haversineKm(a: Coordinates, b: { lat: number; lng: number }): number {
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x))
 }
 
+export function normalizeMunicipio(s: string): string {
+  return s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim()
+}
+
+function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: string): Reservoir {
+  return {
+    name: titleCase(r.name),
+    fillPercent: r.fillPercent,
+    fillPercentAsOf: FETCHED_AT,
+    basin: r.basin,
+    distanceKm: Math.round(haversineKm(coords, r)),
+    systemName,
+  }
+}
+
+function titleCase(s: string): string {
+  return s
+    .toLowerCase()
+    .split(' ')
+    .map((w, i) => (i === 0 || w.length > 2 ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(' ')
+}
+
 // Fill % → colour used by both the map circles and the panel bars
 export function fillColour(pct: number): string {
   if (pct < 25) return '#ef4444'  // red
@@ -51,13 +72,13 @@ export function fillColour(pct: number): string {
 export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
   return {
     type: 'FeatureCollection',
-    features: ANDALUCIA_RESERVOIRS.map(r => ({
+    features: RESERVOIRS.map(r => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
       properties: {
-        name: r.name,
+        name: titleCase(r.name),
         fillPercent: r.fillPercent,
-        historicalMeanPercent: r.historicalMeanPercent ?? null,
+        historicalMeanPercent: null, // REDIAM's feed has no historical-mean field; kept for MapView.tsx's existing property shape
         basin: r.basin,
         colour: fillColour(r.fillPercent),
       },
@@ -65,19 +86,36 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
   }
 }
 
+/**
+ * First tries to match the location's municipality against a known supply
+ * system (returns every reservoir feeding that system). Falls back to
+ * nearest-3-within-80km when no system match is found — most Andalucía
+ * municipalities aren't in the researched supply-system lists yet.
+ */
+export function getReservoirsForLocation(location: SearchResult): Reservoir[] {
+  const coords = location.coordinates
+  const municipio = location.municipio ? normalizeMunicipio(location.municipio) : ''
+
+  if (municipio) {
+    const matchedSystems = SUPPLY_SYSTEMS.filter(s => s.servesMunicipalities.includes(municipio))
+    if (matchedSystems.length > 0) {
+      const codEstToSystemName = new Map<string, string>()
+      for (const s of matchedSystems) {
+        for (const codEst of s.reservoirCodEsts) codEstToSystemName.set(codEst, s.name)
+      }
+      return RESERVOIRS
+        .filter(r => codEstToSystemName.has(r.codEst))
+        .map(r => toReservoir(r, coords, codEstToSystemName.get(r.codEst)))
+        .sort((a, b) => a.distanceKm - b.distanceKm)
+    }
+  }
+
+  return getNearbyReservoirs(coords)
+}
+
 export function getNearbyReservoirs(coords: Coordinates, radiusKm = 80, limit = 3): Reservoir[] {
-  return ANDALUCIA_RESERVOIRS.map((r) => ({
-    name: r.name,
-    fillPercent: r.fillPercent,
-    historicalMeanPercent: r.historicalMeanPercent,
-    basin: r.basin,
-    distanceKm: Math.round(haversineKm(coords, r)),
-  }))
-    .filter((r) => r.distanceKm <= radiusKm)
+  return RESERVOIRS.map(r => toReservoir(r, coords))
+    .filter(r => r.distanceKm <= radiusKm)
     .sort((a, b) => a.distanceKm - b.distanceKm)
     .slice(0, limit)
 }
-
-// TODO v2: Replace with live datos.gob.es API call
-// https://datos.gob.es/es/catalogo/ea0043519-sistema-automatico-de-informacion-hidrologica-saih-de-la-demarcacion-hidrografica-del-guadalquivir
-// and REDIAM Andalusia Reservoir Viewer data feed
