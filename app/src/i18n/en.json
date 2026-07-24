@@ -86,6 +86,16 @@
     "questions": {
       "title": "Questions to ask",
       "loading": "Generating questions..."
+    },
+    "bathingWater": {
+      "title": "Bathing Water",
+      "excellent": "Excellent bathing water",
+      "good": "Good bathing water",
+      "sufficient": "Sufficient — meets minimum EU standards",
+      "poor": "Poor — may not meet EU standards",
+      "unknown": "Not assessed this season",
+      "distance": "{{distance}} km away",
+      "source": "Source: EEA Bathing Water Directive — {{year}} season"
     }
   },
   "attribution": "Map: OpenFreeMap / OpenStreetMap · Flood zones: MITERD SNCZI · Drought: Copernicus EDO",

@@ -86,6 +86,16 @@
     "questions": {
       "title": "Preguntas que deberías hacer",
       "loading": "Generando preguntas..."
+    },
+    "bathingWater": {
+      "title": "Calidad de Baño",
+      "excellent": "Excelente calidad de baño",
+      "good": "Buena calidad de baño",
+      "sufficient": "Suficiente — cumple los estándares mínimos de la UE",
+      "poor": "Deficiente — puede no cumplir los estándares de la UE",
+      "unknown": "No evaluado esta temporada",
+      "distance": "A {{distance}} km",
+      "source": "Fuente: Directiva de Aguas de Baño de la UE (EEA) — temporada {{year}}"
     }
   },
   "attribution": "Mapa: OpenFreeMap / OpenStreetMap · Zonas inundables: MITERD SNCZI · Sequía: Copernicus EDO",
