@@ -18,7 +18,8 @@
     "title": "Map layers",
     "flood": "Flood zones",
     "drought": "Drought status",
-    "reservoirs": "Reservoirs"
+    "reservoirs": "Reservoirs",
+    "coastal": "Coastal zones"
   },
   "risk": {
     "title": "Risk Profile",
@@ -62,6 +63,13 @@
         "desalination": "Desalination"
       },
       "noData": "Supply data not available for this municipality"
+    },
+    "coastalFlood": {
+      "title": "Coastal Zone",
+      "inServidumbre": "Within 20 m coastal protection zone — building restrictions apply",
+      "inPolicia": "Within 100 m coastal zone — planning restrictions may apply",
+      "clear": "Not in a mapped coastal zone",
+      "source": "Source: MITERD Coastal DPH"
     },
     "aiSummary": {
       "title": "What this means for you",
