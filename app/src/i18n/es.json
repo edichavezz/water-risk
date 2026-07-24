@@ -18,7 +18,9 @@
     "title": "Capas del mapa",
     "flood": "Zonas inundables",
     "drought": "Estado de sequía",
-    "reservoirs": "Embalses"
+    "reservoirs": "Embalses",
+    "coastal": "Zonas costeras",
+    "groundwater": "Aguas subterráneas"
   },
   "risk": {
     "title": "Perfil de riesgo",
@@ -62,6 +64,20 @@
         "desalination": "Desalinización"
       },
       "noData": "Datos de suministro no disponibles para este municipio"
+    },
+    "coastalFlood": {
+      "title": "Zona Costera",
+      "inServidumbre": "Dentro de la zona de servidumbre costera de 20 m — se aplican restricciones de construcción",
+      "inPolicia": "Dentro de la zona de policía de 100 m — pueden aplicarse restricciones urbanísticas",
+      "clear": "No está en una zona costera cartografiada",
+      "source": "Fuente: DPH Costas (MITERD)"
+    },
+    "groundwater": {
+      "title": "Aguas Subterráneas",
+      "overexploited": "Dentro del acuífero {{unit}}, declarado sobreexplotado. Los derechos de extracción pueden estar restringidos.",
+      "clear": "No se declara sobreexplotación de acuíferos en esta zona",
+      "noData": "Sin datos de unidades hidrogeológicas para esta ubicación",
+      "source": "Fuente: unidades hidrogeológicas del IGME (clasificación anual)"
     },
     "aiSummary": {
       "title": "Qué significa esto para ti",

@@ -58,6 +58,19 @@ export interface WaterQualityResult {
   source: 'SINAC'
 }
 
+export interface CoastalFloodResult {
+  inServidumbre: boolean
+  inPolicia: boolean
+  source: 'MITERD DPH'
+}
+
+export interface GroundwaterResult {
+  inOverexploitedUnit: boolean
+  unitName?: string
+  basin?: string
+  source: 'IGME'
+}
+
 export interface BathingWaterResult {
   siteName: string
   distanceKm: number
@@ -71,6 +84,9 @@ export interface RiskProfile {
   floodZone: FloodZoneResult | null
   drought: DroughtStatus | null
   reservoirs: Reservoir[]
+  waterQuality: WaterQualityResult | null
+  coastalFlood: CoastalFloodResult | null
+  groundwater: GroundwaterResult | null
   bathingWater: BathingWaterResult | null
   aiSummary?: string
   aiQuestions?: string[]

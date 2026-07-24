@@ -9,13 +9,15 @@ interface AppStore {
     flood: boolean
     drought: boolean
     reservoirs: boolean
+    coastal: boolean
+    groundwater: boolean
   }
 
   setLanguage: (lang: Language) => void
   setUserType: (type: UserType) => void
   setProfile: (profile: RiskProfile | null) => void
   updateProfile: (partial: Partial<RiskProfile>) => void
-  toggleLayer: (layer: 'flood' | 'drought' | 'reservoirs') => void
+  toggleLayer: (layer: 'flood' | 'drought' | 'reservoirs' | 'coastal' | 'groundwater') => void
 }
 
 export const useAppStore = create<AppStore>((set) => ({
@@ -26,6 +28,8 @@ export const useAppStore = create<AppStore>((set) => ({
     flood: true,
     drought: true,
     reservoirs: true,
+    coastal: true,
+    groundwater: true,
   },
 
   setLanguage: (language) => set({ language }),

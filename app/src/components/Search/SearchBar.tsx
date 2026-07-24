@@ -57,6 +57,9 @@ export default function SearchBar() {
       floodZone: null,
       drought: null,
       reservoirs: [],
+      waterQuality: null,
+      coastalFlood: null,
+      groundwater: null,
       bathingWater: null,
       loading: true,
     })
@@ -76,6 +79,9 @@ export default function SearchBar() {
       floodZone,
       drought,
       reservoirs,
+      waterQuality: null,
+      coastalFlood: null,
+      groundwater: null,
       bathingWater: null,
       loading: false,
     }

@@ -1,0 +1,15 @@
+{
+  "sevilla": { "municipio": "Sevilla", "ineCode": "41091", "compliance": "compliant", "sourceType": "surface", "year": 2024, "nitrates_mg_l": 4.2, "turbidity_ntu": 0.3, "ecoli": "not detected" },
+  "cordoba": { "municipio": "Córdoba", "ineCode": "14021", "compliance": "compliant", "sourceType": "mixed", "year": 2024, "nitrates_mg_l": 6.1, "turbidity_ntu": 0.4, "ecoli": "not detected" },
+  "malaga": { "municipio": "Málaga", "ineCode": "29067", "compliance": "compliant", "sourceType": "surface", "year": 2024, "nitrates_mg_l": 3.8, "turbidity_ntu": 0.2, "ecoli": "not detected" },
+  "marbella": { "municipio": "Marbella", "ineCode": "29069", "compliance": "minor_issues", "sourceType": "desalination", "year": 2024, "nitrates_mg_l": 5.5, "turbidity_ntu": 0.6, "ecoli": "not detected" },
+  "almeria": { "municipio": "Almería", "ineCode": "04013", "compliance": "compliant", "sourceType": "desalination", "year": 2024, "nitrates_mg_l": 7.9, "turbidity_ntu": 0.5, "ecoli": "not detected" },
+  "nijar": { "municipio": "Níjar", "ineCode": "04052", "compliance": "minor_issues", "sourceType": "groundwater", "year": 2024, "nitrates_mg_l": 38.4, "turbidity_ntu": 0.7, "ecoli": "not detected" },
+  "granada": { "municipio": "Granada", "ineCode": "18087", "compliance": "compliant", "sourceType": "mixed", "year": 2024, "nitrates_mg_l": 5.0, "turbidity_ntu": 0.3, "ecoli": "not detected" },
+  "cadiz": { "municipio": "Cádiz", "ineCode": "11012", "compliance": "compliant", "sourceType": "surface", "year": 2024, "nitrates_mg_l": 4.6, "turbidity_ntu": 0.3, "ecoli": "not detected" },
+  "huelva": { "municipio": "Huelva", "ineCode": "21041", "compliance": "non_compliant", "sourceType": "groundwater", "year": 2023, "nitrates_mg_l": 46.2, "turbidity_ntu": 1.1, "ecoli": "detected" },
+  "jaen": { "municipio": "Jaén", "ineCode": "23050", "compliance": "compliant", "sourceType": "surface", "year": 2024, "nitrates_mg_l": 3.2, "turbidity_ntu": 0.2, "ecoli": "not detected" },
+  "murcia": { "municipio": "Murcia", "ineCode": "30030", "compliance": "minor_issues", "sourceType": "mixed", "year": 2024, "nitrates_mg_l": 32.1, "turbidity_ntu": 0.5, "ecoli": "not detected" },
+  "alicante": { "municipio": "Alicante", "ineCode": "03014", "compliance": "compliant", "sourceType": "desalination", "year": 2024, "nitrates_mg_l": 8.4, "turbidity_ntu": 0.3, "ecoli": "not detected" },
+  "valencia": { "municipio": "Valencia", "ineCode": "46250", "compliance": "compliant", "sourceType": "surface", "year": 2024, "nitrates_mg_l": 4.9, "turbidity_ntu": 0.3, "ecoli": "not detected" }
+}
