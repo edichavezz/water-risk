@@ -19,7 +19,8 @@
     "flood": "Flood zones",
     "drought": "Drought status",
     "reservoirs": "Reservoirs",
-    "coastal": "Coastal zones"
+    "coastal": "Coastal zones",
+    "groundwater": "Groundwater"
   },
   "risk": {
     "title": "Risk Profile",
@@ -70,6 +71,13 @@
       "inPolicia": "Within 100 m coastal zone — planning restrictions may apply",
       "clear": "Not in a mapped coastal zone",
       "source": "Source: MITERD Coastal DPH"
+    },
+    "groundwater": {
+      "title": "Groundwater",
+      "overexploited": "Within {{unit}} aquifer, declared overexploited. Groundwater abstraction may be restricted.",
+      "clear": "No groundwater overexploitation declared for this area",
+      "noData": "No hydrogeological unit data for this location",
+      "source": "Source: IGME hydrogeological units (annual classification)"
     },
     "aiSummary": {
       "title": "What this means for you",
