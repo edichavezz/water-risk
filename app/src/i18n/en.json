@@ -1,0 +1,68 @@
+{
+  "appName": "Water Risk Explorer",
+  "tagline": "Water risk for your location in Spain",
+  "search": {
+    "placeholder": "Enter address, postcode, or municipality...",
+    "searching": "Searching...",
+    "noResults": "No results found. Try a municipality name.",
+    "hint": "e.g. Sevilla, 29001, Calle Larios Málaga"
+  },
+  "userType": {
+    "label": "I am a...",
+    "buyer": "Property Buyer",
+    "renter": "Renter",
+    "farmer": "Farmer / Smallholder",
+    "business": "Small Business"
+  },
+  "layers": {
+    "title": "Map layers",
+    "flood": "Flood zones",
+    "drought": "Drought status",
+    "reservoirs": "Reservoirs"
+  },
+  "risk": {
+    "title": "Risk Profile",
+    "flood": {
+      "title": "Flood Risk",
+      "inZone100": "This location is in a 1-in-100-year flood zone",
+      "inZone500": "This location is in a 1-in-500-year flood zone",
+      "inZone10": "This location is in a high-risk flood zone (1-in-10-year)",
+      "notInZone": "No flood zone recorded for this location",
+      "source": "Source: SNCZI (MITERD)",
+      "caveat": "Post-DANA 2024 flood data may not yet be reflected in all areas."
+    },
+    "drought": {
+      "title": "Drought Status",
+      "none": "No drought conditions",
+      "watch": "Drought watch",
+      "warning": "Drought warning",
+      "alert": "Drought alert",
+      "partial_recovery": "Partial recovery",
+      "recovery": "Recovering",
+      "unknown": "Status unknown",
+      "source": "Source: Copernicus European Drought Observatory (updated weekly)"
+    },
+    "reservoirs": {
+      "title": "Nearby Reservoirs",
+      "fill": "{{percent}}% full",
+      "historical": "historical mean: {{mean}}%",
+      "noData": "No reservoir data available nearby"
+    },
+    "aiSummary": {
+      "title": "What this means for you",
+      "loading": "Generating your risk summary..."
+    },
+    "questions": {
+      "title": "Questions to ask",
+      "loading": "Generating questions..."
+    }
+  },
+  "attribution": "Map: OpenFreeMap / OpenStreetMap · Flood zones: MITERD SNCZI · Drought: Copernicus EDO",
+  "dataFreshness": "Drought data updated weekly · Flood zones updated periodically",
+  "noLocation": "Search for a location to see its water risk profile",
+  "errors": {
+    "geocodingFailed": "Could not find that location. Try a municipality name.",
+    "dataFailed": "Some data could not be loaded. Showing partial results.",
+    "aiFailed": "AI summary unavailable. Check your API key."
+  }
+}

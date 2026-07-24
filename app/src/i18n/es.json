@@ -1,0 +1,68 @@
+{
+  "appName": "Water Risk Explorer",
+  "tagline": "Explora el riesgo hídrico en España",
+  "search": {
+    "placeholder": "Introduce dirección, código postal o municipio...",
+    "searching": "Buscando...",
+    "noResults": "Sin resultados. Prueba con el nombre del municipio.",
+    "hint": "ej. Sevilla, 29001, Calle Larios Málaga"
+  },
+  "userType": {
+    "label": "Soy...",
+    "buyer": "Comprador de vivienda",
+    "renter": "Inquilino/a",
+    "farmer": "Agricultor / Propietario rural",
+    "business": "Pequeña empresa"
+  },
+  "layers": {
+    "title": "Capas del mapa",
+    "flood": "Zonas inundables",
+    "drought": "Estado de sequía",
+    "reservoirs": "Embalses"
+  },
+  "risk": {
+    "title": "Perfil de riesgo",
+    "flood": {
+      "title": "Riesgo de inundación",
+      "inZone100": "Esta ubicación está en zona inundable T100 (período de retorno 100 años)",
+      "inZone500": "Esta ubicación está en zona inundable T500 (período de retorno 500 años)",
+      "inZone10": "Esta ubicación está en zona de alto riesgo de inundación (T10)",
+      "notInZone": "No se registra zona inundable para esta ubicación",
+      "source": "Fuente: SNCZI (MITERD)",
+      "caveat": "Los datos de inundación post-DANA 2024 pueden no estar aún actualizados en todas las zonas."
+    },
+    "drought": {
+      "title": "Estado de sequía",
+      "none": "Sin condiciones de sequía",
+      "watch": "Vigilancia de sequía",
+      "warning": "Aviso de sequía",
+      "alert": "Alerta de sequía",
+      "partial_recovery": "Recuperación parcial",
+      "recovery": "En recuperación",
+      "unknown": "Estado desconocido",
+      "source": "Fuente: Observatorio Europeo de Sequías de Copernicus (actualización semanal)"
+    },
+    "reservoirs": {
+      "title": "Embalses cercanos",
+      "fill": "{{percent}}% de capacidad",
+      "historical": "media histórica: {{mean}}%",
+      "noData": "No hay datos de embalses disponibles en esta zona"
+    },
+    "aiSummary": {
+      "title": "Qué significa esto para ti",
+      "loading": "Generando tu resumen de riesgo..."
+    },
+    "questions": {
+      "title": "Preguntas que deberías hacer",
+      "loading": "Generando preguntas..."
+    }
+  },
+  "attribution": "Mapa: OpenFreeMap / OpenStreetMap · Zonas inundables: MITERD SNCZI · Sequía: Copernicus EDO",
+  "dataFreshness": "Datos de sequía actualizados semanalmente · Zonas inundables actualizadas periódicamente",
+  "noLocation": "Busca una ubicación para ver su perfil de riesgo hídrico",
+  "errors": {
+    "geocodingFailed": "No se ha encontrado esa ubicación. Prueba con el nombre del municipio.",
+    "dataFailed": "Algunos datos no se han podido cargar. Mostrando resultados parciales.",
+    "aiFailed": "Resumen de IA no disponible. Comprueba tu clave de API."
+  }
+}
