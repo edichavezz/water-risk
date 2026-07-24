@@ -6,9 +6,11 @@ export default function LayerToggle() {
   const { activeLayers, toggleLayer } = useAppStore()
 
   const layers: { key: keyof typeof activeLayers; emoji: string; label: string }[] = [
-    { key: 'flood',      emoji: '🌊', label: t('layers.flood') },
-    { key: 'drought',    emoji: '☀️', label: t('layers.drought') },
-    { key: 'reservoirs', emoji: '💧', label: t('layers.reservoirs') },
+    { key: 'flood',       emoji: '🌊', label: t('layers.flood') },
+    { key: 'drought',     emoji: '☀️', label: t('layers.drought') },
+    { key: 'reservoirs',  emoji: '💧', label: t('layers.reservoirs') },
+    { key: 'coastal',     emoji: '🏖', label: t('layers.coastal') },
+    { key: 'groundwater', emoji: '🟤', label: t('layers.groundwater') },
   ]
 
   return (

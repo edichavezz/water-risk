@@ -6,6 +6,11 @@ import DroughtCard from './DroughtCard'
 import ReservoirCard from './ReservoirCard'
 import AIProfile from './AIProfile'
 import QuestionsCard from './QuestionsCard'
+import WaterQualityCard from './WaterQualityCard'
+import CoastalFloodCard from './CoastalFloodCard'
+import GroundwaterCard from './GroundwaterCard'
+import BathingWaterCard from './BathingWaterCard'
+import { isCoastalProvincia } from '../../services/coastalFlood'
 
 export default function RiskPanel() {
   const { t } = useTranslation()
@@ -22,7 +27,7 @@ export default function RiskPanel() {
     )
   }
 
-  const { location, floodZone, drought, reservoirs, aiSummary, aiQuestions, loading } = profile
+  const { location, floodZone, drought, reservoirs, waterQuality, coastalFlood, groundwater, bathingWater, aiSummary, aiQuestions, loading } = profile
 
   const aiLoading = loading || (!aiSummary && !profile.error)
 
@@ -54,6 +59,10 @@ export default function RiskPanel() {
         <FloodCard data={floodZone} loading={loading} />
         <DroughtCard data={drought} loading={loading} />
         <ReservoirCard reservoirs={reservoirs} loading={loading} />
+        <WaterQualityCard data={waterQuality} loading={loading} />
+        <CoastalFloodCard data={coastalFlood} loading={loading} isCoastal={isCoastalProvincia(location.provincia)} />
+        <GroundwaterCard data={groundwater} loading={loading} />
+        <BathingWaterCard data={bathingWater} loading={loading} />
 
         <hr className="border-gray-100" />
 
