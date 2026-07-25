@@ -106,5 +106,72 @@
     "geocodingFailed": "Could not find that location. Try a municipality name.",
     "dataFailed": "Some data could not be loaded. Showing partial results.",
     "aiFailed": "AI summary unavailable. Check your API key."
+  },
+  "registry": {
+    "flood": {
+      "name": "River flood zones",
+      "cadence": "Updated with SNCZI cartography cycles",
+      "resolution": "Mapped flood polygons (T10 / T100 / T500)",
+      "limitations": [
+        "Does not show surface-water or flash flooding",
+        "Does not show property-level drainage problems",
+        "Does not show historical flood incidents"
+      ]
+    },
+    "drought": {
+      "name": "Drought status",
+      "cadence": "Updated every 10 days (Combined Drought Indicator)",
+      "resolution": "~5 km grid",
+      "limitations": [
+        "Does not show local supply restrictions in force",
+        "Does not show reservoir or aquifer levels directly"
+      ]
+    },
+    "reservoirs": {
+      "name": "Nearby reservoirs",
+      "cadence": "Live REDIAM data where available",
+      "resolution": "Individual reservoirs by supply system or proximity",
+      "limitations": [
+        "May not show which reservoir supplies your tap",
+        "Values are a snapshot, not a weekly trend"
+      ]
+    },
+    "waterQuality": {
+      "name": "Drinking water quality",
+      "cadence": "Annual SINAC reporting",
+      "resolution": "Municipality level",
+      "limitations": [
+        "Does not show your building's plumbing quality",
+        "Does not cover private wells",
+        "Sample covers a limited set of municipalities"
+      ]
+    },
+    "coastalFlood": {
+      "name": "Coastal zone (DPH)",
+      "cadence": "Updated with coastal domain cartography",
+      "resolution": "Mapped 20 m / 100 m coastal strips",
+      "limitations": [
+        "Does not show storm-surge or sea-level-rise projections",
+        "Does not confirm legal status of an individual property"
+      ]
+    },
+    "groundwater": {
+      "name": "Groundwater status",
+      "cadence": "Annual IGME classification",
+      "resolution": "Hydrogeological unit polygons",
+      "limitations": [
+        "Does not show individual well legality or allocation",
+        "Does not show current aquifer levels"
+      ]
+    },
+    "bathingWater": {
+      "name": "Bathing water",
+      "cadence": "Annual EU bathing season assessment",
+      "resolution": "Individual monitored sites",
+      "limitations": [
+        "Does not reflect conditions on a given day",
+        "Assessment year is approximate for this source"
+      ]
+    }
   }
 }

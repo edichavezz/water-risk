@@ -106,5 +106,72 @@
     "geocodingFailed": "No se ha encontrado esa ubicación. Prueba con el nombre del municipio.",
     "dataFailed": "Algunos datos no se han podido cargar. Mostrando resultados parciales.",
     "aiFailed": "Resumen de IA no disponible. Comprueba tu clave de API."
+  },
+  "registry": {
+    "flood": {
+      "name": "Zonas inundables fluviales",
+      "cadence": "Actualizado con los ciclos cartográficos del SNCZI",
+      "resolution": "Polígonos de inundación (T10 / T100 / T500)",
+      "limitations": [
+        "No muestra inundaciones pluviales ni repentinas",
+        "No muestra problemas de drenaje a nivel de propiedad",
+        "No muestra incidentes históricos de inundación"
+      ]
+    },
+    "drought": {
+      "name": "Estado de sequía",
+      "cadence": "Actualizado cada 10 días (Indicador Combinado de Sequía)",
+      "resolution": "Malla de ~5 km",
+      "limitations": [
+        "No muestra restricciones locales de suministro vigentes",
+        "No muestra directamente niveles de embalses o acuíferos"
+      ]
+    },
+    "reservoirs": {
+      "name": "Embalses cercanos",
+      "cadence": "Datos en vivo de REDIAM cuando están disponibles",
+      "resolution": "Embalses individuales por sistema de suministro o proximidad",
+      "limitations": [
+        "Puede no indicar qué embalse abastece su grifo",
+        "Los valores son una instantánea, no una tendencia semanal"
+      ]
+    },
+    "waterQuality": {
+      "name": "Calidad del agua potable",
+      "cadence": "Informe anual SINAC",
+      "resolution": "Nivel municipal",
+      "limitations": [
+        "No muestra la calidad de la fontanería de su edificio",
+        "No cubre pozos privados",
+        "La muestra cubre un conjunto limitado de municipios"
+      ]
+    },
+    "coastalFlood": {
+      "name": "Zona costera (DPH)",
+      "cadence": "Actualizado con la cartografía del dominio costero",
+      "resolution": "Franjas costeras de 20 m / 100 m",
+      "limitations": [
+        "No muestra proyecciones de marejadas ni subida del nivel del mar",
+        "No confirma la situación legal de una propiedad concreta"
+      ]
+    },
+    "groundwater": {
+      "name": "Estado de las aguas subterráneas",
+      "cadence": "Clasificación anual del IGME",
+      "resolution": "Polígonos de unidades hidrogeológicas",
+      "limitations": [
+        "No muestra la legalidad ni la concesión de pozos individuales",
+        "No muestra niveles actuales del acuífero"
+      ]
+    },
+    "bathingWater": {
+      "name": "Aguas de baño",
+      "cadence": "Evaluación anual de la temporada de baño de la UE",
+      "resolution": "Puntos de muestreo individuales",
+      "limitations": [
+        "No refleja las condiciones de un día concreto",
+        "El año de evaluación es aproximado para esta fuente"
+      ]
+    }
   }
 }
