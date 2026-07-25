@@ -68,7 +68,7 @@ export default function SearchBar() {
       loading: true,
     })
 
-    const coastal = isCoastalProvincia(result.provincia)
+    const coastal = isCoastalProvincia(result.provincia, result.displayName)
 
     const [floodZone, drought, coastalFlood, waterQuality] = await Promise.all([
       getFloodZoneStatus(result.coordinates).catch(() => null),

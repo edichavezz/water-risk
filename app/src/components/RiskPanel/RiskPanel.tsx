@@ -60,7 +60,7 @@ export default function RiskPanel() {
         <DroughtCard data={drought} loading={loading} />
         <ReservoirCard reservoirs={reservoirs} loading={loading} />
         <WaterQualityCard data={waterQuality} loading={loading} />
-        <CoastalFloodCard data={coastalFlood} loading={loading} isCoastal={isCoastalProvincia(location.provincia)} />
+        <CoastalFloodCard data={coastalFlood} loading={loading} isCoastal={isCoastalProvincia(location.provincia, location.displayName)} />
         <GroundwaterCard data={groundwater} loading={loading} />
         <BathingWaterCard data={bathingWater} loading={loading} />
 

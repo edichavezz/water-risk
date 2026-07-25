@@ -27,10 +27,18 @@ const COASTAL_PROVINCES = [
 // Full list of Spanish provinces with coastline — used to decide whether to
 // fire the coastal query at all and whether to render the card. Inland
 // provinces (Córdoba, Jaén, Ciudad Real, etc.) never see this card.
-export function isCoastalProvincia(provincia?: string): boolean {
-  if (!provincia) return false
-  const p = provincia.toLowerCase()
-  return COASTAL_PROVINCES.some(c => p.includes(c))
+//
+// Nominatim's address.county is unreliable for this check: it sometimes
+// returns a comarca/tourism-region name (e.g. "Costa del Sol Occidental"
+// for Marbella) instead of the actual province, and sometimes omits county
+// entirely so geocoding.ts falls back to address.state (the autonomous
+// community, e.g. "Andalucía" — which matches no province name). The full
+// displayName reliably includes the real province name deeper in the
+// comma-separated address hierarchy, so it's checked as a second signal.
+export function isCoastalProvincia(provincia?: string, displayName?: string): boolean {
+  const haystacks = [provincia, displayName].filter((s): s is string => !!s).map(s => s.toLowerCase())
+  if (haystacks.length === 0) return false
+  return COASTAL_PROVINCES.some(c => haystacks.some(h => h.includes(c)))
 }
 
 async function queryLayer(coords: Coordinates, layer: string): Promise<boolean> {
