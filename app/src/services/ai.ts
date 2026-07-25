@@ -1,177 +1,103 @@
-import type { RiskProfile, UserType, Language } from '../types'
+import type { Language } from '../types'
+import type { DatasetId, DatasetResult, InterpretationScope } from '../types/workspace'
+import { useAppStore } from '../store/useAppStore'
+import type {
+  FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
+  CoastalFloodResult, GroundwaterResult, BathingWaterResult,
+} from '../types'
 
-const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY as string | undefined
+export interface EvidenceItem { id: DatasetId; status: string; summary: string }
 
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-}
-
-async function callClaude(messages: Message[]): Promise<string> {
-  if (!ANTHROPIC_API_KEY) {
-    throw new Error('VITE_ANTHROPIC_API_KEY not set')
+function summarize(id: DatasetId, r: DatasetResult): string {
+  if (r.status !== 'available') {
+    // Evidence for non-values carries the state, never an implied value.
+    return `No usable value (${r.status}).`
   }
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5',
-      max_tokens: 600,
-      messages,
-    }),
-  })
-  if (!res.ok) throw new Error(`Claude API error ${res.status}`)
-  const data = await res.json()
-  return data.content[0].text as string
-}
-
-const USER_TYPE_LABELS: Record<UserType, Record<Language, string>> = {
-  buyer: { en: 'property buyer / homeowner', es: 'comprador de vivienda / propietario' },
-  renter: { en: 'renter / tenant', es: 'inquilino/a' },
-  farmer: { en: 'farmer / smallholder', es: 'agricultor / propietario rural' },
-  business: { en: 'small business owner', es: 'propietario de pequeña empresa' },
-}
-
-function buildContext(profile: RiskProfile, lang: Language): string {
-  const loc = profile.location
-  const parts: string[] = [
-    `Location: ${loc.municipio || loc.displayName}${loc.provincia ? ', ' + loc.provincia : ''}, Spain`,
-    `River basin: ${loc.basin ?? 'unknown'}`,
-  ]
-
-  if (profile.floodZone) {
-    if (profile.floodZone.inZone) {
-      parts.push(`Flood risk: IN a ${profile.floodZone.returnPeriod}-year return period flood zone (SNCZI official data)`)
-    } else {
-      parts.push('Flood risk: NOT in a mapped flood zone')
+  switch (id) {
+    case 'flood': {
+      const d = r.data as FloodZoneResult
+      return d.inZone
+        ? `Inside mapped flood zone, return period T${d.returnPeriod} (source SNCZI).`
+        : 'Outside the mapped T10, T100 and T500 river-flood zones (source SNCZI).'
+    }
+    case 'drought': {
+      const d = r.data as DroughtStatus
+      return `Combined Drought Indicator level: ${d.level} (source Copernicus EDO, ${d.updatedAt}).`
+    }
+    case 'reservoirs': {
+      const rs = r.data as Reservoir[]
+      return `Nearby reservoirs: ${rs.map(x => `${x.name} ${x.fillPercent}% full (mean ${x.historicalMeanPercent ?? '?'}%)`).join('; ')} (source REDIAM).`
+    }
+    case 'waterQuality': {
+      const d = r.data as WaterQualityResult
+      return `SINAC ${d.year} drinking-water compliance: ${d.compliance}; source type ${d.sourceType}.`
+    }
+    case 'coastalFlood': {
+      const d = r.data as CoastalFloodResult
+      return `Coastal DPH: ${d.inServidumbre ? 'inside 20 m servidumbre strip' : 'outside 20 m strip'}; ${d.inPolicia ? 'inside 100 m zone' : 'outside 100 m zone'} (source MITERD).`
+    }
+    case 'groundwater': {
+      const d = r.data as GroundwaterResult
+      return d.inOverexploitedUnit
+        ? `Inside overexploited hydrogeological unit ${d.unitName ?? ''} (source IGME).`
+        : 'Not inside a declared overexploited hydrogeological unit (source IGME).'
+    }
+    case 'bathingWater': {
+      const d = r.data as BathingWaterResult
+      return `Nearest bathing site ${d.siteName} at ${d.distanceKm} km, rating ${d.rating} (source EEA).`
     }
   }
-
-  if (profile.drought) {
-    const levelLabels: Record<string, string> = {
-      alert: 'DROUGHT ALERT (severe)',
-      warning: 'Drought warning (moderate)',
-      watch: 'Drought watch (mild)',
-      partial_recovery: 'Partial drought recovery',
-      recovery: 'Recovering from drought',
-      none: 'No drought conditions currently',
-      unknown: 'Drought status unknown',
-    }
-    parts.push(`Drought status: ${levelLabels[profile.drought.level] ?? profile.drought.level} (Copernicus EDO, updated weekly)`)
-  }
-
-  if (profile.reservoirs.length > 0) {
-    const resLines = profile.reservoirs.map(
-      r => {
-        const mean = r.historicalMeanPercent != null ? `, historical mean ~${r.historicalMeanPercent}%` : ''
-        const source = r.systemName ? `via ${r.systemName}` : `${r.distanceKm}km away`
-        return `${r.name}: ${r.fillPercent}% full${mean} (${source}, data as of ${r.fillPercentAsOf})`
-      }
-    )
-    parts.push(`Nearest reservoirs:\n${resLines.join('\n')}`)
-  }
-
-  if (profile.waterQuality) {
-    parts.push(`Drinking water: ${profile.waterQuality.compliance}, source: ${profile.waterQuality.sourceType}, last tested: ${profile.waterQuality.year}`)
-  }
-
-  if (profile.coastalFlood) {
-    const coastalLine = profile.coastalFlood.inServidumbre
-      ? 'in 20m servidumbre zone'
-      : profile.coastalFlood.inPolicia
-      ? 'in 100m policia zone'
-      : 'not in coastal zone'
-    parts.push(`Coastal zone: ${coastalLine}`)
-  }
-
-  if (profile.groundwater) {
-    parts.push(
-      `Groundwater: ${profile.groundwater.inOverexploitedUnit ? 'in overexploited unit: ' + profile.groundwater.unitName : 'not in overexploited unit'}`
-    )
-  }
-
-  if (profile.bathingWater) {
-    parts.push(`Nearest bathing site: ${profile.bathingWater.siteName} (${profile.bathingWater.distanceKm} km) — rated ${profile.bathingWater.rating} (${profile.bathingWater.year})`)
-  }
-
-  return parts.join('\n')
 }
 
-export async function generateRiskSummary(
-  profile: RiskProfile,
-  userType: UserType,
-  lang: Language
-): Promise<string> {
-  const context = buildContext(profile, lang)
-  const persona = USER_TYPE_LABELS[userType][lang]
-  const langInstruction = lang === 'es'
-    ? 'Respond entirely in Spanish.'
-    : 'Respond in English.'
-
-  const prompt = lang === 'es'
-    ? `Eres un experto en riesgos hídricos en España. Analiza los siguientes datos para una persona que es ${persona}.
-
-${context}
-
-Escribe un resumen claro y directo (máximo 120 palabras) de lo que estos datos significan específicamente para un ${persona}. Usa lenguaje sencillo, sin tecnicismos innecesarios. Menciona implicaciones concretas relevantes para este perfil de usuario.`
-    : `You are a water risk expert for Spain. Analyse the following data for someone who is a ${persona}.
-
-${context}
-
-Write a clear, direct summary (max 120 words) of what these data points mean specifically for a ${persona}. Use plain language. Mention concrete implications relevant to this user type. ${langInstruction}`
-
-  return callClaude([{ role: 'user', content: prompt }])
+export function buildEvidence(
+  results: Partial<Record<DatasetId, DatasetResult>>,
+  _language: Language,
+): EvidenceItem[] {
+  return (Object.entries(results) as Array<[DatasetId, DatasetResult]>)
+    .filter(([, r]) => r.status !== 'loading' && r.status !== 'not_applicable')
+    .map(([id, r]) => ({ id, status: r.status, summary: summarize(id, r) }))
 }
 
-export async function generateQuestions(
-  profile: RiskProfile,
-  userType: UserType,
-  lang: Language
-): Promise<string[]> {
-  const context = buildContext(profile, lang)
-  const persona = USER_TYPE_LABELS[userType][lang]
-
-  const targets: Record<UserType, Record<Language, string>> = {
-    buyer: {
-      en: 'estate agent, notary, and mortgage lender',
-      es: 'agente inmobiliario, notario y entidad hipotecaria',
-    },
-    renter: {
-      en: 'landlord and municipality',
-      es: 'propietario y ayuntamiento',
-    },
-    farmer: {
-      en: 'irrigation community (comunidad de regantes), river basin authority, and groundwater registry',
-      es: 'comunidad de regantes, confederación hidrográfica y registro de aguas',
-    },
-    business: {
-      en: 'municipality, water utility, and insurer',
-      es: 'ayuntamiento, empresa de aguas y aseguradora',
-    },
+export async function requestInterpretation(
+  scope: InterpretationScope,
+  question?: string,
+): Promise<void> {
+  const s = useAppStore.getState()
+  if (!s.location || !s.coverage?.supported) {
+    s.setInterpretation({ status: 'error', scope, text: undefined, questions: undefined })
+    return
   }
-
-  const target = targets[userType][lang]
-
-  const prompt = lang === 'es'
-    ? `Eres un experto en riesgos hídricos en España. Basándote en estos datos:
-
-${context}
-
-Genera exactamente 6 preguntas concretas que un ${persona} debería hacer a su ${target} antes de tomar decisiones. Las preguntas deben ser específicas para esta ubicación y sus riesgos hídricos. Devuelve SOLO las preguntas, una por línea, sin numeración ni viñetas.`
-    : `You are a water risk expert for Spain. Based on this data:
-
-${context}
-
-Generate exactly 6 specific questions a ${persona} should ask their ${target} before making decisions. Questions must be specific to this location and its water risks. Return ONLY the questions, one per line, no numbering or bullets.`
-
-  const text = await callClaude([{ role: 'user', content: prompt }])
-  return text
-    .split('\n')
-    .map(q => q.trim())
-    .filter(q => q.length > 10)
-    .slice(0, 6)
+  const evidence = buildEvidence(s.results, s.language)
+  if (evidence.length === 0) {
+    s.setInterpretation({ status: 'error', scope })
+    return
+  }
+  s.setInterpretation({ status: 'loading', scope, language: s.language })
+  try {
+    const res = await fetch('/api/interpret', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        language: s.language,
+        audience: s.audience,
+        scope: scope.type === 'dataset' ? scope.id : 'location',
+        location: {
+          name: s.location.municipio || s.location.displayName,
+          municipio: s.location.municipio,
+          provincia: s.location.provincia,
+          basin: s.location.basin,
+        },
+        evidence,
+        ...(question ? { question } : {}),
+      }),
+    })
+    if (!res.ok) throw new Error(`Proxy error ${res.status}`)
+    const out = (await res.json()) as { interpretation: string; questions: string[] }
+    useAppStore.getState().setInterpretation({
+      status: 'ready', scope, text: out.interpretation, questions: out.questions,
+      basis: evidence.map(e => e.id), language: s.language,
+    })
+  } catch {
+    useAppStore.getState().setInterpretation({ status: 'error', scope })
+  }
 }
