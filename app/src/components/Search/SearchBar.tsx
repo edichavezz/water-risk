@@ -4,7 +4,7 @@ import { geocodeAddress } from '../../services/geocoding'
 import { useAppStore } from '../../store/useAppStore'
 import { getFloodZoneStatus } from '../../services/floodZone'
 import { getDroughtStatus } from '../../services/drought'
-import { getNearbyReservoirs } from '../../services/reservoirs'
+import { getReservoirsForLocation } from '../../services/reservoirs'
 import { generateRiskSummary, generateQuestions } from '../../services/ai'
 import { getWaterQualityByMunicipality } from '../../services/waterQuality'
 import { getCoastalFloodStatus, isCoastalProvincia } from '../../services/coastalFlood'
@@ -76,7 +76,7 @@ export default function SearchBar() {
       coastal ? getCoastalFloodStatus(result.coordinates).catch(() => null) : Promise.resolve(null),
       getWaterQualityByMunicipality(result.municipio ?? '').catch(() => null),
     ])
-    const reservoirs = getNearbyReservoirs(result.coordinates)
+    const reservoirs = getReservoirsForLocation(result)
     const groundwater = getGroundwaterStatus(result.coordinates)
     const bathingWater = await getNearestBathingSite(result.coordinates).catch(() => null)
 

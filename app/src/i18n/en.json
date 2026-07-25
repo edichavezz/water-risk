@@ -48,7 +48,8 @@
       "title": "Nearby Reservoirs",
       "fill": "{{percent}}% full",
       "historical": "historical mean: {{mean}}%",
-      "noData": "No reservoir data available nearby"
+      "noData": "No reservoir data available nearby",
+      "asOf": "REDIAM (Junta de Andalucía) — data as of {{date}}"
     },
     "waterQuality": {
       "title": "Drinking Water",
