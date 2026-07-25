@@ -1,3 +1,5 @@
+export * from './workspace'
+
 export type UserType = 'buyer' | 'renter' | 'farmer' | 'business'
 export type Language = 'en' | 'es'
 
