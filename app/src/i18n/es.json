@@ -48,7 +48,8 @@
       "title": "Embalses cercanos",
       "fill": "{{percent}}% de capacidad",
       "historical": "media histórica: {{mean}}%",
-      "noData": "No hay datos de embalses disponibles en esta zona"
+      "noData": "No hay datos de embalses disponibles en esta zona",
+      "asOf": "REDIAM (Junta de Andalucía) — datos del {{date}}"
     },
     "waterQuality": {
       "title": "Agua Potable",

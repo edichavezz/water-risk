@@ -66,7 +66,11 @@ function buildContext(profile: RiskProfile, lang: Language): string {
 
   if (profile.reservoirs.length > 0) {
     const resLines = profile.reservoirs.map(
-      r => `${r.name}: ${r.fillPercent}% full (historical mean ~${r.historicalMeanPercent ?? '?'}%, ${r.distanceKm}km away)`
+      r => {
+        const mean = r.historicalMeanPercent != null ? `, historical mean ~${r.historicalMeanPercent}%` : ''
+        const source = r.systemName ? `via ${r.systemName}` : `${r.distanceKm}km away`
+        return `${r.name}: ${r.fillPercent}% full${mean} (${source}, data as of ${r.fillPercentAsOf})`
+      }
     )
     parts.push(`Nearest reservoirs:\n${resLines.join('\n')}`)
   }

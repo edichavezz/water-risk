@@ -53,7 +53,9 @@ export default function ReservoirCard({ reservoirs, loading }: Props) {
               </div>
               <FillBar percent={r.fillPercent} mean={r.historicalMeanPercent} />
               <div className="flex justify-between mt-0.5">
-                <span className="text-xs text-gray-400">{r.distanceKm} km away</span>
+                <span className="text-xs text-gray-400">
+                  {r.systemName ? r.systemName : `${r.distanceKm} km away`}
+                </span>
                 {r.historicalMeanPercent && (
                   <span className="text-xs text-gray-400">
                     {t('risk.reservoirs.historical', { mean: r.historicalMeanPercent })}
@@ -65,7 +67,9 @@ export default function ReservoirCard({ reservoirs, loading }: Props) {
         </div>
       )}
 
-      <p className="text-xs text-gray-400">Source: REDIAM / MITERD (static seed — live API in v2)</p>
+      {reservoirs.length > 0 && (
+        <p className="text-xs text-gray-400">{t('risk.reservoirs.asOf', { date: reservoirs[0].fillPercentAsOf })}</p>
+      )}
     </div>
   )
 }
