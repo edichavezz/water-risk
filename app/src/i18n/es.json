@@ -266,5 +266,19 @@
     "unsupported": "Fuera de la cobertura detallada",
     "error": "No se pudo acceder a la fuente",
     "retry": "Reintentar"
+  },
+  "ai": {
+    "assistedLabel": "Asistido por IA",
+    "titleLocation": "Qué pueden significar los datos de esta ubicación",
+    "titleDataset": "Qué puede significar este resultado",
+    "basis": "Basado en: {{sources}}",
+    "loading": "Generando interpretación…",
+    "error": "No se pudo generar la interpretación.",
+    "unsupported": "Aquí no hay datos detallados, así que no se puede hacer una interpretación. Consulta fuentes regionales oficiales.",
+    "stale": "Ha cambiado el idioma. ¿Regenerar la interpretación?",
+    "regenerate": "Regenerar",
+    "followUpLabel": "Haz una pregunta sobre estos datos",
+    "followUpSend": "Preguntar",
+    "suggested": "Preguntas que podrías hacer"
   }
 }
