@@ -23,8 +23,8 @@ export default function EntryCard() {
 
   return (
     <div className="absolute left-6 top-1/2 z-10 w-[380px] max-w-[calc(100vw-3rem)] -translate-y-1/2 rounded-2xl bg-canvas p-6 shadow-xl">
-      <h1 className="text-xl font-bold text-ink">{t('entry.heading')}</h1>
-      <p className="mt-1 text-sm text-muted">{t('entry.supporting')}</p>
+      {/* The heading this card used to carry is now the header tagline. */}
+      <p className="text-sm text-muted">{t('entry.supporting')}</p>
 
       <div className="relative mt-4">
         <label htmlFor={inputId} className="mb-1 block text-sm font-bold text-ink">

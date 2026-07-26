@@ -49,6 +49,13 @@ body {
   height: 100%;
 }
 
+/* The app header spans the top of the viewport, so MapLibre's top-anchored
+   control groups (the zoom buttons live in top-right) have to start below it. */
+.maplibregl-ctrl-top-right,
+.maplibregl-ctrl-top-left {
+  top: 3.5rem;
+}
+
 /* ── Map location picker ──────────────────────────────────────────────────
    A provisional pin: hollow and dashed, so it never reads as the filled
    teardrop a confirmed search result gets. */

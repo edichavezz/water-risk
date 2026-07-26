@@ -17,7 +17,7 @@ export default function LayerTray() {
   const n = (primaryLayer ? 1 : 0) + contextLayers.length
 
   return (
-    <div className="absolute top-4 right-14 z-10">
+    <div className="absolute top-16 right-14 z-10">
       <button
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
