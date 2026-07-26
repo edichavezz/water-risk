@@ -87,17 +87,25 @@ export async function getFloodZoneStatus(coords: Coordinates): Promise<FloodZone
     { layer: SNCZI_LAYERS.T500, period: '500' as const },
   ]
 
+  let sampled = false
+  let lastError: unknown
+
   for (const { layer, period } of layers) {
     try {
       if (await pointIsPainted(getSNCZISampleUrl(layer, coords))) {
         return { inZone: true, returnPeriod: period, source: 'SNCZI' }
       }
-    } catch {
-      // This layer could not be sampled — try the next, rather than claiming
-      // the point is safe on the strength of a network error.
-      continue
+      sampled = true
+    } catch (e) {
+      // One failed layer is survivable — the others still answer.
+      lastError = e
     }
   }
+
+  // Nothing answered. Reporting "not in a flood zone" here would repeat the
+  // failure this endpoint move fixed: a dead service reading as safety. Throw
+  // so the dataset surfaces as an error instead.
+  if (!sampled) throw lastError ?? new Error('SNCZI flood zones could not be sampled')
 
   return { inZone: false, source: 'SNCZI' }
 }
