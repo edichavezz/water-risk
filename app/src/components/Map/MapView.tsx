@@ -4,6 +4,8 @@ import { useAppStore } from '../../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../../services/floodZone'
 import { getDroughtWmsUrl } from '../../services/drought'
 import { getAllReservoirsGeoJSON } from '../../services/reservoirs'
+import { getCoastalWmsUrl, COASTAL_LAYERS } from '../../services/coastalFlood'
+import groundwaterUnits from '../../data/groundwater-units.json'
 
 const ANDALUCIA_CENTER: [number, number] = [-4.5, 37.5]
 const DEFAULT_ZOOM = 7
@@ -156,6 +158,47 @@ export default function MapView() {
         },
       })
 
+      // ── Coastal DPH WMS layers (MITERD) ───────────────────────────────
+      const coastalLayerDefs = [
+        { id: 'coastal-policia', layer: COASTAL_LAYERS.policia, opacity: 0.35 },
+        { id: 'coastal-servidumbre', layer: COASTAL_LAYERS.servidumbre, opacity: 0.5 },
+      ]
+      coastalLayerDefs.forEach(({ id, layer, opacity }) => {
+        map.addSource(`${id}-source`, {
+          type: 'raster',
+          tiles: [getCoastalWmsUrl(layer)],
+          tileSize: 256,
+          attribution: 'MITERD Costas',
+        })
+        map.addLayer({
+          id,
+          type: 'raster',
+          source: `${id}-source`,
+          paint: { 'raster-opacity': opacity },
+          layout: { visibility: 'none' },
+        })
+      })
+
+      // ── Groundwater overexploited units (IGME) ────────────────────────
+      map.addSource('groundwater-units', {
+        type: 'geojson',
+        data: groundwaterUnits as GeoJSON.FeatureCollection,
+      })
+      map.addLayer({
+        id: 'groundwater-fill',
+        type: 'fill',
+        source: 'groundwater-units',
+        paint: { 'fill-color': '#b45309', 'fill-opacity': 0.18 },
+        layout: { visibility: 'none' },
+      })
+      map.addLayer({
+        id: 'groundwater-outline',
+        type: 'line',
+        source: 'groundwater-units',
+        paint: { 'line-color': '#b45309', 'line-width': 1.5 },
+        layout: { visibility: 'none' },
+      })
+
       // ── Reservoir click popup ─────────────────────────────────────────
       map.on('click', 'reservoirs-circle', (e) => {
         if (!e.features?.length) return
@@ -230,6 +273,11 @@ export default function MapView() {
     setVis('reservoirs-circle', res)
     setVis('reservoirs-label', res)
     setVis('reservoirs-name', res)
+
+    setVis('coastal-policia', activeLayers.coastal)
+    setVis('coastal-servidumbre', activeLayers.coastal)
+    setVis('groundwater-fill', activeLayers.groundwater)
+    setVis('groundwater-outline', activeLayers.groundwater)
   }, [activeLayers])
 
   // ── Highlight nearby reservoirs when a profile is loaded ───────────────
