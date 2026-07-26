@@ -20,7 +20,9 @@ beforeEach(() => useAppStore.setState(useAppStore.getInitialState()))
 describe('entry card', () => {
   it('renders literal copy with optional audience below the input', () => {
     render(<EntryCard />)
-    expect(screen.getByRole('heading', { name: /check water risks/i })).toBeInTheDocument()
+    // The card no longer carries a heading — that copy is the header tagline.
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+    expect(screen.getByText(/public data on flooding, drought/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/postcode, town or address/i)).toBeInTheDocument()
     expect(screen.getByText(/optional/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /i live or own here/i })).toBeInTheDocument()

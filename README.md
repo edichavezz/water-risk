@@ -1,4 +1,4 @@
-# AguaRiesgo 🌊
+# Water Risk Explorer
 
 A bilingual (ES/EN) water risk tool for Spain. Enter any Spanish address, postcode, or municipality and get a plain-language water risk profile: flood zones, drought status, reservoir levels, drinking water quality, coastal zones, groundwater status, and AI-generated implications — all tailored to whether you're a buyer, renter, farmer, or business.
 
