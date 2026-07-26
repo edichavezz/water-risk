@@ -15,12 +15,12 @@
     "business": "Pequeña empresa"
   },
   "layers": {
-    "title": "Capas del mapa",
-    "flood": "Zonas inundables",
-    "drought": "Estado de sequía",
-    "reservoirs": "Embalses",
-    "coastal": "Zonas costeras",
-    "groundwater": "Aguas subterráneas"
+    "button": "Capas del mapa · {{n}}",
+    "primaryHeading": "Capa de riesgo principal",
+    "contextHeading": "Contexto",
+    "none": "Ninguna",
+    "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
+    "close": "Cerrar"
   },
   "risk": {
     "title": "Perfil de riesgo",
@@ -176,5 +176,32 @@
   },
   "map": {
     "hoverHint": "Seleccionar para ver detalles"
+  },
+  "legend": {
+    "source": "Fuente: {{source}}",
+    "flood": {
+      "t10": "Zona T10 (10 años)",
+      "t100": "Zona T100 (100 años)",
+      "t500": "Zona T500 (500 años)"
+    },
+    "drought": {
+      "title": "Indicador Combinado de Sequía",
+      "watch": "Prealerta",
+      "warning": "Alerta",
+      "alert": "Emergencia"
+    },
+    "coastalFlood": {
+      "servidumbre": "Servidumbre de 20 m",
+      "policia": "Zona de 100 m"
+    },
+    "groundwater": {
+      "over": "Unidad declarada sobreexplotada"
+    },
+    "reservoirs": {
+      "title": "Llenado de embalses",
+      "low": "<25%",
+      "mid": "25–60%",
+      "high": ">60%"
+    }
   }
 }

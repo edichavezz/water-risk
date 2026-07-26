@@ -15,12 +15,12 @@
     "business": "Small Business"
   },
   "layers": {
-    "title": "Map layers",
-    "flood": "Flood zones",
-    "drought": "Drought status",
-    "reservoirs": "Reservoirs",
-    "coastal": "Coastal zones",
-    "groundwater": "Groundwater"
+    "button": "Map layers · {{n}}",
+    "primaryHeading": "Primary risk layer",
+    "contextHeading": "Context",
+    "none": "None",
+    "readabilityWarning": "Two overlays can make the map harder to read.",
+    "close": "Close"
   },
   "risk": {
     "title": "Risk Profile",
@@ -176,5 +176,32 @@
   },
   "map": {
     "hoverHint": "Select for detail"
+  },
+  "legend": {
+    "source": "Source: {{source}}",
+    "flood": {
+      "t10": "10-year zone",
+      "t100": "100-year zone",
+      "t500": "500-year zone"
+    },
+    "drought": {
+      "title": "Combined Drought Indicator",
+      "watch": "Watch",
+      "warning": "Warning",
+      "alert": "Alert"
+    },
+    "coastalFlood": {
+      "servidumbre": "20 m servidumbre",
+      "policia": "100 m zone"
+    },
+    "groundwater": {
+      "over": "Declared overexploited unit"
+    },
+    "reservoirs": {
+      "title": "Reservoir fill",
+      "low": "<25%",
+      "mid": "25–60%",
+      "high": ">60%"
+    }
   }
 }
