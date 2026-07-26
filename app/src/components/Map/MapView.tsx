@@ -81,7 +81,15 @@ export default function MapView() {
   // ── Apply the layer plan when primary/context layers change ──────────────
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) return
+    if (!map) return
+    // isStyleLoaded() goes false whenever any source is still fetching — which
+    // WMS rasters do constantly — so returning here dropped the toggle for
+    // good. Re-apply once the map settles instead.
+    if (!map.isStyleLoaded()) {
+      const apply = () => applyLayerPlan(map, primaryLayer, contextLayers)
+      map.once('idle', apply)
+      return () => { map.off('idle', apply) }
+    }
     applyLayerPlan(map, primaryLayer, contextLayers)
   }, [primaryLayer, contextLayers])
 

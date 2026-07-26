@@ -4,12 +4,13 @@
     "about": "Acerca de"
   },
   "layers": {
-    "button": "Capas del mapa · {{n}}",
+    "button": "Capas del mapa",
     "primaryHeading": "Capa de riesgo principal",
     "contextHeading": "Contexto",
     "none": "Ninguna",
     "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "unavailable": "Sin capa disponible"
   },
   "risk": {
     "title": "Perfil de riesgo",

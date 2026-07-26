@@ -14,7 +14,11 @@ import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
 
 const WARNING = '#B87535'
-const RESERVOIR_MINZOOM = 8
+// Markers appear at the entry view's zoom (6.3) so toggling the reservoirs
+// layer there visibly does something; the per-marker text only joins once
+// there is room for it, otherwise 72 labels collide at national scale.
+const RESERVOIR_MINZOOM = 6
+const RESERVOIR_LABEL_MINZOOM = 8
 
 let hoverPopup: maplibregl.Popup | null = null
 
@@ -108,7 +112,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
       layout: { visibility: 'none' },
     })
     map.addLayer({
-      id: 'reservoirs-label', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
+      id: 'reservoirs-label', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_LABEL_MINZOOM,
       layout: {
         'text-field': ['concat', ['to-string', ['get', 'fillPercent']], '%'],
         'text-size': 9, 'text-allow-overlap': true, 'text-ignore-placement': true, visibility: 'none',
@@ -116,7 +120,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
       paint: { 'text-color': '#ffffff', 'text-halo-color': 'rgba(0,0,0,0.2)', 'text-halo-width': 0.5 },
     })
     map.addLayer({
-      id: 'reservoirs-name', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
+      id: 'reservoirs-name', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_LABEL_MINZOOM,
       layout: {
         'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.6],
         'text-anchor': 'top', 'text-max-width': 10, visibility: 'none',

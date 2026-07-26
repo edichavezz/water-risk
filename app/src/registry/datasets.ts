@@ -13,6 +13,10 @@ export interface DatasetDef {
   category: 'hazard' | 'supply' | 'quality'
   source: { name: string; url?: string }
   mapRole: 'primary' | 'context' | 'none'
+  // Set when the dataset has a map role but its upstream WMS is down, so the
+  // layer cannot paint. The tray shows the control disabled rather than
+  // offering a toggle that silently does nothing.
+  mapUnavailable?: boolean
   aiAllowed: boolean
   audienceWeight: Record<Audience, number>
   defaultOrder: number
@@ -46,6 +50,10 @@ export const DATASETS: DatasetDef[] = [
     category: 'hazard',
     source: { name: 'Copernicus EDO', url: 'https://edo.jrc.ec.europa.eu/' },
     mapRole: 'primary',
+    // edo.jrc.ec.europa.eu/geoserver redirects to
+    // drought.emergency.copernicus.eu, which 404s every GeoServer path — no
+    // live replacement for the cdi_current raster has been found.
+    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 4 },
     defaultOrder: 2,
@@ -94,6 +102,9 @@ export const DATASETS: DatasetDef[] = [
     category: 'hazard',
     source: { name: 'MITERD Coastal DPH' },
     mapRole: 'primary',
+    // Same dead wms.aspx host as the old flood endpoint: every request returns
+    // a NullReferenceException, and the coastal layers have no IDEE equivalent.
+    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,

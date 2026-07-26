@@ -9,10 +9,12 @@ import '../../i18n'
 beforeEach(() => useAppStore.setState(useAppStore.getInitialState()))
 
 describe('layer tray', () => {
-  it('shows count of visible data layers', () => {
+  it('labels the button without a layer count', () => {
     render(<LayerTray />)
-    // reservoirs context is on by default
-    expect(screen.getByRole('button', { name: /map layers · 1/i })).toBeInTheDocument()
+    const button = screen.getByRole('button', { name: /map layers/i })
+    expect(button).toBeInTheDocument()
+    // The bare count next to the label read as meaningless, so it was removed.
+    expect(button.textContent).not.toMatch(/\d/)
   })
 
   it('primary selection is a radio group — one active at most', async () => {
@@ -21,10 +23,21 @@ describe('layer tray', () => {
     await user.click(screen.getByRole('button', { name: /map layers/i }))
     await user.click(screen.getByRole('radio', { name: /river flood zones/i }))
     expect(useAppStore.getState().primaryLayer).toBe('flood')
-    await user.click(screen.getByRole('radio', { name: /drought status/i }))
-    expect(useAppStore.getState().primaryLayer).toBe('drought')
+    await user.click(screen.getByRole('radio', { name: /groundwater/i }))
+    expect(useAppStore.getState().primaryLayer).toBe('groundwater')
     await user.click(screen.getByRole('radio', { name: /none/i }))
     expect(useAppStore.getState().primaryLayer).toBeNull()
+  })
+
+  it('disables layers whose upstream service is down', async () => {
+    const user = userEvent.setup()
+    render(<LayerTray />)
+    await user.click(screen.getByRole('button', { name: /map layers/i }))
+    // Copernicus EDO and the MITERD coastal WMS both return errors for every
+    // request, so offering these as toggles would be a guaranteed no-op.
+    expect(screen.getByRole('radio', { name: /drought status/i })).toBeDisabled()
+    await user.click(screen.getByRole('radio', { name: /drought status/i }))
+    expect(useAppStore.getState().primaryLayer).not.toBe('drought')
   })
 
   it('context checkboxes toggle overlays', async () => {

@@ -4,12 +4,13 @@
     "about": "About"
   },
   "layers": {
-    "button": "Map layers · {{n}}",
+    "button": "Map layers",
     "primaryHeading": "Primary risk layer",
     "contextHeading": "Context",
     "none": "None",
     "readabilityWarning": "Two overlays can make the map harder to read.",
-    "close": "Close"
+    "close": "Close",
+    "unavailable": "No map layer available"
   },
   "risk": {
     "title": "Risk Profile",
