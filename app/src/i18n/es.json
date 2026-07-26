@@ -173,5 +173,8 @@
         "El año de evaluación es aproximado para esta fuente"
       ]
     }
+  },
+  "map": {
+    "hoverHint": "Seleccionar para ver detalles"
   }
 }

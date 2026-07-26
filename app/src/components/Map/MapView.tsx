@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
 import { addCoverageLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
+import { ensureDataLayers, applyLayerPlan, bindMapInteractions } from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
 
 const prefersReducedMotion = () =>
@@ -15,6 +16,8 @@ export default function MapView() {
   const markerRef = useRef<maplibregl.Marker | null>(null)
   const view = useAppStore(s => s.view)
   const location = useAppStore(s => s.location)
+  const primaryLayer = useAppStore(s => s.primaryLayer)
+  const contextLayers = useAppStore(s => s.contextLayers)
 
   // ── Bootstrap the single map instance ────────────────────────────────────
   useEffect(() => {
@@ -41,7 +44,13 @@ export default function MapView() {
       }), 'bottom-right')
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
       map.addControl(new maplibregl.ScaleControl(), 'bottom-left')
-      map.on('load', () => addCoverageLayers(map))
+      map.on('load', () => {
+        addCoverageLayers(map)
+        ensureDataLayers(map)
+        bindMapInteractions(map)
+        const { primaryLayer: p, contextLayers: c } = useAppStore.getState()
+        applyLayerPlan(map, p, c)
+      })
       mapRef.current = map
     })()
     return () => {
@@ -50,6 +59,13 @@ export default function MapView() {
       mapRef.current = null
     }
   }, [])
+
+  // ── Apply the layer plan when primary/context layers change ──────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    applyLayerPlan(map, primaryLayer, contextLayers)
+  }, [primaryLayer, contextLayers])
 
   // ── Camera follows workspace state ───────────────────────────────────────
   useEffect(() => {

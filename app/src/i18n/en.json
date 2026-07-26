@@ -173,5 +173,8 @@
         "Assessment year is approximate for this source"
       ]
     }
+  },
+  "map": {
+    "hoverHint": "Select for detail"
   }
 }
