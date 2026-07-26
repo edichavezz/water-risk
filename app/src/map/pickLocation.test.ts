@@ -16,17 +16,41 @@ const madrid = {
 beforeEach(() => vi.resetAllMocks())
 
 describe('hitsInteractiveLayer', () => {
-  const fakeMap = (features: unknown[]) =>
-    ({ queryRenderedFeatures: () => features }) as never
+  // Only answers with features when asked about a layer that exists, so a
+  // drifted or empty layer id fails the tests below rather than passing them.
+  const fakeMap = (present: string[], features: unknown[]) => {
+    const queried: string[][] = []
+    const map = {
+      getLayer: (id: string) => (present.includes(id) ? {} : undefined),
+      queryRenderedFeatures: (_p: unknown, opts: { layers: string[] }) => {
+        queried.push(opts.layers)
+        return opts.layers.length > 0 ? features : []
+      },
+    }
+    return { map: map as never, queried }
+  }
 
   // Without this guard a click on a reservoir circle would fire both the
   // reservoir handler and the picker — MapLibre suppresses neither.
   it('is true when a clickable data feature is under the pointer', () => {
-    expect(hitsInteractiveLayer(fakeMap([{ id: 1 }]), { x: 10, y: 10 })).toBe(true)
+    const { map } = fakeMap(['reservoirs-circle'], [{ id: 1 }])
+    expect(hitsInteractiveLayer(map, { x: 10, y: 10 })).toBe(true)
+  })
+
+  it('queries the reservoir layer by name', () => {
+    const { map, queried } = fakeMap(['reservoirs-circle'], [{ id: 1 }])
+    hitsInteractiveLayer(map, { x: 10, y: 10 })
+    expect(queried).toEqual([['reservoirs-circle']])
   })
 
   it('is false over bare basemap', () => {
-    expect(hitsInteractiveLayer(fakeMap([]), { x: 10, y: 10 })).toBe(false)
+    const { map } = fakeMap(['reservoirs-circle'], [])
+    expect(hitsInteractiveLayer(map, { x: 10, y: 10 })).toBe(false)
+  })
+
+  it('is false before the data layers have been added', () => {
+    const { map } = fakeMap([], [{ id: 1 }])
+    expect(hitsInteractiveLayer(map, { x: 10, y: 10 })).toBe(false)
   })
 })
 

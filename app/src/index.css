@@ -73,7 +73,7 @@ body {
 .pick-popup__action {
   margin-top: 6px;
   width: 100%;
-  min-height: 32px;
+  min-height: 44px; /* matches every other control's touch target */
   border-radius: 6px;
   background: var(--color-primary);
   color: #fff;
