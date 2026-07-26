@@ -1,6 +1,5 @@
 export * from './workspace'
 
-export type UserType = 'buyer' | 'renter' | 'farmer' | 'business'
 export type Language = 'en' | 'es'
 
 export interface Coordinates {
@@ -81,19 +80,4 @@ export interface BathingWaterResult {
   rating: 'excellent' | 'good' | 'sufficient' | 'poor' | 'unknown'
   year: number
   source: 'EEA'
-}
-
-export interface RiskProfile {
-  location: SearchResult
-  floodZone: FloodZoneResult | null
-  drought: DroughtStatus | null
-  reservoirs: Reservoir[]
-  waterQuality: WaterQualityResult | null
-  coastalFlood: CoastalFloodResult | null
-  groundwater: GroundwaterResult | null
-  bathingWater: BathingWaterResult | null
-  aiSummary?: string
-  aiQuestions?: string[]
-  loading: boolean
-  error?: string
 }

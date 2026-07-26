@@ -1,19 +1,4 @@
 {
-  "appName": "Water Risk Explorer",
-  "tagline": "Water risk for your location in Spain",
-  "search": {
-    "placeholder": "Enter address, postcode, or municipality...",
-    "searching": "Searching...",
-    "noResults": "No results found. Try a municipality name.",
-    "hint": "e.g. Sevilla, 29001, Calle Larios Málaga"
-  },
-  "userType": {
-    "label": "I am a...",
-    "buyer": "Property Buyer",
-    "renter": "Renter",
-    "farmer": "Farmer / Smallholder",
-    "business": "Small Business"
-  },
   "layers": {
     "button": "Map layers · {{n}}",
     "primaryHeading": "Primary risk layer",
@@ -98,14 +83,6 @@
       "distance": "{{distance}} km away",
       "source": "Source: EEA Bathing Water Directive — {{year}} season"
     }
-  },
-  "attribution": "Map: OpenFreeMap / OpenStreetMap · Flood zones: MITERD SNCZI · Drought: Copernicus EDO",
-  "dataFreshness": "Drought data updated weekly · Flood zones updated periodically",
-  "noLocation": "Search for a location to see its water risk profile",
-  "errors": {
-    "geocodingFailed": "Could not find that location. Try a municipality name.",
-    "dataFailed": "Some data could not be loaded. Showing partial results.",
-    "aiFailed": "AI summary unavailable. Check your API key."
   },
   "registry": {
     "flood": {
@@ -280,5 +257,10 @@
     "followUpLabel": "Ask a follow-up about this data",
     "followUpSend": "Ask",
     "suggested": "Questions you could ask"
+  },
+  "sheet": {
+    "expand": "Expand results",
+    "collapse": "Show map",
+    "signals": "Key results"
   }
 }

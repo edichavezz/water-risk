@@ -4,6 +4,7 @@ import Legend from './components/Map/Legend'
 import EntryCard from './components/Entry/EntryCard'
 import CoverageKey from './components/Entry/CoverageKey'
 import WorkspacePanel from './components/Panel/WorkspacePanel'
+import MobileSheet from './components/Panel/MobileSheet'
 import LanguageToggle from './components/LanguageToggle'
 import { useAppStore } from './store/useAppStore'
 
@@ -27,7 +28,9 @@ export default function App() {
 
       {view === 'searched' && (
         <>
+          {/* Desktop panel (md+) and mobile bottom sheet (<md) share PanelBody */}
           <WorkspacePanel />
+          <MobileSheet />
           <LayerTray />
           <Legend />
         </>
