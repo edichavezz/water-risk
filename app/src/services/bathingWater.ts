@@ -7,9 +7,11 @@ import type { Coordinates, BathingWaterResult } from '../types'
 const EEA_BATHING_WATER_API =
   'https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0/query'
 
-// This endpoint doesn't expose a clean per-record assessment year, so this
-// is an approximation of "most recently completed EU bathing season."
-const CURRENT_SEASON_YEAR = new Date().getFullYear() - 1
+// EEA's live ArcGIS layer exposes qualityStatus as a static column — its
+// field alias is literally "2022", confirmed via live metadata inspection
+// (MapServer/0?f=json). This is NOT a rolling "current year minus one"
+// value despite the service being named "_Dyna_WM" — it's a snapshot.
+const CURRENT_SEASON_YEAR = 2022
 
 interface RawSite {
   bathingWaterName: string

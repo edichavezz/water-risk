@@ -57,7 +57,7 @@
       "minor_issues": "Minor issues",
       "non_compliant": "Non-compliant",
       "unknown": "No data",
-      "source": "Source: SINAC (Ministry of Health) — {{year}} annual data",
+      "source": "Source: SINAC (Ministry of Health) — {{year}} annual data (illustrative sample dataset, not the full official dataset)",
       "sourceType": {
         "surface": "Surface water",
         "groundwater": "Groundwater",
@@ -78,7 +78,7 @@
       "overexploited": "Within {{unit}} aquifer, declared overexploited. Groundwater abstraction may be restricted.",
       "clear": "No groundwater overexploitation declared for this area",
       "noData": "No hydrogeological unit data for this location",
-      "source": "Source: IGME hydrogeological units (annual classification)"
+      "source": "Source: IGME hydrogeological units (annual classification) — illustrative sample of known overexploited units, not the complete official dataset"
     },
     "aiSummary": {
       "title": "What this means for you",

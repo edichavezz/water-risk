@@ -12,6 +12,7 @@ export const SUPPLY_SYSTEMS: SupplySystem[] = [
     reservoirCodEsts: ['E57', 'E58', 'E61', 'E62', 'E63', 'E64', 'E65'] },
   { id: 'malaga-emasa', name: 'EMASA', province: 'Málaga',
     servesMunicipalities: ['malaga', 'torremolinos', 'alhaurin de la torre'],
+    // S19 (Casasola) excluded: not currently in the live REDIAM feed (no fill reading)
     reservoirCodEsts: ['S29', 'S30', 'S31', 'S20'] },
   { id: 'malaga-acosol', name: 'Acosol', province: 'Málaga',
     servesMunicipalities: ['marbella', 'benahavis', 'benalmadena', 'estepona', 'fuengirola', 'istan', 'manilva', 'mijas', 'ojen', 'casares'],

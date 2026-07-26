@@ -57,7 +57,7 @@
       "minor_issues": "Incidencias menores",
       "non_compliant": "No conforme",
       "unknown": "Sin datos",
-      "source": "Fuente: SINAC (Ministerio de Sanidad) — datos anuales de {{year}}",
+      "source": "Fuente: SINAC (Ministerio de Sanidad) — datos anuales de {{year}} (muestra ilustrativa, no es el conjunto de datos oficial completo)",
       "sourceType": {
         "surface": "Agua superficial",
         "groundwater": "Agua subterránea",
@@ -78,7 +78,7 @@
       "overexploited": "Dentro del acuífero {{unit}}, declarado sobreexplotado. Los derechos de extracción pueden estar restringidos.",
       "clear": "No se declara sobreexplotación de acuíferos en esta zona",
       "noData": "Sin datos de unidades hidrogeológicas para esta ubicación",
-      "source": "Fuente: unidades hidrogeológicas del IGME (clasificación anual)"
+      "source": "Fuente: unidades hidrogeológicas del IGME (clasificación anual) — muestra ilustrativa de unidades sobreexplotadas conocidas, no es el conjunto de datos oficial completo"
     },
     "aiSummary": {
       "title": "Qué significa esto para ti",
