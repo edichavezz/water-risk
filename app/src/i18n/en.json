@@ -203,5 +203,21 @@
       "mid": "25–60%",
       "high": ">60%"
     }
+  },
+  "entry": {
+    "heading": "Check water risks for a place in Spain",
+    "supporting": "Public data on flooding, drought, reservoirs and water quality.",
+    "locationLabel": "Postcode, town or address",
+    "audiencePrompt": "What brings you here?",
+    "optional": "Optional",
+    "changeLater": "You can change this later",
+    "resident": "I live or own here",
+    "buyer": "I'm considering buying or investing",
+    "submit": "Check this area",
+    "exploreHint": "or just explore the map",
+    "coverageNote": "Detailed results are available for Andalucía. Other regions will be added over time.",
+    "keyAvailable": "Detailed data available",
+    "keyUnavailable": "Not yet available",
+    "noResults": "Location could not be found. Try a nearby town or a postcode."
   }
 }

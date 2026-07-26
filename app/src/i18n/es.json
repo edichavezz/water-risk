@@ -203,5 +203,21 @@
       "mid": "25–60%",
       "high": ">60%"
     }
+  },
+  "entry": {
+    "heading": "Consulta los riesgos hídricos de un lugar de España",
+    "supporting": "Datos públicos sobre inundaciones, sequía, embalses y calidad del agua.",
+    "locationLabel": "Código postal, municipio o dirección",
+    "audiencePrompt": "¿Qué te trae por aquí?",
+    "optional": "Opcional",
+    "changeLater": "Podrás cambiarlo más tarde",
+    "resident": "Vivo aquí o soy propietario/a",
+    "buyer": "Estoy pensando en comprar o invertir",
+    "submit": "Consultar esta zona",
+    "exploreHint": "o simplemente explora el mapa",
+    "coverageNote": "Hay resultados detallados para Andalucía. Otras regiones se añadirán con el tiempo.",
+    "keyAvailable": "Datos detallados disponibles",
+    "keyUnavailable": "Aún no disponible",
+    "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
   }
 }
