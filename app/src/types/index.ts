@@ -41,6 +41,7 @@ export interface DroughtStatus {
 }
 
 export interface Reservoir {
+  codEst: string // REDIAM station code — the key the map features are promoted on
   name: string
   fillPercent: number
   fillPercentAsOf: string

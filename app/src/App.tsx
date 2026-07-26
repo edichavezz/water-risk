@@ -5,7 +5,7 @@ import EntryCard from './components/Entry/EntryCard'
 import CoverageKey from './components/Entry/CoverageKey'
 import WorkspacePanel from './components/Panel/WorkspacePanel'
 import MobileSheet from './components/Panel/MobileSheet'
-import LanguageToggle from './components/LanguageToggle'
+import AppHeader from './components/Header/AppHeader'
 import { useAppStore } from './store/useAppStore'
 
 export default function App() {
@@ -36,9 +36,7 @@ export default function App() {
         </>
       )}
 
-      <div className="absolute left-4 top-4 z-10">
-        <LanguageToggle />
-      </div>
+      <AppHeader />
     </div>
   )
 }

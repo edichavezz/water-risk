@@ -1,4 +1,8 @@
 {
+  "app": {
+    "tagline": "Consulta los riesgos hídricos de un lugar de España",
+    "about": "Acerca de"
+  },
   "layers": {
     "button": "Capas del mapa · {{n}}",
     "primaryHeading": "Capa de riesgo principal",
@@ -105,11 +109,12 @@
       ]
     },
     "reservoirs": {
-      "name": "Embalses cercanos",
+      "name": "Embalses de abastecimiento",
       "cadence": "Datos en vivo de REDIAM cuando están disponibles",
-      "resolution": "Embalses individuales por sistema de suministro o proximidad",
+      "resolution": "Embalses del sistema que abastece a este municipio",
       "limitations": [
-        "Puede no indicar qué embalse abastece su grifo",
+        "Los sistemas de abastecimiento se han recopilado a mano y cubren parte de Andalucía",
+        "No indica qué embalse del sistema llega a su grifo",
         "Los valores son una instantánea, no una tendencia semanal"
       ]
     },
@@ -153,6 +158,11 @@
   },
   "map": {
     "hoverHint": "Seleccionar para ver detalles",
+    "reservoir": {
+      "storage": "{{stored}} de {{capacity}} hm³ embalsados",
+      "basin": "Cuenca: {{basin}}",
+      "asOf": "Nivel a fecha de {{date}}"
+    },
     "pickLoading": "Buscando este lugar…",
     "pickSearchHere": "Buscar aquí",
     "pickNoPlace": "No se encontró ningún lugar aquí",
@@ -180,13 +190,14 @@
     },
     "reservoirs": {
       "title": "Llenado de embalses",
+      "supply": "Abastece esta zona",
+      "other": "Otros embalses",
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
     }
   },
   "entry": {
-    "heading": "Consulta los riesgos hídricos de un lugar de España",
     "supporting": "Datos públicos sobre inundaciones, sequía, embalses y calidad del agua.",
     "locationLabel": "Código postal, municipio o dirección",
     "audiencePrompt": "¿Qué te trae por aquí?",
@@ -200,6 +211,19 @@
     "keyAvailable": "Datos detallados disponibles",
     "keyUnavailable": "Aún no disponible",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
+  },
+  "about": {
+    "title": "Acerca de {{name}}",
+    "close": "Cerrar",
+    "whatHeading": "Qué es esto",
+    "whatBody": "Una herramienta gratuita para consultar qué dicen los datos públicos sobre el agua en el lugar donde vives o donde estás pensando comprar. Introduce un lugar de España y reúne los registros de inundaciones, sequía, embalses, abastecimiento y calidad del agua de ese punto, y los explica en lenguaje claro.",
+    "coverageHeading": "Dónde funciona",
+    "coverageBody": "Hay resultados detallados para Andalucía. En el resto de España seguirás viendo las capas de ámbito nacional, como las zonas inundables y el estado de sequía, pero pueden faltar los datos locales de abastecimiento y calidad del agua. Se añadirán más regiones con el tiempo.",
+    "aiHeading": "Sobre los resúmenes con IA",
+    "aiBody": "La interpretación escrita la genera un modelo de lenguaje a partir de los datos mostrados en la página. Puede contener errores u omisiones, y es opcional: se muestran todas las cifras de origen y sus fuentes para que puedas comprobarlas.",
+    "disclaimerHeading": "No es asesoramiento profesional",
+    "disclaimerBody": "Esta es información de contexto, no asesoramiento jurídico, financiero ni pericial. No te bases solo en ella para una compra, una decisión de seguro o una solicitud urbanística. Confirma siempre con la fuente oficial y con un profesional cualificado.",
+    "sourcesHeading": "Fuentes de datos"
   },
   "panel": {
     "publicData": "Datos públicos",
@@ -221,7 +245,9 @@
         "detailNote": "Ningún polígono oficial de inundación fluvial intersecta el punto seleccionado."
       },
       "reservoirs": {
-        "nearest": "{{name}} · {{percent}}% de llenado"
+        "headline": "{{name}} · {{percent}}% de llenado",
+        "supplyScope": "Resaltados en el mapa: los embalses de {{system}}, que abastece esta zona.",
+        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio"
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",

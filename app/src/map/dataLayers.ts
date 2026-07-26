@@ -1,11 +1,13 @@
 import type maplibregl from 'maplibre-gl'
+import type { ExpressionSpecification } from 'maplibre-gl'
 import maplibre from 'maplibre-gl'
 import i18n from '../i18n'
+import { formatLongDate } from '../i18n/formatDate'
 import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
 import { getCoastalWmsUrl, COASTAL_LAYERS } from '../services/coastalFlood'
-import { getAllReservoirsGeoJSON } from '../services/reservoirs'
+import { allReservoirCodEsts, getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
 import groundwaterUnits from '../data/groundwater-units.json'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
 import { bindLocationPicker } from './pickLocation'
@@ -65,17 +67,43 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     })
     map.addLayer({
       id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
-      paint: { 'circle-radius': 11, 'circle-color': '#ffffff', 'circle-opacity': 0.85 },
+      paint: {
+        'circle-radius': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false], 14,
+          ['boolean', ['feature-state', 'highlighted'], false], 14,
+          11,
+        ],
+        'circle-color': '#ffffff',
+        'circle-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.35, 0.85],
+      },
       layout: { visibility: 'none' },
     })
+    // `highlighted` is true for any reservoir in the current result set. When a
+    // result set exists, everything outside it is dimmed back so the ones that
+    // matter read first; `selected` (clicked) always wins the ring.
+    const isSelected: ExpressionSpecification = ['boolean', ['feature-state', 'selected'], false]
+    const isHighlighted: ExpressionSpecification = ['boolean', ['feature-state', 'highlighted'], false]
+    const isDimmed: ExpressionSpecification = ['boolean', ['feature-state', 'dimmed'], false]
     map.addLayer({
       id: 'reservoirs-circle', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': 9,
+        'circle-radius': ['case', isSelected, 11, isHighlighted, 11, 9],
         'circle-color': ['get', 'colour'],
-        'circle-opacity': 0.9,
-        'circle-stroke-color': ['case', ['boolean', ['feature-state', 'selected'], false], '#204E62', '#ffffff'],
-        'circle-stroke-width': ['case', ['boolean', ['feature-state', 'selected'], false], 3, 1.5],
+        'circle-opacity': [
+          'case',
+          isSelected, 1,
+          isHighlighted, 1,
+          isDimmed, 0.35,
+          0.9,
+        ],
+        'circle-stroke-color': [
+          'case',
+          isSelected, '#204E62',
+          isHighlighted, '#204E62',
+          '#ffffff',
+        ],
+        'circle-stroke-width': ['case', isSelected, 3, isHighlighted, 2.5, 1.5],
       },
       layout: { visibility: 'none' },
     })
@@ -93,7 +121,12 @@ export function ensureDataLayers(map: maplibregl.Map): void {
         'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.6],
         'text-anchor': 'top', 'text-max-width': 10, visibility: 'none',
       },
-      paint: { 'text-color': '#20312A', 'text-halo-color': '#ffffff', 'text-halo-width': 1.5 },
+      paint: {
+        'text-color': '#20312A',
+        'text-halo-color': '#ffffff',
+        'text-halo-width': 1.5,
+        'text-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.4, 1],
+      },
     })
   }
 }
@@ -114,14 +147,153 @@ export function applyLayerPlan(
 }
 
 let selectedReservoirId: string | number | undefined
+let detailPopup: maplibregl.Popup | null = null
+
+// Every codEst currently carrying a feature-state, so it can be cleared
+// explicitly — setFeatureState merges, it never replaces.
+let highlightedCodEsts: string[] = []
+let dimmedCodEsts: string[] = []
+
+/**
+ * Marks the reservoirs behind the current result set and dims the rest, so the
+ * ones the panel is talking about are findable on the map. Pass an empty list
+ * to return every marker to its neutral state.
+ */
+export function applyReservoirHighlight(map: maplibregl.Map, codEsts: string[]): void {
+  if (!map.getSource('reservoirs-src')) return
+
+  for (const id of highlightedCodEsts) {
+    map.setFeatureState({ source: 'reservoirs-src', id }, { highlighted: false })
+  }
+  for (const id of dimmedCodEsts) {
+    map.setFeatureState({ source: 'reservoirs-src', id }, { dimmed: false })
+  }
+  highlightedCodEsts = []
+  dimmedCodEsts = []
+  if (codEsts.length === 0) return
+
+  const highlighted = new Set(codEsts)
+  for (const id of codEsts) {
+    map.setFeatureState({ source: 'reservoirs-src', id }, { highlighted: true })
+  }
+  highlightedCodEsts = [...codEsts]
+
+  // Dimming is what makes the highlight read as a set rather than as decoration.
+  for (const feature of allReservoirCodEsts()) {
+    if (highlighted.has(feature)) continue
+    map.setFeatureState({ source: 'reservoirs-src', id: feature }, { dimmed: true })
+    dimmedCodEsts.push(feature)
+  }
+}
+
+export interface ReservoirProps {
+  name: string
+  fillPercent: number
+  storedHm3: number | null
+  capacityHm3: number | null
+  basin: string
+  river: string
+  province: string
+  asOf: string
+}
+
+// The click popup — the "detail" the hover hint promises. Built as DOM rather
+// than HTML so upstream names are never interpolated into markup.
+export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
+  const el = document.createElement('div')
+  el.className = 'reservoir-popup'
+
+  const name = document.createElement('div')
+  name.className = 'reservoir-popup__name'
+  name.textContent = props.name
+  el.append(name)
+
+  const pct = document.createElement('div')
+  pct.className = 'reservoir-popup__pct'
+  pct.textContent = `${props.fillPercent}%`
+  el.append(pct)
+
+  const lines: string[] = []
+  if (props.storedHm3 != null && props.capacityHm3 != null) {
+    lines.push(i18n.t('map.reservoir.storage', {
+      stored: props.storedHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+      capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+    }))
+  }
+  if (props.river) lines.push(titleCase(props.river))
+  if (props.basin) {
+    lines.push(i18n.t('map.reservoir.basin', { basin: titleCase(props.basin) }))
+  }
+  for (const text of lines) {
+    const row = document.createElement('div')
+    row.className = 'reservoir-popup__row'
+    row.textContent = text
+    el.append(row)
+  }
+
+  const asOf = document.createElement('div')
+  asOf.className = 'reservoir-popup__asof'
+  asOf.textContent = i18n.t('map.reservoir.asOf', { date: formatLongDate(props.asOf) })
+  el.append(asOf)
+
+  return el
+}
+
+// Keeps the fit clear of the workspace panel (left, on md+) and the mobile
+// bottom sheet, so a "fitted" marker never lands underneath a panel.
+export function fitPadding(map: maplibregl.Map): maplibregl.PaddingOptions {
+  const { width, height } = map.getCanvas().getBoundingClientRect()
+  const desktop = width >= 768
+  return {
+    top: 60,
+    right: 60,
+    bottom: desktop ? 60 : Math.min(height * 0.45, 320),
+    left: desktop ? Math.min(width * 0.32, 420) : 60,
+  }
+}
+
+/**
+ * Widens the camera just enough to bring the highlighted reservoirs into view
+ * alongside the searched point. Clamped at both ends: never below
+ * RESERVOIR_MINZOOM (where the markers stop drawing, so a fit that "worked"
+ * would show nothing) and never tighter than the zoom the search already set.
+ */
+export function fitReservoirsInView(
+  map: maplibregl.Map,
+  centre: [number, number],
+  points: [number, number][],
+  opts: { animate: boolean; maxZoom: number },
+): void {
+  if (points.length === 0) return
+  const bounds = new maplibre.LngLatBounds(centre, centre)
+  for (const p of points) bounds.extend(p)
+
+  const camera = map.cameraForBounds(bounds, { padding: fitPadding(map) })
+  if (!camera || camera.zoom === undefined) return
+  const zoom = Math.min(Math.max(camera.zoom, RESERVOIR_MINZOOM), opts.maxZoom)
+  const centreOfBounds = camera.center as maplibregl.LngLatLike
+
+  if (!opts.animate) map.jumpTo({ center: centreOfBounds, zoom })
+  else map.easeTo({ center: centreOfBounds, zoom, duration: 900 })
+}
 
 export function bindMapInteractions(map: maplibregl.Map): void {
   bindLocationPicker(map)
+
+  const clearSelection = () => {
+    if (selectedReservoirId !== undefined) {
+      map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: false })
+      selectedReservoirId = undefined
+    }
+  }
 
   map.on('mouseenter', 'reservoirs-circle', e => {
     map.getCanvas().style.cursor = 'pointer'
     const f = e.features?.[0]
     if (!f) return
+    // Only the pinned marker skips its hover popup — it already shows more.
+    // Other markers still hover normally.
+    if (detailPopup && f.id !== undefined && f.id === selectedReservoirId) return
     const props = f.properties as { name: string; fillPercent: number }
     const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
     hoverPopup?.remove()
@@ -144,13 +316,29 @@ export function bindMapInteractions(map: maplibregl.Map): void {
   map.on('click', 'reservoirs-circle', e => {
     const f = e.features?.[0]
     if (!f) return
-    if (selectedReservoirId !== undefined) {
-      map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: false })
-    }
+    clearSelection()
     selectedReservoirId = f.id
     if (selectedReservoirId !== undefined) {
       map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: true })
     }
-    useAppStore.getState().selectDataset('reservoirs')
+
+    hoverPopup?.remove()
+    hoverPopup = null
+    detailPopup?.remove()
+    const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
+    detailPopup = new maplibre.Popup({ offset: 16, maxWidth: '240px', closeOnClick: false })
+      .setLngLat(coords)
+      .setDOMContent(reservoirDetailContent(f.properties as unknown as ReservoirProps))
+      .addTo(map)
+    detailPopup.on('close', () => {
+      detailPopup = null
+      clearSelection()
+    })
+
+    // Only meaningful once a search exists — the workspace panel is not
+    // mounted on the entry view, so the popup carries the detail there.
+    if (useAppStore.getState().view === 'searched') {
+      useAppStore.getState().selectDataset('reservoirs')
+    }
   })
 }

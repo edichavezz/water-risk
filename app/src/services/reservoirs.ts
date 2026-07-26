@@ -17,7 +17,13 @@ interface GeneratedReservoir {
 }
 
 const RESERVOIRS = generated.reservoirs as GeneratedReservoir[]
+// REDIAM's own bulletin date (`fecha`) for the readings — the date the levels
+// were measured, not the date our pipeline ran.
 const FETCHED_AT = generated.fetchedAt as string
+
+export function reservoirsAsOf(): string {
+  return FETCHED_AT
+}
 
 function haversineKm(a: Coordinates, b: { lat: number; lng: number }): number {
   const R = 6371
@@ -43,6 +49,7 @@ export function normalizeMunicipio(s: string): string {
 
 function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: string): Reservoir {
   return {
+    codEst: r.codEst,
     name: titleCase(r.name),
     fillPercent: r.fillPercent,
     fillPercentAsOf: FETCHED_AT,
@@ -52,7 +59,7 @@ function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: st
   }
 }
 
-function titleCase(s: string): string {
+export function titleCase(s: string): string {
   return s
     .toLowerCase()
     .split(' ')
@@ -68,6 +75,15 @@ export function fillColour(pct: number): string {
   return '#3b82f6'                // blue
 }
 
+export function allReservoirCodEsts(): string[] {
+  return RESERVOIRS.map(r => r.codEst)
+}
+
+export function reservoirLngLat(codEst: string): [number, number] | null {
+  const r = RESERVOIRS.find(x => x.codEst === codEst)
+  return r ? [r.lng, r.lat] : null
+}
+
 // GeoJSON for all reservoirs — used by MapView to render the layer
 export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
   return {
@@ -76,10 +92,16 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
       properties: {
+        codEst: r.codEst,
         name: titleCase(r.name),
         fillPercent: r.fillPercent,
+        storedHm3: r.storedHm3,
+        capacityHm3: r.capacityHm3,
         historicalMeanPercent: null, // REDIAM's feed has no historical-mean field; kept for MapView.tsx's existing property shape
         basin: r.basin,
+        river: r.river,
+        province: r.province,
+        asOf: FETCHED_AT,
         colour: fillColour(r.fillPercent),
       },
     })),
@@ -87,35 +109,29 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
 }
 
 /**
- * First tries to match the location's municipality against a known supply
- * system (returns every reservoir feeding that system). Falls back to
- * nearest-3-within-80km when no system match is found — most Andalucía
- * municipalities aren't in the researched supply-system lists yet.
+ * Every reservoir feeding the supply system that serves this municipality.
+ *
+ * Returns nothing when the municipality isn't in SUPPLY_SYSTEMS. There is no
+ * proximity fallback: a reservoir 10 km away may be pure irrigation storage
+ * and supply nobody, so "nearest" answers a question the user didn't ask and
+ * reads as an answer to the one they did. An empty result is the honest state,
+ * and SUPPLY_SYSTEMS covers ~133 of Andalucía's ~785 municipalities today.
  */
 export function getReservoirsForLocation(location: SearchResult): Reservoir[] {
   const coords = location.coordinates
   const municipio = location.municipio ? normalizeMunicipio(location.municipio) : ''
 
-  if (municipio) {
-    const matchedSystems = SUPPLY_SYSTEMS.filter(s => s.servesMunicipalities.includes(municipio))
-    if (matchedSystems.length > 0) {
-      const codEstToSystemName = new Map<string, string>()
-      for (const s of matchedSystems) {
-        for (const codEst of s.reservoirCodEsts) codEstToSystemName.set(codEst, s.name)
-      }
-      return RESERVOIRS
-        .filter(r => codEstToSystemName.has(r.codEst))
-        .map(r => toReservoir(r, coords, codEstToSystemName.get(r.codEst)))
-        .sort((a, b) => a.distanceKm - b.distanceKm)
-    }
+  if (!municipio) return []
+
+  const matchedSystems = SUPPLY_SYSTEMS.filter(s => s.servesMunicipalities.includes(municipio))
+  if (matchedSystems.length === 0) return []
+
+  const codEstToSystemName = new Map<string, string>()
+  for (const s of matchedSystems) {
+    for (const codEst of s.reservoirCodEsts) codEstToSystemName.set(codEst, s.name)
   }
-
-  return getNearbyReservoirs(coords)
-}
-
-export function getNearbyReservoirs(coords: Coordinates, radiusKm = 80, limit = 3): Reservoir[] {
-  return RESERVOIRS.map(r => toReservoir(r, coords))
-    .filter(r => r.distanceKm <= radiusKm)
+  return RESERVOIRS
+    .filter(r => codEstToSystemName.has(r.codEst))
+    .map(r => toReservoir(r, coords, codEstToSystemName.get(r.codEst)))
     .sort((a, b) => a.distanceKm - b.distanceKm)
-    .slice(0, limit)
 }

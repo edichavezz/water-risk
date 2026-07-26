@@ -49,6 +49,13 @@ body {
   height: 100%;
 }
 
+/* The app header spans the top of the viewport, so MapLibre's top-anchored
+   control groups (the zoom buttons live in top-right) have to start below it. */
+.maplibregl-ctrl-top-right,
+.maplibregl-ctrl-top-left {
+  top: 3.5rem;
+}
+
 /* ── Map location picker ──────────────────────────────────────────────────
    A provisional pin: hollow and dashed, so it never reads as the filled
    teardrop a confirmed search result gets. */
@@ -83,3 +90,23 @@ body {
 }
 
 .pick-popup__action:hover { background: var(--color-primary-hover); }
+
+.reservoir-popup {
+  padding: 2px 2px 0;
+  font-size: 12px;
+  color: var(--color-ink);
+}
+
+.reservoir-popup__name { font-weight: 700; padding-right: 12px; }
+.reservoir-popup__pct {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-primary);
+}
+.reservoir-popup__row { font-size: 11px; }
+.reservoir-popup__asof {
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--color-muted);
+}

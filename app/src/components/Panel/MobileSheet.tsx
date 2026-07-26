@@ -10,7 +10,8 @@ type Position = 'peek' | 'half' | 'full'
 const HEIGHT: Record<Position, string> = {
   peek: 'h-28',
   half: 'h-[50dvh]',
-  full: 'h-[92dvh]',
+  // Stops short of the app header, which sits above the sheet at z-30.
+  full: 'h-[calc(100dvh-4.5rem)]',
 }
 
 export default function MobileSheet() {

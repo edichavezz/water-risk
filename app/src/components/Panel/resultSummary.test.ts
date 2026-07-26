@@ -18,6 +18,12 @@ describe('resultSummary', () => {
     expect(s).not.toMatch(/\bsafe\b/i)
   })
 
+  it('an empty reservoir result blames the missing record, not the source', () => {
+    const s = resultSummary('reservoirs', { status: 'unavailable' }, t)
+    expect(s).toMatch(/no supply-system record/i)
+    expect(s).not.toMatch(/could not be reached|no current result/i)
+  })
+
   it('in-zone flood names the return period', () => {
     const s = resultSummary('flood', { status: 'available', data: { inZone: true, returnPeriod: '100', source: 'SNCZI' } }, t)
     expect(s).toMatch(/T100/)

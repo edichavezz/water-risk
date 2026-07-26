@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { getDataset } from '../../registry/datasets'
 import type { DatasetId } from '../../types/workspace'
+import type { Reservoir } from '../../types'
 
 interface Row { color: string; opacity?: number; label: string }
 
@@ -34,27 +35,64 @@ function legendRows(primary: DatasetId, t: (k: string) => string): Row[] {
 export default function Legend() {
   const { t } = useTranslation()
   const primaryLayer = useAppStore(s => s.primaryLayer)
-  if (!primaryLayer) return null
+  const contextLayers = useAppStore(s => s.contextLayers)
+  const reservoirResult = useAppStore(s => s.results.reservoirs)
 
-  const def = getDataset(primaryLayer)
-  const rows = legendRows(primaryLayer, t)
+  // The ringed markers need a key, or the reader is left guessing what the
+  // emphasis means.
+  const highlighted =
+    contextLayers.includes('reservoirs') && reservoirResult?.status === 'available'
+      ? (reservoirResult.data as Reservoir[])
+      : []
+
+  if (!primaryLayer && highlighted.length === 0) return null
+
+  const def = primaryLayer ? getDataset(primaryLayer) : null
+  const rows = primaryLayer ? legendRows(primaryLayer, t) : []
 
   return (
     <div className="absolute bottom-8 left-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
-      <p className="mb-1.5 font-bold text-ink">{t(`registry.${primaryLayer}.name`)}</p>
-      <ul className="space-y-1">
-        {rows.map((r, i) => (
-          <li key={i} className="flex items-center gap-2">
-            <span
-              className="inline-block h-3 w-3 shrink-0 rounded-sm"
-              style={{ background: r.color, opacity: r.opacity ?? 1 }}
-            />
-            <span className="text-ink">{r.label}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-2 text-muted">{t('legend.source', { source: def.source.name })}</p>
-      <p className="text-muted">{t(`registry.${primaryLayer}.cadence`)}</p>
+      {primaryLayer && def && (
+        <>
+          <p className="mb-1.5 font-bold text-ink">{t(`registry.${primaryLayer}.name`)}</p>
+          <ul className="space-y-1">
+            {rows.map((r, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span
+                  className="inline-block h-3 w-3 shrink-0 rounded-sm"
+                  style={{ background: r.color, opacity: r.opacity ?? 1 }}
+                />
+                <span className="text-ink">{r.label}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-muted">{t('legend.source', { source: def.source.name })}</p>
+          <p className="text-muted">{t(`registry.${primaryLayer}.cadence`)}</p>
+        </>
+      )}
+
+      {highlighted.length > 0 && (
+        <div className={primaryLayer ? 'mt-3 border-t border-gray-200 pt-2' : ''}>
+          <p className="mb-1.5 font-bold text-ink">{t('registry.reservoirs.name')}</p>
+          <ul className="space-y-1">
+            <li className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="inline-block h-3 w-3 shrink-0 rounded-full bg-[#4B91AD]"
+                style={{ boxShadow: '0 0 0 2px #204E62' }}
+              />
+              <span className="text-ink">{t('legend.reservoirs.supply')}</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="inline-block h-3 w-3 shrink-0 rounded-full bg-[#4B91AD] opacity-35"
+              />
+              <span className="text-muted">{t('legend.reservoirs.other')}</span>
+            </li>
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

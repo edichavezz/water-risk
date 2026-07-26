@@ -26,7 +26,10 @@ function summarize(id: DatasetId, r: DatasetResult): string {
     }
     case 'reservoirs': {
       const rs = r.data as Reservoir[]
-      return `Nearby reservoirs: ${rs.map(x => `${x.name} ${x.fillPercent}% full (mean ${x.historicalMeanPercent ?? '?'}%)`).join('; ')} (source REDIAM).`
+      const asOf = rs[0]?.fillPercentAsOf
+      const system = rs[0]?.systemName
+      const scope = system ? `Reservoirs supplying this area via ${system}` : 'Supply reservoirs'
+      return `${scope}: ${rs.map(x => `${x.name} ${x.fillPercent}% full (mean ${x.historicalMeanPercent ?? '?'}%)`).join('; ')} (source REDIAM${asOf ? `, levels read ${asOf}` : ''}).`
     }
     case 'waterQuality': {
       const d = r.data as WaterQualityResult

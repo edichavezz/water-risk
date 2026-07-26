@@ -17,7 +17,7 @@ export default function WorkspacePanel() {
 
   return (
     <aside
-      className={`absolute bottom-6 left-6 top-6 z-10 hidden flex-col rounded-2xl bg-canvas p-4 shadow-xl transition-[width] duration-[var(--dur-panel)] md:flex ${
+      className={`absolute bottom-6 left-6 top-16 z-10 hidden flex-col rounded-2xl bg-canvas p-4 shadow-xl transition-[width] duration-[var(--dur-panel)] md:flex ${
         WIDTH_BY_DEPTH[panelDepth]
       } max-w-[calc(100vw-3rem)]`}
     >
