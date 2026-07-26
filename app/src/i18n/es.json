@@ -185,6 +185,9 @@
     },
     "reservoirs": {
       "title": "Llenado de embalses",
+      "supply": "En el sistema de abastecimiento de esta zona",
+      "nearby": "Embalses más cercanos — solo por proximidad",
+      "other": "Otros embalses",
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
@@ -226,7 +229,9 @@
         "detailNote": "Ningún polígono oficial de inundación fluvial intersecta el punto seleccionado."
       },
       "reservoirs": {
-        "nearest": "{{name}} · {{percent}}% de llenado"
+        "nearest": "{{name}} · {{percent}}% de llenado",
+        "supplyScope": "Resaltados en el mapa: embalses del sistema de abastecimiento de esta zona.",
+        "nearbyScope": "Resaltados en el mapa: los embalses más cercanos. Solo por proximidad — no consta que abastezcan esta zona."
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",

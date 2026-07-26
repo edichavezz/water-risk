@@ -49,6 +49,7 @@ export function normalizeMunicipio(s: string): string {
 
 function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: string): Reservoir {
   return {
+    codEst: r.codEst,
     name: titleCase(r.name),
     fillPercent: r.fillPercent,
     fillPercentAsOf: FETCHED_AT,
@@ -72,6 +73,15 @@ export function fillColour(pct: number): string {
   if (pct < 40) return '#f97316'  // orange
   if (pct < 60) return '#eab308'  // yellow
   return '#3b82f6'                // blue
+}
+
+export function allReservoirCodEsts(): string[] {
+  return RESERVOIRS.map(r => r.codEst)
+}
+
+export function reservoirLngLat(codEst: string): [number, number] | null {
+  const r = RESERVOIRS.find(x => x.codEst === codEst)
+  return r ? [r.lng, r.lat] : null
 }
 
 // GeoJSON for all reservoirs — used by MapView to render the layer

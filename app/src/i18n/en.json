@@ -185,6 +185,9 @@
     },
     "reservoirs": {
       "title": "Reservoir fill",
+      "supply": "In this area's supply system",
+      "nearby": "Nearest reservoirs — proximity only",
+      "other": "Other reservoirs",
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
@@ -226,7 +229,9 @@
         "detailNote": "No official river-flood polygon intersects the selected point."
       },
       "reservoirs": {
-        "nearest": "{{name}} · {{percent}}% full"
+        "nearest": "{{name}} · {{percent}}% full",
+        "supplyScope": "Highlighted on the map: reservoirs in this area's supply system.",
+        "nearbyScope": "Highlighted on the map: the nearest reservoirs. Proximity only — not a record of what supplies this area."
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",

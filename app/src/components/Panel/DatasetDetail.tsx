@@ -25,10 +25,19 @@ export default function DatasetDetail() {
 
   // Reservoirs carry REDIAM's own reading date, so the levels are dated rather
   // than left to read as "current" (spec §9.2).
-  const reservoirAsOf =
+  const reservoirs =
     id === 'reservoirs' && result?.status === 'available'
-      ? (result.data as Reservoir[])[0]?.fillPercentAsOf
+      ? (result.data as Reservoir[])
       : undefined
+  const reservoirAsOf = reservoirs?.[0]?.fillPercentAsOf
+  // Says what the map highlight means. A supply-system match and a
+  // nearest-within-80km fallback look alike on the map but claim different
+  // things, so the copy has to separate them.
+  const reservoirScope = reservoirs?.length
+    ? reservoirs[0].systemName !== undefined
+      ? t('panel.summary.reservoirs.supplyScope')
+      : t('panel.summary.reservoirs.nearbyScope')
+    : null
 
   const explain = () => {
     openAiMode()
@@ -47,6 +56,7 @@ export default function DatasetDetail() {
       <h2 className="text-lg font-bold text-ink">{t(`registry.${id}.name`)}</h2>
       <p className="text-base text-ink">{resultSummary(id, result, t)}</p>
       {floodNote && <p className="text-sm text-muted">{floodNote}</p>}
+      {reservoirScope && <p className="text-sm text-muted">{reservoirScope}</p>}
       {reservoirAsOf && (
         <p className="text-xs text-muted">
           {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}

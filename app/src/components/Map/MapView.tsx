@@ -5,8 +5,19 @@ import maplibregl from 'maplibre-gl'
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
 import { addCoverageLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
-import { ensureDataLayers, applyLayerPlan, bindMapInteractions } from '../../map/dataLayers'
+import {
+  ensureDataLayers, applyLayerPlan, bindMapInteractions,
+  applyReservoirHighlight, fitReservoirsInView,
+} from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
+import { reservoirLngLat } from '../../services/reservoirs'
+import type { Reservoir } from '../../types'
+import type { DatasetResult } from '../../types/workspace'
+
+function resultCodEsts(result: DatasetResult | undefined): string[] {
+  if (result?.status !== 'available') return []
+  return (result.data as Reservoir[]).map(r => r.codEst)
+}
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
@@ -20,6 +31,7 @@ export default function MapView() {
   const searchOrigin = useAppStore(s => s.searchOrigin)
   const primaryLayer = useAppStore(s => s.primaryLayer)
   const contextLayers = useAppStore(s => s.contextLayers)
+  const reservoirResult = useAppStore(s => s.results.reservoirs)
 
   // ── Bootstrap the single map instance ────────────────────────────────────
   useEffect(() => {
@@ -50,8 +62,12 @@ export default function MapView() {
         addCoverageLayers(map)
         ensureDataLayers(map)
         bindMapInteractions(map)
-        const { primaryLayer: p, contextLayers: c } = useAppStore.getState()
+        // Results can land before the style finishes loading (reservoirs
+        // resolve synchronously from bundled JSON), and the effects below bail
+        // out until it has — so re-apply whatever state already exists.
+        const { primaryLayer: p, contextLayers: c, results } = useAppStore.getState()
         applyLayerPlan(map, p, c)
+        applyReservoirHighlight(map, resultCodEsts(results.reservoirs))
       })
       mapRef.current = map
     })()
@@ -68,6 +84,33 @@ export default function MapView() {
     if (!map || !map.isStyleLoaded()) return
     applyLayerPlan(map, primaryLayer, contextLayers)
   }, [primaryLayer, contextLayers])
+
+  // ── Highlight the reservoirs behind the current result ───────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    const codEsts = resultCodEsts(reservoirResult)
+    applyReservoirHighlight(map, codEsts)
+
+    // Highlighting alone is invisible if the markers sit outside the viewport,
+    // which they usually do at the zoom a typed search lands on. A map-picked
+    // point keeps the zoom the user chose, so it is left alone.
+    if (codEsts.length === 0 || !location || searchOrigin !== 'query') return
+    if (!contextLayers.includes('reservoirs')) return
+    const points = codEsts
+      .map(reservoirLngLat)
+      .filter((p): p is [number, number] => p !== null)
+    const fit = () =>
+      fitReservoirsInView(
+        map,
+        [location.coordinates.lng, location.coordinates.lat],
+        points,
+        { animate: !prefersReducedMotion(), maxZoom: 11 },
+      )
+    // Don't fight the search flight — fit once it has settled.
+    if (map.isMoving()) map.once('moveend', fit)
+    else fit()
+  }, [reservoirResult, location, searchOrigin, contextLayers])
 
   // ── Camera follows workspace state ───────────────────────────────────────
   useEffect(() => {
