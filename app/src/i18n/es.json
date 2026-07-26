@@ -153,6 +153,11 @@
   },
   "map": {
     "hoverHint": "Seleccionar para ver detalles",
+    "reservoir": {
+      "storage": "{{stored}} de {{capacity}} hm³ embalsados",
+      "basin": "Cuenca: {{basin}}",
+      "asOf": "Nivel a fecha de {{date}}"
+    },
     "pickLoading": "Buscando este lugar…",
     "pickSearchHere": "Buscar aquí",
     "pickNoPlace": "No se encontró ningún lugar aquí",

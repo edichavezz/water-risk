@@ -17,7 +17,13 @@ interface GeneratedReservoir {
 }
 
 const RESERVOIRS = generated.reservoirs as GeneratedReservoir[]
+// REDIAM's own bulletin date (`fecha`) for the readings — the date the levels
+// were measured, not the date our pipeline ran.
 const FETCHED_AT = generated.fetchedAt as string
+
+export function reservoirsAsOf(): string {
+  return FETCHED_AT
+}
 
 function haversineKm(a: Coordinates, b: { lat: number; lng: number }): number {
   const R = 6371
@@ -52,7 +58,7 @@ function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: st
   }
 }
 
-function titleCase(s: string): string {
+export function titleCase(s: string): string {
   return s
     .toLowerCase()
     .split(' ')
@@ -76,10 +82,16 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
       properties: {
+        codEst: r.codEst,
         name: titleCase(r.name),
         fillPercent: r.fillPercent,
+        storedHm3: r.storedHm3,
+        capacityHm3: r.capacityHm3,
         historicalMeanPercent: null, // REDIAM's feed has no historical-mean field; kept for MapView.tsx's existing property shape
         basin: r.basin,
+        river: r.river,
+        province: r.province,
+        asOf: FETCHED_AT,
         colour: fillColour(r.fillPercent),
       },
     })),

@@ -92,8 +92,10 @@ export function bindLocationPicker(map: maplibregl.Map): void {
   }
 
   map.on('click', e => {
-    if (hitsInteractiveLayer(map, e.point)) return
+    // A click on an interactive layer abandons any provisional pick — leaving
+    // the hollow pin behind would stack two popups on the map.
     dismiss()
+    if (hitsInteractiveLayer(map, e.point)) return
 
     const coords = { lat: e.lngLat.lat, lng: e.lngLat.lng }
 

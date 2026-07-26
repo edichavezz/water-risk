@@ -1,11 +1,12 @@
 import type maplibregl from 'maplibre-gl'
 import maplibre from 'maplibre-gl'
 import i18n from '../i18n'
+import { formatLongDate } from '../i18n/formatDate'
 import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
 import { getCoastalWmsUrl, COASTAL_LAYERS } from '../services/coastalFlood'
-import { getAllReservoirsGeoJSON } from '../services/reservoirs'
+import { getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
 import groundwaterUnits from '../data/groundwater-units.json'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
 import { bindLocationPicker } from './pickLocation'
@@ -114,14 +115,78 @@ export function applyLayerPlan(
 }
 
 let selectedReservoirId: string | number | undefined
+let detailPopup: maplibregl.Popup | null = null
+
+export interface ReservoirProps {
+  name: string
+  fillPercent: number
+  storedHm3: number | null
+  capacityHm3: number | null
+  basin: string
+  river: string
+  province: string
+  asOf: string
+}
+
+// The click popup — the "detail" the hover hint promises. Built as DOM rather
+// than HTML so upstream names are never interpolated into markup.
+export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
+  const el = document.createElement('div')
+  el.className = 'reservoir-popup'
+
+  const name = document.createElement('div')
+  name.className = 'reservoir-popup__name'
+  name.textContent = props.name
+  el.append(name)
+
+  const pct = document.createElement('div')
+  pct.className = 'reservoir-popup__pct'
+  pct.textContent = `${props.fillPercent}%`
+  el.append(pct)
+
+  const lines: string[] = []
+  if (props.storedHm3 != null && props.capacityHm3 != null) {
+    lines.push(i18n.t('map.reservoir.storage', {
+      stored: props.storedHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+      capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+    }))
+  }
+  if (props.river) lines.push(titleCase(props.river))
+  if (props.basin) {
+    lines.push(i18n.t('map.reservoir.basin', { basin: titleCase(props.basin) }))
+  }
+  for (const text of lines) {
+    const row = document.createElement('div')
+    row.className = 'reservoir-popup__row'
+    row.textContent = text
+    el.append(row)
+  }
+
+  const asOf = document.createElement('div')
+  asOf.className = 'reservoir-popup__asof'
+  asOf.textContent = i18n.t('map.reservoir.asOf', { date: formatLongDate(props.asOf) })
+  el.append(asOf)
+
+  return el
+}
 
 export function bindMapInteractions(map: maplibregl.Map): void {
   bindLocationPicker(map)
+
+  const clearSelection = () => {
+    if (selectedReservoirId !== undefined) {
+      map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: false })
+      selectedReservoirId = undefined
+    }
+  }
 
   map.on('mouseenter', 'reservoirs-circle', e => {
     map.getCanvas().style.cursor = 'pointer'
     const f = e.features?.[0]
     if (!f) return
+    // Only the pinned marker skips its hover popup — it already shows more.
+    // Other markers still hover normally.
+    if (detailPopup && f.id !== undefined && f.id === selectedReservoirId) return
     const props = f.properties as { name: string; fillPercent: number }
     const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
     hoverPopup?.remove()
@@ -144,13 +209,29 @@ export function bindMapInteractions(map: maplibregl.Map): void {
   map.on('click', 'reservoirs-circle', e => {
     const f = e.features?.[0]
     if (!f) return
-    if (selectedReservoirId !== undefined) {
-      map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: false })
-    }
+    clearSelection()
     selectedReservoirId = f.id
     if (selectedReservoirId !== undefined) {
       map.setFeatureState({ source: 'reservoirs-src', id: selectedReservoirId }, { selected: true })
     }
-    useAppStore.getState().selectDataset('reservoirs')
+
+    hoverPopup?.remove()
+    hoverPopup = null
+    detailPopup?.remove()
+    const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
+    detailPopup = new maplibre.Popup({ offset: 16, maxWidth: '240px', closeOnClick: false })
+      .setLngLat(coords)
+      .setDOMContent(reservoirDetailContent(f.properties as unknown as ReservoirProps))
+      .addTo(map)
+    detailPopup.on('close', () => {
+      detailPopup = null
+      clearSelection()
+    })
+
+    // Only meaningful once a search exists — the workspace panel is not
+    // mounted on the entry view, so the popup carries the detail there.
+    if (useAppStore.getState().view === 'searched') {
+      useAppStore.getState().selectDataset('reservoirs')
+    }
   })
 }

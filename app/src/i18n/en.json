@@ -153,6 +153,11 @@
   },
   "map": {
     "hoverHint": "Select for detail",
+    "reservoir": {
+      "storage": "{{stored}} of {{capacity}} hm³ stored",
+      "basin": "Basin: {{basin}}",
+      "asOf": "Level as of {{date}}"
+    },
     "pickLoading": "Finding this place…",
     "pickSearchHere": "Search here",
     "pickNoPlace": "No place found here",

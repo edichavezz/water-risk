@@ -3,7 +3,8 @@ import { useAppStore } from '../../store/useAppStore'
 import { getDataset } from '../../registry/datasets'
 import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
-import type { FloodZoneResult } from '../../types'
+import { formatLongDate } from '../../i18n/formatDate'
+import type { FloodZoneResult, Reservoir } from '../../types'
 
 export default function DatasetDetail() {
   const { t } = useTranslation()
@@ -22,6 +23,13 @@ export default function DatasetDetail() {
       ? t('panel.summary.flood.detailNote')
       : null
 
+  // Reservoirs carry REDIAM's own reading date, so the levels are dated rather
+  // than left to read as "current" (spec §9.2).
+  const reservoirAsOf =
+    id === 'reservoirs' && result?.status === 'available'
+      ? (result.data as Reservoir[])[0]?.fillPercentAsOf
+      : undefined
+
   const explain = () => {
     openAiMode()
     void requestInterpretation({ type: 'dataset', id })
@@ -39,6 +47,11 @@ export default function DatasetDetail() {
       <h2 className="text-lg font-bold text-ink">{t(`registry.${id}.name`)}</h2>
       <p className="text-base text-ink">{resultSummary(id, result, t)}</p>
       {floodNote && <p className="text-sm text-muted">{floodNote}</p>}
+      {reservoirAsOf && (
+        <p className="text-xs text-muted">
+          {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}
+        </p>
+      )}
 
       <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>
