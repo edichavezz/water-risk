@@ -27,24 +27,33 @@ describe('getReservoirsForLocation', () => {
     }
   })
 
-  it('falls back to proximity when no municipality match exists', () => {
+  // No proximity fallback: a reservoir near a town may serve irrigation and
+  // supply nobody, so nearness must never stand in for a supply record.
+  it('returns nothing when the municipality has no supply-system record', () => {
     const location: SearchResult = {
       displayName: 'Somewhere unmapped, Spain',
-      coordinates: { lat: 37.338, lng: -5.847 },
+      coordinates: { lat: 37.338, lng: -5.847 }, // well within 80 km of the EMASESA reservoirs
       municipio: 'Not A Real Mapped Town',
       provincia: 'Sevilla',
     }
-    const result = getReservoirsForLocation(location)
-    expect(result.length).toBeGreaterThan(0)
-    expect(result.every(r => r.systemName === undefined)).toBe(true)
-    for (let i = 1; i < result.length; i++) {
-      expect(result[i].distanceKm).toBeGreaterThanOrEqual(result[i - 1].distanceKm)
-    }
+    expect(getReservoirsForLocation(location)).toEqual([])
   })
 
-  it('falls back to proximity when municipio is missing entirely', () => {
+  it('returns nothing when municipio is missing entirely', () => {
     const location: SearchResult = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
-    expect(getReservoirsForLocation(location).length).toBeGreaterThan(0)
+    expect(getReservoirsForLocation(location)).toEqual([])
+  })
+
+  it('every returned reservoir names the system it was matched through', () => {
+    const location: SearchResult = {
+      displayName: 'Córdoba, Spain',
+      coordinates: { lat: 37.8882, lng: -4.7794 },
+      municipio: 'Córdoba',
+      provincia: 'Córdoba',
+    }
+    const result = getReservoirsForLocation(location)
+    expect(result.length).toBeGreaterThan(0)
+    expect(result.every(r => r.systemName !== undefined)).toBe(true)
   })
 
   it('reproduces the real Nominatim response shape for postcode 41500 and still matches EMASESA', () => {

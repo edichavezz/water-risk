@@ -30,13 +30,10 @@ export default function DatasetDetail() {
       ? (result.data as Reservoir[])
       : undefined
   const reservoirAsOf = reservoirs?.[0]?.fillPercentAsOf
-  // Says what the map highlight means. A supply-system match and a
-  // nearest-within-80km fallback look alike on the map but claim different
-  // things, so the copy has to separate them.
+  // Names the system the highlighted markers belong to, so the map emphasis is
+  // attributable rather than just decorative.
   const reservoirScope = reservoirs?.length
-    ? reservoirs[0].systemName !== undefined
-      ? t('panel.summary.reservoirs.supplyScope')
-      : t('panel.summary.reservoirs.nearbyScope')
+    ? t('panel.summary.reservoirs.supplyScope', { system: reservoirs[0].systemName ?? '' })
     : null
 
   const explain = () => {

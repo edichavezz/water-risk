@@ -105,11 +105,12 @@
       ]
     },
     "reservoirs": {
-      "name": "Embalses cercanos",
+      "name": "Embalses de abastecimiento",
       "cadence": "Datos en vivo de REDIAM cuando están disponibles",
-      "resolution": "Embalses individuales por sistema de suministro o proximidad",
+      "resolution": "Embalses del sistema que abastece a este municipio",
       "limitations": [
-        "Puede no indicar qué embalse abastece su grifo",
+        "Los sistemas de abastecimiento se han recopilado a mano y cubren parte de Andalucía",
+        "No indica qué embalse del sistema llega a su grifo",
         "Los valores son una instantánea, no una tendencia semanal"
       ]
     },
@@ -185,8 +186,7 @@
     },
     "reservoirs": {
       "title": "Llenado de embalses",
-      "supply": "En el sistema de abastecimiento de esta zona",
-      "nearby": "Embalses más cercanos — solo por proximidad",
+      "supply": "Abastece esta zona",
       "other": "Otros embalses",
       "low": "<25%",
       "mid": "25–60%",
@@ -229,9 +229,9 @@
         "detailNote": "Ningún polígono oficial de inundación fluvial intersecta el punto seleccionado."
       },
       "reservoirs": {
-        "nearest": "{{name}} · {{percent}}% de llenado",
-        "supplyScope": "Resaltados en el mapa: embalses del sistema de abastecimiento de esta zona.",
-        "nearbyScope": "Resaltados en el mapa: los embalses más cercanos. Solo por proximidad — no consta que abastezcan esta zona."
+        "headline": "{{name}} · {{percent}}% de llenado",
+        "supplyScope": "Resaltados en el mapa: los embalses de {{system}}, que abastece esta zona.",
+        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio"
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",

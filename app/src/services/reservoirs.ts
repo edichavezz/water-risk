@@ -109,35 +109,29 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
 }
 
 /**
- * First tries to match the location's municipality against a known supply
- * system (returns every reservoir feeding that system). Falls back to
- * nearest-3-within-80km when no system match is found — most Andalucía
- * municipalities aren't in the researched supply-system lists yet.
+ * Every reservoir feeding the supply system that serves this municipality.
+ *
+ * Returns nothing when the municipality isn't in SUPPLY_SYSTEMS. There is no
+ * proximity fallback: a reservoir 10 km away may be pure irrigation storage
+ * and supply nobody, so "nearest" answers a question the user didn't ask and
+ * reads as an answer to the one they did. An empty result is the honest state,
+ * and SUPPLY_SYSTEMS covers ~133 of Andalucía's ~785 municipalities today.
  */
 export function getReservoirsForLocation(location: SearchResult): Reservoir[] {
   const coords = location.coordinates
   const municipio = location.municipio ? normalizeMunicipio(location.municipio) : ''
 
-  if (municipio) {
-    const matchedSystems = SUPPLY_SYSTEMS.filter(s => s.servesMunicipalities.includes(municipio))
-    if (matchedSystems.length > 0) {
-      const codEstToSystemName = new Map<string, string>()
-      for (const s of matchedSystems) {
-        for (const codEst of s.reservoirCodEsts) codEstToSystemName.set(codEst, s.name)
-      }
-      return RESERVOIRS
-        .filter(r => codEstToSystemName.has(r.codEst))
-        .map(r => toReservoir(r, coords, codEstToSystemName.get(r.codEst)))
-        .sort((a, b) => a.distanceKm - b.distanceKm)
-    }
+  if (!municipio) return []
+
+  const matchedSystems = SUPPLY_SYSTEMS.filter(s => s.servesMunicipalities.includes(municipio))
+  if (matchedSystems.length === 0) return []
+
+  const codEstToSystemName = new Map<string, string>()
+  for (const s of matchedSystems) {
+    for (const codEst of s.reservoirCodEsts) codEstToSystemName.set(codEst, s.name)
   }
-
-  return getNearbyReservoirs(coords)
-}
-
-export function getNearbyReservoirs(coords: Coordinates, radiusKm = 80, limit = 3): Reservoir[] {
-  return RESERVOIRS.map(r => toReservoir(r, coords))
-    .filter(r => r.distanceKm <= radiusKm)
+  return RESERVOIRS
+    .filter(r => codEstToSystemName.has(r.codEst))
+    .map(r => toReservoir(r, coords, codEstToSystemName.get(r.codEst)))
     .sort((a, b) => a.distanceKm - b.distanceKm)
-    .slice(0, limit)
 }

@@ -13,6 +13,12 @@ type TFunc = (key: string, opts?: Record<string, unknown>) => string
  */
 export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TFunc): string {
   const status = r?.status ?? 'loading'
+  // An empty reservoir result isn't a source failure — it means we hold no
+  // supply-system record for this municipality, which is a different fact and
+  // the common one. "No current result available" would misattribute it.
+  if (id === 'reservoirs' && status === 'unavailable') {
+    return t('panel.summary.reservoirs.noSupplyRecord')
+  }
   if (status !== 'available') return t(`states.${status}`)
 
   switch (id) {
@@ -28,10 +34,10 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
     }
     case 'reservoirs': {
       const rs = r!.data as Reservoir[]
-      if (rs.length === 0) return t('states.unavailable')
-      const nearest = rs[0]
-      return t('panel.summary.reservoirs.nearest', {
-        name: nearest.name, percent: nearest.fillPercent,
+      if (rs.length === 0) return t('panel.summary.reservoirs.noSupplyRecord')
+      const closest = rs[0]
+      return t('panel.summary.reservoirs.headline', {
+        name: closest.name, percent: closest.fillPercent,
       })
     }
     case 'waterQuality': {

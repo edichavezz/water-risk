@@ -105,11 +105,12 @@
       ]
     },
     "reservoirs": {
-      "name": "Nearby reservoirs",
+      "name": "Supply reservoirs",
       "cadence": "Live REDIAM data where available",
-      "resolution": "Individual reservoirs by supply system or proximity",
+      "resolution": "Reservoirs feeding this municipality's supply system",
       "limitations": [
-        "May not show which reservoir supplies your tap",
+        "Supply systems are researched by hand and cover part of Andalucía",
+        "Does not show which reservoir in a system reaches your tap",
         "Values are a snapshot, not a weekly trend"
       ]
     },
@@ -185,8 +186,7 @@
     },
     "reservoirs": {
       "title": "Reservoir fill",
-      "supply": "In this area's supply system",
-      "nearby": "Nearest reservoirs — proximity only",
+      "supply": "Supplies this area",
       "other": "Other reservoirs",
       "low": "<25%",
       "mid": "25–60%",
@@ -229,9 +229,9 @@
         "detailNote": "No official river-flood polygon intersects the selected point."
       },
       "reservoirs": {
-        "nearest": "{{name}} · {{percent}}% full",
-        "supplyScope": "Highlighted on the map: reservoirs in this area's supply system.",
-        "nearbyScope": "Highlighted on the map: the nearest reservoirs. Proximity only — not a record of what supplies this area."
+        "headline": "{{name}} · {{percent}}% full",
+        "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
+        "noSupplyRecord": "No supply-system record for this municipality yet"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",

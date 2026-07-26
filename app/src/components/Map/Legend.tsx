@@ -39,12 +39,11 @@ export default function Legend() {
   const reservoirResult = useAppStore(s => s.results.reservoirs)
 
   // The ringed markers need a key, or the reader is left guessing what the
-  // emphasis means — and the two cases mean materially different things.
+  // emphasis means.
   const highlighted =
     contextLayers.includes('reservoirs') && reservoirResult?.status === 'available'
       ? (reservoirResult.data as Reservoir[])
       : []
-  const bySupplySystem = highlighted.length > 0 && highlighted[0].systemName !== undefined
 
   if (!primaryLayer && highlighted.length === 0) return null
 
@@ -82,9 +81,7 @@ export default function Legend() {
                 className="inline-block h-3 w-3 shrink-0 rounded-full bg-[#4B91AD]"
                 style={{ boxShadow: '0 0 0 2px #204E62' }}
               />
-              <span className="text-ink">
-                {bySupplySystem ? t('legend.reservoirs.supply') : t('legend.reservoirs.nearby')}
-              </span>
+              <span className="text-ink">{t('legend.reservoirs.supply')}</span>
             </li>
             <li className="flex items-center gap-2">
               <span

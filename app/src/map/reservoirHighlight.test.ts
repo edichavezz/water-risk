@@ -22,16 +22,16 @@ function fakeMap(overrides: Partial<Record<string, unknown>> = {}) {
   return { map: map as unknown as maplibregl.Map, calls, moves }
 }
 
-const CAZORLA: SearchResult = {
-  displayName: 'Cazorla, Jaén, Spain',
-  coordinates: { lat: 37.9129, lng: -3.0039 },
-  municipio: 'Cazorla',
-  provincia: 'Jaén',
+const SEVILLA: SearchResult = {
+  displayName: 'Sevilla, Andalucía, Spain',
+  coordinates: { lat: 37.3891, lng: -5.9845 },
+  municipio: 'Sevilla',
+  provincia: 'Sevilla',
 }
 
 describe('reservoir results', () => {
   it('carry the codEst the map highlight keys on', () => {
-    const rs = getReservoirsForLocation(CAZORLA)
+    const rs = getReservoirsForLocation(SEVILLA)
     expect(rs.length).toBeGreaterThan(0)
     for (const r of rs) expect(r.codEst).toBeTruthy()
   })

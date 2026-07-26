@@ -31,7 +31,7 @@ describe('layer tray', () => {
     const user = userEvent.setup()
     render(<LayerTray />)
     await user.click(screen.getByRole('button', { name: /map layers/i }))
-    await user.click(screen.getByRole('checkbox', { name: /nearby reservoirs/i }))
+    await user.click(screen.getByRole('checkbox', { name: /supply reservoirs/i }))
     expect(useAppStore.getState().contextLayers).toEqual([])
   })
 })
