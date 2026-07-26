@@ -72,7 +72,9 @@ export default function InterpretationView() {
 
       {interpretation.status === 'stale' && (
         <div className="flex flex-col items-start gap-2 rounded-xl bg-subtle-warm p-3">
-          <p className="text-sm text-ink">{t('ai.stale')}</p>
+          <p className="text-sm text-ink">
+            {t(interpretation.staleReason === 'audience' ? 'ai.staleAudience' : 'ai.stale')}
+          </p>
           <button
             onClick={regenerate}
             className="min-h-11 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white hover:bg-primary-hover"

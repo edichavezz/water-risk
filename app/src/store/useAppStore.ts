@@ -64,11 +64,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
       language,
       interpretation:
         state.interpretation.status === 'ready'
-          ? { ...state.interpretation, status: 'stale' }
+          ? { ...state.interpretation, status: 'stale', staleReason: 'language' }
           : state.interpretation,
     })),
 
-  setAudience: audience => set({ audience }),
+  // Audience changes the framing of an interpretation, not the data behind it.
+  // Nothing refetches; a ready text goes stale so the reader is never shown
+  // buyer-framed prose under a resident selection (same rule as language).
+  setAudience: audience =>
+    set(state => ({
+      audience,
+      interpretation:
+        state.interpretation.status === 'ready'
+          ? { ...state.interpretation, status: 'stale', staleReason: 'audience' }
+          : state.interpretation,
+    })),
 
   beginSearch: (location, origin = 'query') =>
     set({

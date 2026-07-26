@@ -226,6 +226,10 @@
     "sourcesHeading": "Fuentes de datos"
   },
   "panel": {
+    "noResultGroup": "Sin resultado para esta ubicación",
+    "audienceLabel": "Leyendo como",
+    "audienceResident": "Vivo aquí o soy propietario/a",
+    "audienceBuyer": "Estoy comprando",
     "publicData": "Datos públicos",
     "aiTab": "¿Qué significa esto?",
     "back": "Todos los datos públicos",
@@ -283,6 +287,7 @@
     "error": "No se pudo generar la interpretación.",
     "unsupported": "Aquí no hay datos detallados, así que no se puede hacer una interpretación. Consulta fuentes regionales oficiales.",
     "stale": "Ha cambiado el idioma. ¿Regenerar la interpretación?",
+    "staleAudience": "Has cambiado para quién es esto. ¿Regenerar la explicación?",
     "regenerate": "Regenerar",
     "followUpLabel": "Haz una pregunta sobre estos datos",
     "followUpSend": "Preguntar",

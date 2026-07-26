@@ -24,10 +24,12 @@ readings, so the first thing the reader sees can be three "no result" lines.
 
 `available` and `loading` share rank 0 deliberately. Results arrive
 asynchronously; if `available` outranked `loading`, rows would climb past each
-other as each fetch lands. Sharing the rank makes reordering **monotonic** —
-every row starts at rank 0 and either stays there or drops once, so nothing the
-reader is looking at ever jumps upward. Sorting is stable, so relevance order is
-preserved within a rank.
+other as each fetch lands. Sharing the rank means a row's rank only ever
+increases, which gives the property that matters: **no row overtakes a row above
+it that still has a value.** (Rows do shift up a slot when something above them
+drops away — that is unavoidable and reads fine. What churns a list is rows
+passing each other.) Sorting is stable, so relevance order survives inside a
+rank.
 
 `not_applicable` rows and the coverage filter are untouched — they are still
 removed from the list entirely.
@@ -57,11 +59,17 @@ has never looked at water data before, and the follow-up questions are where
 depth belongs.** Saying that explicitly in the prompt lets the model stop trying
 to be complete in one paragraph.
 
-The prompt keeps two rules verbatim in substance, because they are correctness,
-not tone:
+The prompt keeps a short block of hard rules, because they are correctness, not
+tone:
 
 - Use only the evidence given; never guess a value for a missing or errored dataset.
 - Never invent an overall risk score or combined rating.
+- Name the source of every fact, in plain words — in every language. (Added
+  after the read-through: phrased as a style tip, this got dropped entirely from
+  the Spanish output under plain-language pressure.)
+- Keep the source's own severity word; don't upgrade "watch" into "alert".
+- Don't explain a reading away with seasonal or outside knowledge, and don't
+  state what a bank, insurer or public body will require — say what to ask them.
 
 And gains plain-language direction that applies in both languages:
 
@@ -105,7 +113,9 @@ Changing the audience:
 - **re-ranks** the dataset list (relevance weights change),
 - **marks a `ready` interpretation `stale`**, exactly as `setLanguage` already
   does, so the reader is never shown buyer-framed text under a resident
-  selection. The existing stale banner offers regeneration,
+  selection. The banner offers regeneration. It also carries a `staleReason`
+  now, because the existing copy hard-coded "The language changed" and said so
+  after an audience change,
 - **does not refetch anything.** Audience influences fetch order only, and the
   data is already in hand.
 

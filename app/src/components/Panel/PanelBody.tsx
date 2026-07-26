@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { requestInterpretation } from '../../services/ai'
+import AudienceSwitcher from './AudienceSwitcher'
 import DatasetList from './DatasetList'
 import DatasetDetail from './DatasetDetail'
 import InterpretationView from './InterpretationView'
@@ -44,6 +45,8 @@ export default function PanelBody() {
 
   return (
     <>
+      <AudienceSwitcher />
+
       <div role="tablist" className="mb-3 flex gap-1 rounded-xl bg-subtle-warm p-1">
         <button
           role="tab"
