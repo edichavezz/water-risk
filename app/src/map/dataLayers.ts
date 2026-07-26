@@ -14,7 +14,11 @@ import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
 
 const WARNING = '#B87535'
-const RESERVOIR_MINZOOM = 8
+// Markers appear at the entry view's zoom (6.3) so toggling the reservoirs
+// layer there visibly does something; the per-marker text only joins once
+// there is room for it, otherwise 72 labels collide at national scale.
+const RESERVOIR_MINZOOM = 6
+const RESERVOIR_LABEL_MINZOOM = 8
 
 let hoverPopup: maplibregl.Popup | null = null
 
@@ -65,30 +69,46 @@ export function ensureDataLayers(map: maplibregl.Map): void {
       data: getAllReservoirsGeoJSON(),
       promoteId: 'codEst',
     })
-    map.addLayer({
-      id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
-      paint: {
-        'circle-radius': [
-          'case',
-          ['boolean', ['feature-state', 'selected'], false], 14,
-          ['boolean', ['feature-state', 'highlighted'], false], 14,
-          11,
-        ],
-        'circle-color': '#ffffff',
-        'circle-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.35, 0.85],
-      },
-      layout: { visibility: 'none' },
-    })
     // `highlighted` is true for any reservoir in the current result set. When a
     // result set exists, everything outside it is dimmed back so the ones that
     // matter read first; `selected` (clicked) always wins the ring.
     const isSelected: ExpressionSpecification = ['boolean', ['feature-state', 'selected'], false]
     const isHighlighted: ExpressionSpecification = ['boolean', ['feature-state', 'highlighted'], false]
     const isDimmed: ExpressionSpecification = ['boolean', ['feature-state', 'dimmed'], false]
+
+    // Markers are drawn small enough to read as dots at national scale and
+    // grow to their full size by the zoom a search lands on. At a flat radius
+    // the 72 markers would be white blobs across the whole country on first
+    // load, since the reservoirs layer is on by default.
+    const byZoom = (wide: number, close: number): ExpressionSpecification => [
+      'interpolate', ['linear'], ['zoom'],
+      RESERVOIR_MINZOOM, wide,
+      RESERVOIR_LABEL_MINZOOM, close,
+    ]
+
+    map.addLayer({
+      id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
+      paint: {
+        'circle-radius': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false], byZoom(6, 14),
+          ['boolean', ['feature-state', 'highlighted'], false], byZoom(6, 14),
+          byZoom(4.5, 11),
+        ],
+        'circle-color': '#ffffff',
+        'circle-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.35, 0.85],
+      },
+      layout: { visibility: 'none' },
+    })
     map.addLayer({
       id: 'reservoirs-circle', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': ['case', isSelected, 11, isHighlighted, 11, 9],
+        'circle-radius': [
+          'case',
+          isSelected, byZoom(5, 11),
+          isHighlighted, byZoom(5, 11),
+          byZoom(3.5, 9),
+        ],
         'circle-color': ['get', 'colour'],
         'circle-opacity': [
           'case',
@@ -103,12 +123,17 @@ export function ensureDataLayers(map: maplibregl.Map): void {
           isHighlighted, '#204E62',
           '#ffffff',
         ],
-        'circle-stroke-width': ['case', isSelected, 3, isHighlighted, 2.5, 1.5],
+        'circle-stroke-width': [
+          'case',
+          isSelected, byZoom(1.5, 3),
+          isHighlighted, byZoom(1.25, 2.5),
+          byZoom(0.75, 1.5),
+        ],
       },
       layout: { visibility: 'none' },
     })
     map.addLayer({
-      id: 'reservoirs-label', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
+      id: 'reservoirs-label', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_LABEL_MINZOOM,
       layout: {
         'text-field': ['concat', ['to-string', ['get', 'fillPercent']], '%'],
         'text-size': 9, 'text-allow-overlap': true, 'text-ignore-placement': true, visibility: 'none',
@@ -116,7 +141,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
       paint: { 'text-color': '#ffffff', 'text-halo-color': 'rgba(0,0,0,0.2)', 'text-halo-width': 0.5 },
     })
     map.addLayer({
-      id: 'reservoirs-name', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
+      id: 'reservoirs-name', type: 'symbol', source: 'reservoirs-src', minzoom: RESERVOIR_LABEL_MINZOOM,
       layout: {
         'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.6],
         'text-anchor': 'top', 'text-max-width': 10, visibility: 'none',
