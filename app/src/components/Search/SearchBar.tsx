@@ -4,7 +4,7 @@ import { geocodeAddress } from '../../services/geocoding'
 import { useAppStore } from '../../store/useAppStore'
 import { getFloodZoneStatus } from '../../services/floodZone'
 import { getDroughtStatus } from '../../services/drought'
-import { getNearbyReservoirs } from '../../services/reservoirs'
+import { getReservoirsForLocation } from '../../services/reservoirs'
 import { generateRiskSummary, generateQuestions } from '../../services/ai'
 import type { SearchResult } from '../../types'
 
@@ -65,7 +65,7 @@ export default function SearchBar() {
       getFloodZoneStatus(result.coordinates).catch(() => null),
       getDroughtStatus(result.coordinates).catch(() => null),
     ])
-    const reservoirs = getNearbyReservoirs(result.coordinates)
+    const reservoirs = getReservoirsForLocation(result)
 
     updateProfile({ floodZone, drought, reservoirs, loading: false })
 
