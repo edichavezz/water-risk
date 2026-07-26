@@ -152,7 +152,11 @@
     }
   },
   "map": {
-    "hoverHint": "Seleccionar para ver detalles"
+    "hoverHint": "Seleccionar para ver detalles",
+    "pickLoading": "Buscando este lugar…",
+    "pickSearchHere": "Buscar aquí",
+    "pickNoPlace": "No se encontró ningún lugar aquí",
+    "pickOutsideCoverage": "Fuera de cobertura — solo ubicación"
   },
   "legend": {
     "source": "Fuente: {{source}}",
@@ -191,7 +195,7 @@
     "resident": "Vivo aquí o soy propietario/a",
     "buyer": "Estoy pensando en comprar o invertir",
     "submit": "Consultar esta zona",
-    "exploreHint": "o simplemente explora el mapa",
+    "exploreHint": "o haz clic en cualquier punto del mapa",
     "coverageNote": "Hay resultados detallados para Andalucía. Otras regiones se añadirán con el tiempo.",
     "keyAvailable": "Datos detallados disponibles",
     "keyUnavailable": "Aún no disponible",

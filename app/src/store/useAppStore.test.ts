@@ -33,6 +33,13 @@ describe('workspace store', () => {
     expect(s.interpretation.status).toBe('idle')
   })
 
+  it('records where the search came from so the camera can respond', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    expect(useAppStore.getState().searchOrigin).toBe('query')
+    useAppStore.getState().beginSearch(sevilla, 'map')
+    expect(useAppStore.getState().searchOrigin).toBe('map')
+  })
+
   it('beginSearch outside coverage marks unsupported', () => {
     useAppStore.getState().beginSearch(madrid)
     expect(useAppStore.getState().coverage?.supported).toBe(false)

@@ -1,15 +1,18 @@
 import type { SearchResult } from '../../types'
 import type { DatasetId } from '../../types/workspace'
-import { useAppStore } from '../../store/useAppStore'
+import { useAppStore, type SearchOrigin } from '../../store/useAppStore'
 import { orderedDatasets, getDataset } from '../../registry/datasets'
 import { runProfile } from '../../services/orchestrator'
 
 // Enters the searched state and fetches the applicable datasets. Outside
 // coverage it shows the location but runs no dataset fetches and applies no
 // risk styling (spec §15.2).
-export async function submitLocation(location: SearchResult): Promise<void> {
+export async function submitLocation(
+  location: SearchResult,
+  origin: SearchOrigin = 'query',
+): Promise<void> {
   const store = useAppStore.getState()
-  store.beginSearch(location)
+  store.beginSearch(location, origin)
   const coverage = useAppStore.getState().coverage
   if (!coverage?.supported) return
   const datasets = orderedDatasets(location, useAppStore.getState().audience)

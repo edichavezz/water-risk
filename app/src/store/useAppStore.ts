@@ -9,10 +9,15 @@ import { getDataset } from '../registry/datasets'
 
 const MAX_CONTEXT_LAYERS = 2
 
+// Where a search came from. The camera flies to a fixed zoom for a typed
+// query, but holds the user's own zoom when they picked the point themselves.
+export type SearchOrigin = 'query' | 'map'
+
 interface AppStore {
   language: Language
   view: WorkspaceView
   location: SearchResult | null
+  searchOrigin: SearchOrigin
   audience: Audience | null
   coverage: CoverageResult | null
   panelMode: PanelMode
@@ -25,7 +30,7 @@ interface AppStore {
 
   setLanguage: (lang: Language) => void
   setAudience: (a: Audience | null) => void
-  beginSearch: (location: SearchResult) => void
+  beginSearch: (location: SearchResult, origin?: SearchOrigin) => void
   goHome: () => void
   setResult: (id: DatasetId, result: DatasetResult) => void
   selectDataset: (id: DatasetId) => void
@@ -43,6 +48,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   language: 'en',
   view: 'entry',
   location: null,
+  searchOrigin: 'query',
   audience: null,
   coverage: null,
   panelMode: 'data',
@@ -64,10 +70,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   setAudience: audience => set({ audience }),
 
-  beginSearch: location =>
+  beginSearch: (location, origin = 'query') =>
     set({
       view: 'searched',
       location,
+      searchOrigin: origin,
       coverage: lookupCoverage(location.coordinates),
       panelMode: 'data',
       panelDepth: 'list',
@@ -80,6 +87,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     set({
       view: 'entry',
       location: null,
+      searchOrigin: 'query',
       coverage: null,
       panelMode: 'data',
       panelDepth: 'list',

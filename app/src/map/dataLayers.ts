@@ -8,6 +8,7 @@ import { getCoastalWmsUrl, COASTAL_LAYERS } from '../services/coastalFlood'
 import { getAllReservoirsGeoJSON } from '../services/reservoirs'
 import groundwaterUnits from '../data/groundwater-units.json'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
+import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
 
 const WARNING = '#B87535'
@@ -55,7 +56,13 @@ export function ensureDataLayers(map: maplibregl.Map): void {
 
   // ── Reservoir points (context) — clustered by zoom ─────────────────────
   if (!map.getSource('reservoirs-src')) {
-    map.addSource('reservoirs-src', { type: 'geojson', data: getAllReservoirsGeoJSON() })
+    // promoteId gives every feature a stable id, without which setFeatureState
+    // (and so the selected-ring paint expressions below) silently does nothing.
+    map.addSource('reservoirs-src', {
+      type: 'geojson',
+      data: getAllReservoirsGeoJSON(),
+      promoteId: 'codEst',
+    })
     map.addLayer({
       id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: { 'circle-radius': 11, 'circle-color': '#ffffff', 'circle-opacity': 0.85 },
@@ -109,6 +116,8 @@ export function applyLayerPlan(
 let selectedReservoirId: string | number | undefined
 
 export function bindMapInteractions(map: maplibregl.Map): void {
+  bindLocationPicker(map)
+
   map.on('mouseenter', 'reservoirs-circle', e => {
     map.getCanvas().style.cursor = 'pointer'
     const f = e.features?.[0]

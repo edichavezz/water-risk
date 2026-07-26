@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
-import 'maplibre-gl/dist/maplibre-gl.css'
+// maplibre-gl.css is imported (into a cascade layer) from index.css — importing
+// it here too would re-inject it unlayered and beat every Tailwind utility.
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
 import { addCoverageLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
@@ -16,6 +17,7 @@ export default function MapView() {
   const markerRef = useRef<maplibregl.Marker | null>(null)
   const view = useAppStore(s => s.view)
   const location = useAppStore(s => s.location)
+  const searchOrigin = useAppStore(s => s.searchOrigin)
   const primaryLayer = useAppStore(s => s.primaryLayer)
   const contextLayers = useAppStore(s => s.contextLayers)
 
@@ -80,15 +82,19 @@ export default function MapView() {
         'border:2px solid #fff;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(32,49,42,.35)'
       markerRef.current = new maplibregl.Marker({ element: el, anchor: 'bottom' })
         .setLngLat([lng, lat]).addTo(map)
-      if (prefersReducedMotion()) map.jumpTo({ center: [lng, lat], zoom: 11 })
-      else map.flyTo({ center: [lng, lat], zoom: 11, duration: 1200, essential: true })
+      // A typed query lands at a fixed zoom; a point the user picked on the
+      // map keeps the zoom they were already reading at.
+      const zoom = searchOrigin === 'map' ? map.getZoom() : 11
+      if (prefersReducedMotion()) map.jumpTo({ center: [lng, lat], zoom })
+      else if (searchOrigin === 'map') map.easeTo({ center: [lng, lat], zoom, duration: 600 })
+      else map.flyTo({ center: [lng, lat], zoom, duration: 1200, essential: true })
     } else if (view === 'entry') {
       markerRef.current?.remove()
       markerRef.current = null
       if (prefersReducedMotion()) map.jumpTo({ center: ENTRY_CENTER, zoom: ENTRY_ZOOM })
       else map.flyTo({ center: ENTRY_CENTER, zoom: ENTRY_ZOOM, duration: 900 })
     }
-  }, [view, location])
+  }, [view, location, searchOrigin])
 
   return <div ref={containerRef} className="absolute inset-0" aria-label="Map" role="application" />
 }
