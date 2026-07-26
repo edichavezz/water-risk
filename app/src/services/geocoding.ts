@@ -83,13 +83,17 @@ export async function reverseGeocode(coords: Coordinates): Promise<SearchResult 
 
   if (!res.ok) return null
 
-  const r: NominatimResult & { address: NominatimResult['address'] } = await res.json()
+  // Unresolvable coordinates come back as HTTP 200 with `{ error: … }` and no
+  // address — open sea and unmapped ground both land here.
+  const r: Partial<NominatimResult> = await res.json()
+  if (!r.address) return null
+
   const municipio =
     r.address.city || r.address.town || r.address.village || r.address.municipality || ''
   const provincia = r.address.county || r.address.state || ''
 
   return {
-    displayName: r.display_name,
+    displayName: r.display_name ?? '',
     coordinates: coords,
     municipio,
     provincia,

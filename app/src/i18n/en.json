@@ -1,26 +1,11 @@
 {
-  "appName": "Water Risk Explorer",
-  "tagline": "Water risk for your location in Spain",
-  "search": {
-    "placeholder": "Enter address, postcode, or municipality...",
-    "searching": "Searching...",
-    "noResults": "No results found. Try a municipality name.",
-    "hint": "e.g. Sevilla, 29001, Calle Larios Málaga"
-  },
-  "userType": {
-    "label": "I am a...",
-    "buyer": "Property Buyer",
-    "renter": "Renter",
-    "farmer": "Farmer / Smallholder",
-    "business": "Small Business"
-  },
   "layers": {
-    "title": "Map layers",
-    "flood": "Flood zones",
-    "drought": "Drought status",
-    "reservoirs": "Reservoirs",
-    "coastal": "Coastal zones",
-    "groundwater": "Groundwater"
+    "button": "Map layers · {{n}}",
+    "primaryHeading": "Primary risk layer",
+    "contextHeading": "Context",
+    "none": "None",
+    "readabilityWarning": "Two overlays can make the map harder to read.",
+    "close": "Close"
   },
   "risk": {
     "title": "Risk Profile",
@@ -99,12 +84,187 @@
       "source": "Source: EEA Bathing Water Directive — {{year}} season"
     }
   },
-  "attribution": "Map: OpenFreeMap / OpenStreetMap · Flood zones: MITERD SNCZI · Drought: Copernicus EDO",
-  "dataFreshness": "Drought data updated weekly · Flood zones updated periodically",
-  "noLocation": "Search for a location to see its water risk profile",
-  "errors": {
-    "geocodingFailed": "Could not find that location. Try a municipality name.",
-    "dataFailed": "Some data could not be loaded. Showing partial results.",
-    "aiFailed": "AI summary unavailable. Check your API key."
+  "registry": {
+    "flood": {
+      "name": "River flood zones",
+      "cadence": "Updated with SNCZI cartography cycles",
+      "resolution": "Mapped flood polygons (T10 / T100 / T500)",
+      "limitations": [
+        "Does not show surface-water or flash flooding",
+        "Does not show property-level drainage problems",
+        "Does not show historical flood incidents"
+      ]
+    },
+    "drought": {
+      "name": "Drought status",
+      "cadence": "Updated every 10 days (Combined Drought Indicator)",
+      "resolution": "~5 km grid",
+      "limitations": [
+        "Does not show local supply restrictions in force",
+        "Does not show reservoir or aquifer levels directly"
+      ]
+    },
+    "reservoirs": {
+      "name": "Nearby reservoirs",
+      "cadence": "Live REDIAM data where available",
+      "resolution": "Individual reservoirs by supply system or proximity",
+      "limitations": [
+        "May not show which reservoir supplies your tap",
+        "Values are a snapshot, not a weekly trend"
+      ]
+    },
+    "waterQuality": {
+      "name": "Drinking water quality",
+      "cadence": "Annual SINAC reporting",
+      "resolution": "Municipality level",
+      "limitations": [
+        "Does not show your building's plumbing quality",
+        "Does not cover private wells",
+        "Sample covers a limited set of municipalities"
+      ]
+    },
+    "coastalFlood": {
+      "name": "Coastal zone (DPH)",
+      "cadence": "Updated with coastal domain cartography",
+      "resolution": "Mapped 20 m / 100 m coastal strips",
+      "limitations": [
+        "Does not show storm-surge or sea-level-rise projections",
+        "Does not confirm legal status of an individual property"
+      ]
+    },
+    "groundwater": {
+      "name": "Groundwater status",
+      "cadence": "Annual IGME classification",
+      "resolution": "Hydrogeological unit polygons",
+      "limitations": [
+        "Does not show individual well legality or allocation",
+        "Does not show current aquifer levels"
+      ]
+    },
+    "bathingWater": {
+      "name": "Bathing water",
+      "cadence": "Annual EU bathing season assessment",
+      "resolution": "Individual monitored sites",
+      "limitations": [
+        "Does not reflect conditions on a given day",
+        "Assessment year is approximate for this source"
+      ]
+    }
+  },
+  "map": {
+    "hoverHint": "Select for detail",
+    "pickLoading": "Finding this place…",
+    "pickSearchHere": "Search here",
+    "pickNoPlace": "No place found here",
+    "pickOutsideCoverage": "Outside coverage — location only"
+  },
+  "legend": {
+    "source": "Source: {{source}}",
+    "flood": {
+      "t10": "10-year zone",
+      "t100": "100-year zone",
+      "t500": "500-year zone"
+    },
+    "drought": {
+      "title": "Combined Drought Indicator",
+      "watch": "Watch",
+      "warning": "Warning",
+      "alert": "Alert"
+    },
+    "coastalFlood": {
+      "servidumbre": "20 m servidumbre",
+      "policia": "100 m zone"
+    },
+    "groundwater": {
+      "over": "Declared overexploited unit"
+    },
+    "reservoirs": {
+      "title": "Reservoir fill",
+      "low": "<25%",
+      "mid": "25–60%",
+      "high": ">60%"
+    }
+  },
+  "entry": {
+    "heading": "Check water risks for a place in Spain",
+    "supporting": "Public data on flooding, drought, reservoirs and water quality.",
+    "locationLabel": "Postcode, town or address",
+    "audiencePrompt": "What brings you here?",
+    "optional": "Optional",
+    "changeLater": "You can change this later",
+    "resident": "I live or own here",
+    "buyer": "I'm considering buying or investing",
+    "submit": "Check this area",
+    "exploreHint": "or click anywhere on the map",
+    "coverageNote": "Detailed results are available for Andalucía. Other regions will be added over time.",
+    "keyAvailable": "Detailed data available",
+    "keyUnavailable": "Not yet available",
+    "noResults": "Location could not be found. Try a nearby town or a postcode."
+  },
+  "panel": {
+    "publicData": "Public data",
+    "aiTab": "What does this mean?",
+    "back": "All public data",
+    "explain": "Explain this result",
+    "sourceLink": "View original source",
+    "doesNotShow": "Does not show",
+    "geography": "Geography",
+    "cadence": "Updated",
+    "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
+    "unsupportedBody": "You can search another place, or explore the coverage map.",
+    "home": "New search",
+    "mapLayer": "Map layer",
+    "summary": {
+      "flood": {
+        "inZone": "Inside the mapped T{{period}} river-flood zone",
+        "outZone": "Outside the mapped T10, T100 and T500 river-flood zones",
+        "detailNote": "No official river-flood polygon intersects the selected point."
+      },
+      "reservoirs": {
+        "nearest": "{{name}} · {{percent}}% full"
+      },
+      "coastalFlood": {
+        "servidumbre": "Within the 20 m coastal protection strip",
+        "policia": "Within the 100 m coastal zone",
+        "clear": "Outside the mapped coastal zones"
+      },
+      "groundwater": {
+        "over": "Inside {{unit}}, declared overexploited",
+        "clear": "Not inside a declared overexploited unit"
+      },
+      "bathingWater": {
+        "site": "{{name}} · {{rating}} · {{km}} km"
+      },
+      "waterQuality": {
+        "value": "{{compliance}} · {{year}}"
+      }
+    }
+  },
+  "states": {
+    "loading": "Checking source…",
+    "unavailable": "No current result available",
+    "not_applicable": "Not applicable to this place",
+    "unsupported": "Outside detailed coverage",
+    "error": "Source could not be reached",
+    "retry": "Retry"
+  },
+  "ai": {
+    "assistedLabel": "AI-assisted",
+    "titleLocation": "What this location's data may mean",
+    "titleDataset": "What this result may mean",
+    "basis": "Based on: {{sources}}",
+    "loading": "Generating interpretation…",
+    "error": "Interpretation could not be generated.",
+    "unsupported": "Detailed data is not available here, so no interpretation can be made. Check authoritative regional sources instead.",
+    "stale": "The language changed. Regenerate the interpretation?",
+    "regenerate": "Regenerate",
+    "followUpLabel": "Ask a follow-up about this data",
+    "followUpSend": "Ask",
+    "suggested": "Questions you could ask"
+  },
+  "sheet": {
+    "expand": "Expand results",
+    "collapse": "Show map",
+    "signals": "Key results"
   }
 }

@@ -1,26 +1,11 @@
 {
-  "appName": "Water Risk Explorer",
-  "tagline": "Explora el riesgo hídrico en España",
-  "search": {
-    "placeholder": "Introduce dirección, código postal o municipio...",
-    "searching": "Buscando...",
-    "noResults": "Sin resultados. Prueba con el nombre del municipio.",
-    "hint": "ej. Sevilla, 29001, Calle Larios Málaga"
-  },
-  "userType": {
-    "label": "Soy...",
-    "buyer": "Comprador de vivienda",
-    "renter": "Inquilino/a",
-    "farmer": "Agricultor / Propietario rural",
-    "business": "Pequeña empresa"
-  },
   "layers": {
-    "title": "Capas del mapa",
-    "flood": "Zonas inundables",
-    "drought": "Estado de sequía",
-    "reservoirs": "Embalses",
-    "coastal": "Zonas costeras",
-    "groundwater": "Aguas subterráneas"
+    "button": "Capas del mapa · {{n}}",
+    "primaryHeading": "Capa de riesgo principal",
+    "contextHeading": "Contexto",
+    "none": "Ninguna",
+    "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
+    "close": "Cerrar"
   },
   "risk": {
     "title": "Perfil de riesgo",
@@ -99,12 +84,187 @@
       "source": "Fuente: Directiva de Aguas de Baño de la UE (EEA) — temporada {{year}}"
     }
   },
-  "attribution": "Mapa: OpenFreeMap / OpenStreetMap · Zonas inundables: MITERD SNCZI · Sequía: Copernicus EDO",
-  "dataFreshness": "Datos de sequía actualizados semanalmente · Zonas inundables actualizadas periódicamente",
-  "noLocation": "Busca una ubicación para ver su perfil de riesgo hídrico",
-  "errors": {
-    "geocodingFailed": "No se ha encontrado esa ubicación. Prueba con el nombre del municipio.",
-    "dataFailed": "Algunos datos no se han podido cargar. Mostrando resultados parciales.",
-    "aiFailed": "Resumen de IA no disponible. Comprueba tu clave de API."
+  "registry": {
+    "flood": {
+      "name": "Zonas inundables fluviales",
+      "cadence": "Actualizado con los ciclos cartográficos del SNCZI",
+      "resolution": "Polígonos de inundación (T10 / T100 / T500)",
+      "limitations": [
+        "No muestra inundaciones pluviales ni repentinas",
+        "No muestra problemas de drenaje a nivel de propiedad",
+        "No muestra incidentes históricos de inundación"
+      ]
+    },
+    "drought": {
+      "name": "Estado de sequía",
+      "cadence": "Actualizado cada 10 días (Indicador Combinado de Sequía)",
+      "resolution": "Malla de ~5 km",
+      "limitations": [
+        "No muestra restricciones locales de suministro vigentes",
+        "No muestra directamente niveles de embalses o acuíferos"
+      ]
+    },
+    "reservoirs": {
+      "name": "Embalses cercanos",
+      "cadence": "Datos en vivo de REDIAM cuando están disponibles",
+      "resolution": "Embalses individuales por sistema de suministro o proximidad",
+      "limitations": [
+        "Puede no indicar qué embalse abastece su grifo",
+        "Los valores son una instantánea, no una tendencia semanal"
+      ]
+    },
+    "waterQuality": {
+      "name": "Calidad del agua potable",
+      "cadence": "Informe anual SINAC",
+      "resolution": "Nivel municipal",
+      "limitations": [
+        "No muestra la calidad de la fontanería de su edificio",
+        "No cubre pozos privados",
+        "La muestra cubre un conjunto limitado de municipios"
+      ]
+    },
+    "coastalFlood": {
+      "name": "Zona costera (DPH)",
+      "cadence": "Actualizado con la cartografía del dominio costero",
+      "resolution": "Franjas costeras de 20 m / 100 m",
+      "limitations": [
+        "No muestra proyecciones de marejadas ni subida del nivel del mar",
+        "No confirma la situación legal de una propiedad concreta"
+      ]
+    },
+    "groundwater": {
+      "name": "Estado de las aguas subterráneas",
+      "cadence": "Clasificación anual del IGME",
+      "resolution": "Polígonos de unidades hidrogeológicas",
+      "limitations": [
+        "No muestra la legalidad ni la concesión de pozos individuales",
+        "No muestra niveles actuales del acuífero"
+      ]
+    },
+    "bathingWater": {
+      "name": "Aguas de baño",
+      "cadence": "Evaluación anual de la temporada de baño de la UE",
+      "resolution": "Puntos de muestreo individuales",
+      "limitations": [
+        "No refleja las condiciones de un día concreto",
+        "El año de evaluación es aproximado para esta fuente"
+      ]
+    }
+  },
+  "map": {
+    "hoverHint": "Seleccionar para ver detalles",
+    "pickLoading": "Buscando este lugar…",
+    "pickSearchHere": "Buscar aquí",
+    "pickNoPlace": "No se encontró ningún lugar aquí",
+    "pickOutsideCoverage": "Fuera de cobertura — solo ubicación"
+  },
+  "legend": {
+    "source": "Fuente: {{source}}",
+    "flood": {
+      "t10": "Zona T10 (10 años)",
+      "t100": "Zona T100 (100 años)",
+      "t500": "Zona T500 (500 años)"
+    },
+    "drought": {
+      "title": "Indicador Combinado de Sequía",
+      "watch": "Prealerta",
+      "warning": "Alerta",
+      "alert": "Emergencia"
+    },
+    "coastalFlood": {
+      "servidumbre": "Servidumbre de 20 m",
+      "policia": "Zona de 100 m"
+    },
+    "groundwater": {
+      "over": "Unidad declarada sobreexplotada"
+    },
+    "reservoirs": {
+      "title": "Llenado de embalses",
+      "low": "<25%",
+      "mid": "25–60%",
+      "high": ">60%"
+    }
+  },
+  "entry": {
+    "heading": "Consulta los riesgos hídricos de un lugar de España",
+    "supporting": "Datos públicos sobre inundaciones, sequía, embalses y calidad del agua.",
+    "locationLabel": "Código postal, municipio o dirección",
+    "audiencePrompt": "¿Qué te trae por aquí?",
+    "optional": "Opcional",
+    "changeLater": "Podrás cambiarlo más tarde",
+    "resident": "Vivo aquí o soy propietario/a",
+    "buyer": "Estoy pensando en comprar o invertir",
+    "submit": "Consultar esta zona",
+    "exploreHint": "o haz clic en cualquier punto del mapa",
+    "coverageNote": "Hay resultados detallados para Andalucía. Otras regiones se añadirán con el tiempo.",
+    "keyAvailable": "Datos detallados disponibles",
+    "keyUnavailable": "Aún no disponible",
+    "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
+  },
+  "panel": {
+    "publicData": "Datos públicos",
+    "aiTab": "¿Qué significa esto?",
+    "back": "Todos los datos públicos",
+    "explain": "Explicar este resultado",
+    "sourceLink": "Ver fuente original",
+    "doesNotShow": "No muestra",
+    "geography": "Geografía",
+    "cadence": "Actualizado",
+    "unsupportedTitle": "Aún no hay datos detallados de riesgo hídrico para esta zona.",
+    "unsupportedBody": "Puedes buscar otro lugar o explorar el mapa de cobertura.",
+    "home": "Nueva búsqueda",
+    "mapLayer": "Capa del mapa",
+    "summary": {
+      "flood": {
+        "inZone": "Dentro de la zona inundable fluvial T{{period}}",
+        "outZone": "Fuera de las zonas inundables fluviales T10, T100 y T500",
+        "detailNote": "Ningún polígono oficial de inundación fluvial intersecta el punto seleccionado."
+      },
+      "reservoirs": {
+        "nearest": "{{name}} · {{percent}}% de llenado"
+      },
+      "coastalFlood": {
+        "servidumbre": "Dentro de la servidumbre de protección de 20 m",
+        "policia": "Dentro de la zona costera de 100 m",
+        "clear": "Fuera de las zonas costeras cartografiadas"
+      },
+      "groundwater": {
+        "over": "Dentro de {{unit}}, declarada sobreexplotada",
+        "clear": "Fuera de una unidad declarada sobreexplotada"
+      },
+      "bathingWater": {
+        "site": "{{name}} · {{rating}} · {{km}} km"
+      },
+      "waterQuality": {
+        "value": "{{compliance}} · {{year}}"
+      }
+    }
+  },
+  "states": {
+    "loading": "Consultando la fuente…",
+    "unavailable": "No hay resultado actual disponible",
+    "not_applicable": "No aplicable a este lugar",
+    "unsupported": "Fuera de la cobertura detallada",
+    "error": "No se pudo acceder a la fuente",
+    "retry": "Reintentar"
+  },
+  "ai": {
+    "assistedLabel": "Asistido por IA",
+    "titleLocation": "Qué pueden significar los datos de esta ubicación",
+    "titleDataset": "Qué puede significar este resultado",
+    "basis": "Basado en: {{sources}}",
+    "loading": "Generando interpretación…",
+    "error": "No se pudo generar la interpretación.",
+    "unsupported": "Aquí no hay datos detallados, así que no se puede hacer una interpretación. Consulta fuentes regionales oficiales.",
+    "stale": "Ha cambiado el idioma. ¿Regenerar la interpretación?",
+    "regenerate": "Regenerar",
+    "followUpLabel": "Haz una pregunta sobre estos datos",
+    "followUpSend": "Preguntar",
+    "suggested": "Preguntas que podrías hacer"
+  },
+  "sheet": {
+    "expand": "Ampliar resultados",
+    "collapse": "Ver mapa",
+    "signals": "Resultados clave"
   }
 }

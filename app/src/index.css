@@ -1,19 +1,85 @@
+/* MapLibre's stylesheet is unlayered by default, so its plain `.maplibregl-map`
+   rules would outrank every Tailwind utility (layered CSS always loses to
+   unlayered CSS). Declaring the order up front and importing it into its own
+   layer keeps utilities like `absolute` winning on the map container. */
+@layer properties, theme, base, components, maplibre, utilities;
+
 @import "tailwindcss";
-@import "maplibre-gl/dist/maplibre-gl.css";
+@import "maplibre-gl/dist/maplibre-gl.css" layer(maplibre);
+
+@theme {
+  --color-canvas: #FFFFFF;
+  --color-ink: #20312A;
+  --color-muted: #68766F;
+  --color-primary: #285F77;
+  --color-primary-hover: #204E62;
+  --color-primary-soft: #E4EFF3;
+  --color-focus: #78A9BD;
+  --color-subtle-cool: #F5F8F9;
+  --color-subtle-warm: #F7F7F3;
+  --color-coverage: #7FA38C;
+  --color-water: #4B91AD;
+  --color-positive: #397353;
+  --color-warning: #B87535;
+  --color-danger: #AD4942;
+  --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
 
 :root {
-  --color-water: #3b82f6;
-  --color-drought: #f59e0b;
-  --color-flood: #ef4444;
-  --color-safe: #10b981;
+  --dur-control: 150ms;
+  --dur-panel: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-control: 0ms; --dur-panel: 0ms; }
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  @apply font-sans text-ink bg-canvas;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 #map {
   width: 100%;
   height: 100%;
 }
+
+/* ── Map location picker ──────────────────────────────────────────────────
+   A provisional pin: hollow and dashed, so it never reads as the filled
+   teardrop a confirmed search result gets. */
+.pick-pin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px dashed var(--color-primary);
+  background: rgb(255 255 255 / 0.85);
+}
+
+.pick-popup {
+  padding: 2px;
+  font-size: 12px;
+  color: var(--color-ink);
+}
+
+.pick-popup__name { font-weight: 700; }
+.pick-popup__note { margin-top: 2px; font-size: 10px; color: var(--color-muted); }
+
+.pick-popup__action {
+  margin-top: 6px;
+  width: 100%;
+  min-height: 44px; /* matches every other control's touch target */
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pick-popup__action:hover { background: var(--color-primary-hover); }
