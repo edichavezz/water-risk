@@ -3,6 +3,7 @@ import LayerTray from './components/Map/LayerTray'
 import Legend from './components/Map/Legend'
 import EntryCard from './components/Entry/EntryCard'
 import CoverageKey from './components/Entry/CoverageKey'
+import WorkspacePanel from './components/Panel/WorkspacePanel'
 import LanguageToggle from './components/LanguageToggle'
 import { useAppStore } from './store/useAppStore'
 
@@ -26,6 +27,7 @@ export default function App() {
 
       {view === 'searched' && (
         <>
+          <WorkspacePanel />
           <LayerTray />
           <Legend />
         </>

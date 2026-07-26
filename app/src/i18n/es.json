@@ -219,5 +219,52 @@
     "keyAvailable": "Datos detallados disponibles",
     "keyUnavailable": "Aún no disponible",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
+  },
+  "panel": {
+    "publicData": "Datos públicos",
+    "aiTab": "¿Qué significa esto?",
+    "back": "Todos los datos públicos",
+    "explain": "Explicar este resultado",
+    "sourceLink": "Ver fuente original",
+    "doesNotShow": "No muestra",
+    "geography": "Geografía",
+    "cadence": "Actualizado",
+    "unsupportedTitle": "Aún no hay datos detallados de riesgo hídrico para esta zona.",
+    "unsupportedBody": "Puedes buscar otro lugar o explorar el mapa de cobertura.",
+    "home": "Nueva búsqueda",
+    "mapLayer": "Capa del mapa",
+    "summary": {
+      "flood": {
+        "inZone": "Dentro de la zona inundable fluvial T{{period}}",
+        "outZone": "Fuera de las zonas inundables fluviales T10, T100 y T500",
+        "detailNote": "Ningún polígono oficial de inundación fluvial intersecta el punto seleccionado."
+      },
+      "reservoirs": {
+        "nearest": "{{name}} · {{percent}}% de llenado"
+      },
+      "coastalFlood": {
+        "servidumbre": "Dentro de la servidumbre de protección de 20 m",
+        "policia": "Dentro de la zona costera de 100 m",
+        "clear": "Fuera de las zonas costeras cartografiadas"
+      },
+      "groundwater": {
+        "over": "Dentro de {{unit}}, declarada sobreexplotada",
+        "clear": "Fuera de una unidad declarada sobreexplotada"
+      },
+      "bathingWater": {
+        "site": "{{name}} · {{rating}} · {{km}} km"
+      },
+      "waterQuality": {
+        "value": "{{compliance}} · {{year}}"
+      }
+    }
+  },
+  "states": {
+    "loading": "Consultando la fuente…",
+    "unavailable": "No hay resultado actual disponible",
+    "not_applicable": "No aplicable a este lugar",
+    "unsupported": "Fuera de la cobertura detallada",
+    "error": "No se pudo acceder a la fuente",
+    "retry": "Reintentar"
   }
 }

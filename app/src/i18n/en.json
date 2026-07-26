@@ -219,5 +219,52 @@
     "keyAvailable": "Detailed data available",
     "keyUnavailable": "Not yet available",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
+  },
+  "panel": {
+    "publicData": "Public data",
+    "aiTab": "What does this mean?",
+    "back": "All public data",
+    "explain": "Explain this result",
+    "sourceLink": "View original source",
+    "doesNotShow": "Does not show",
+    "geography": "Geography",
+    "cadence": "Updated",
+    "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
+    "unsupportedBody": "You can search another place, or explore the coverage map.",
+    "home": "New search",
+    "mapLayer": "Map layer",
+    "summary": {
+      "flood": {
+        "inZone": "Inside the mapped T{{period}} river-flood zone",
+        "outZone": "Outside the mapped T10, T100 and T500 river-flood zones",
+        "detailNote": "No official river-flood polygon intersects the selected point."
+      },
+      "reservoirs": {
+        "nearest": "{{name}} · {{percent}}% full"
+      },
+      "coastalFlood": {
+        "servidumbre": "Within the 20 m coastal protection strip",
+        "policia": "Within the 100 m coastal zone",
+        "clear": "Outside the mapped coastal zones"
+      },
+      "groundwater": {
+        "over": "Inside {{unit}}, declared overexploited",
+        "clear": "Not inside a declared overexploited unit"
+      },
+      "bathingWater": {
+        "site": "{{name}} · {{rating}} · {{km}} km"
+      },
+      "waterQuality": {
+        "value": "{{compliance}} · {{year}}"
+      }
+    }
+  },
+  "states": {
+    "loading": "Checking source…",
+    "unavailable": "No current result available",
+    "not_applicable": "Not applicable to this place",
+    "unsupported": "Outside detailed coverage",
+    "error": "Source could not be reached",
+    "retry": "Retry"
   }
 }
