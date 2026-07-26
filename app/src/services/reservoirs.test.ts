@@ -46,4 +46,30 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
     expect(getReservoirsForLocation(location).length).toBeGreaterThan(0)
   })
+
+  it('reproduces the real Nominatim response shape for postcode 41500 and still matches EMASESA', () => {
+    // Real Nominatim address block for q=41500, verified live 2026-07-24:
+    // https://nominatim.openstreetmap.org/search?q=41500&format=json&countrycodes=es&addressdetails=1
+    const nominatimAddress = {
+      town: 'Alcalá de Guadaíra',
+      province: 'Sevilla',
+      state: 'Andalucía',
+    }
+    // Same field-picking order as geocoding.ts's geocodeAddress()
+    const municipio =
+      (nominatimAddress as any).city ||
+      (nominatimAddress as any).town ||
+      (nominatimAddress as any).village ||
+      (nominatimAddress as any).municipality ||
+      ''
+
+    const location: SearchResult = {
+      displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
+      coordinates: { lat: 37.3433569, lng: -5.8402153 },
+      municipio,
+    }
+    const result = getReservoirsForLocation(location)
+    expect(result.length).toBe(7)
+    expect(result.every(r => r.systemName === 'EMASESA')).toBe(true)
+  })
 })
