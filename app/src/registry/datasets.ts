@@ -101,9 +101,6 @@ export const DATASETS: DatasetDef[] = [
     category: 'hazard',
     source: { name: 'MITERD Coastal DPH' },
     mapRole: 'primary',
-    // Same dead wms.aspx host as the old flood endpoint: every request returns
-    // a NullReferenceException, and the coastal layers have no IDEE equivalent.
-    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,

@@ -2,17 +2,35 @@ import type { Coordinates, CoastalFloodResult } from '../types'
 
 const COASTAL_DPH_WMS = 'https://wms.mapama.gob.es/sig/Costas/ServDPHC/wms.aspx'
 
-// NOTE (verified 2026-07): This WMS gateway currently returns a server-side
-// ASP.NET NullReferenceException for GetCapabilities AND GetFeatureInfo on
-// every request — confirmed against this endpoint AND the already-live
-// SNCZI flood endpoint (floodZone.ts), which shows the identical failure
-// right now. This is a live outage on MITERD's whole wms.aspx gateway, not
-// a wrong URL/params. Layer names below are the best candidates from public
-// MITERD/datos.gob.es metadata and could not be confirmed against a live
-// GetCapabilities response — re-verify once the gateway responds normally.
+// NOTE (re-verified 2026-07): MITECO's whole wms.aspx gateway is still down —
+// every path returns a server-side NullReferenceException naming
+// ConstruirServiceArcGISBaseUrl, i.e. the ASP.NET proxy cannot reach its own
+// ArcGIS backend. That includes the endpoint datos.gob.es still publishes as
+// the official DPMT service, and the KMZ fallback it lists now redirects to an
+// HTML page. Nothing on our side can fix this; the national deslinde is simply
+// unavailable, so the panel's in-servitude verdict stays unanswerable.
+//
+// The map layer, however, has a live stand-in: REDIAM publishes the Andalucía
+// zoning of the same protection zone (see COASTAL_MAP below).
 export const COASTAL_LAYERS = {
   servidumbre: 'DPMT_Servidumbre',
   policia: 'DPMT_ZonaPolicia',
+}
+
+// REDIAM's coastal zoning, relayed through /api/wms-proxy because the service
+// sends no CORS headers. Andalucía only, which matches this app's
+// detailed-coverage area.
+//
+// This is the *management zoning* of the protection zone — `ZSP` holds the
+// profile transects and `Tramos_homogeneos` the homogeneous stretches — not
+// the DPMT deslinde boundary itself. It is honest as a map overlay showing
+// where coastal protection applies, and deliberately not used to answer
+// whether a given address falls inside the servitude: profiles cannot support
+// a point-in-polygon verdict, and claiming otherwise would be the same kind of
+// confident-but-wrong answer the dead flood endpoint was producing.
+export const COASTAL_MAP_LAYERS = {
+  zsp: 'ZSP',
+  tramos: 'Tramos_homogeneos',
 }
 
 const COASTAL_PROVINCES = [
@@ -86,8 +104,9 @@ export async function getCoastalFloodStatus(coords: Coordinates): Promise<Coasta
 
 export function getCoastalWmsUrl(layer: string): string {
   return (
-    `${COASTAL_DPH_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
-    `&LAYERS=${layer}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
+    `/api/wms-proxy?upstream=rediam-coastal` +
+    `&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
+    `&LAYERS=${encodeURIComponent(layer)}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
     `&SRS=EPSG:3857&WIDTH=256&HEIGHT=256` +
     `&BBOX={bbox-epsg-3857}`
   )
