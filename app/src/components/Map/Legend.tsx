@@ -51,7 +51,7 @@ export default function Legend() {
   const rows = primaryLayer ? legendRows(primaryLayer, t) : []
 
   return (
-    <div className="absolute bottom-8 left-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
+    <div className="absolute bottom-8 right-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
       {primaryLayer && def && (
         <>
           <p className="mb-1.5 font-bold text-ink">{t(`registry.${primaryLayer}.name`)}</p>
