@@ -1,7 +1,6 @@
 {
   "app": {
     "tagline": "Consulta los riesgos hídricos de un lugar de España",
-    "about": "Acerca de",
     "navMap": "Mapa",
     "navAbout": "Acerca de",
     "nav": "Secciones"
@@ -274,9 +273,7 @@
     "makerBodyTwo": "La mía era esta: viviendo en España, el agua sale constantemente en las conversaciones y casi nunca con cifras al lado. Los datos para responder ya existen y ya son públicos. Simplemente no eran utilizables por las personas de las que hablan. Este es mi intento de hacerlos utilizables: es un proyecto personal, no un servicio comercial, y seguirá cambiando.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "reúne el resto de mi trabajo.",
-    "makerCourseLabel": "Terra.do",
-    "close": "Cerrar",
-    "sourcesHeading": "Fuentes de datos"
+    "makerCourseLabel": "Terra.do"
   },
   "panel": {
     "publicData": "Datos públicos",

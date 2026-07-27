@@ -81,7 +81,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
           : state.interpretation,
     })),
 
-  setPage: page => set({ page }),
+  // Returning to the map by hand clears any pending focus request, so a plain
+  // navigation never pops the keyboard open the way the CTA deliberately does.
+  setPage: page => set(page === 'map' ? { page, searchFocusNonce: 0 } : { page }),
 
   // The About page's "try it out" call to action. It never clears a search:
   // a reader who already looked a place up gets their map back untouched,

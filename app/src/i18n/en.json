@@ -1,7 +1,6 @@
 {
   "app": {
     "tagline": "Check water risks for a place in Spain",
-    "about": "About",
     "navMap": "Map",
     "navAbout": "About",
     "nav": "Sections"
@@ -274,9 +273,7 @@
     "makerBodyTwo": "Mine was this: living in Spain, water comes up constantly in conversation and almost never with numbers attached. The data to answer it already exists and is already public. It just was not usable by the people it is about. This is my attempt at making it usable — it is a personal project, not a commercial service, and it will keep changing.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "has the rest of my work.",
-    "makerCourseLabel": "Terra.do",
-    "close": "Close",
-    "sourcesHeading": "Data sources"
+    "makerCourseLabel": "Terra.do"
   },
   "panel": {
     "publicData": "Public data",
