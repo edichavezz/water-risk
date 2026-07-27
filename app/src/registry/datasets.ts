@@ -48,12 +48,11 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'drought',
     category: 'hazard',
-    source: { name: 'Copernicus EDO', url: 'https://edo.jrc.ec.europa.eu/' },
+    source: {
+      name: 'Copernicus EDO',
+      url: 'https://drought.emergency.copernicus.eu/',
+    },
     mapRole: 'primary',
-    // edo.jrc.ec.europa.eu/geoserver redirects to
-    // drought.emergency.copernicus.eu, which 404s every GeoServer path — no
-    // live replacement for the cdi_current raster has been found.
-    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 4 },
     defaultOrder: 2,

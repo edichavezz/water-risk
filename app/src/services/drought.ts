@@ -1,94 +1,67 @@
 import type { Coordinates, DroughtStatus } from '../types'
+import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
 
-// Copernicus EDO WMS
-const EDO_WMS = 'https://edo.jrc.ec.europa.eu/geoserver/edo/wms'
+// Copernicus EDO/GDO drought products.
+//
+// The old endpoint (edo.jrc.ec.europa.eu/geoserver/edo/wms) redirects to
+// drought.emergency.copernicus.eu, where every /geoserver path 404s. The
+// service now lives under /api/wms and sends `Access-Control-Allow-Origin: *`.
+const EDO_WMS = 'https://drought.emergency.copernicus.eu/api/wms'
 
-// CDI colour values → drought level mapping
-// The CDI uses standard colour coding per the EDO specification
-const CDI_COLOUR_MAP: Record<string, DroughtStatus['level']> = {
-  // RGB values from Copernicus CDI colour scheme (approximate)
-  // Green shades = no drought / recovery
-  // Yellow = watch
-  // Orange = warning
-  // Red = alert
-  '255,0,0': 'alert',
-  '255,128,0': 'warning',
-  '255,255,0': 'watch',
-  '0,128,0': 'none',
-  '0,255,0': 'recovery',
-  '128,255,0': 'partial_recovery',
-}
+// Combined Drought Indicator v4.1. Passing an explicit TIME is rejected with
+// DATE_OUT_OF_RANGE around the edges of the 10-day publishing cycle, so we let
+// the service pick its own latest slice.
+const CDI_LAYER = 'cdinx'
+
+/**
+ * The CDI palette, read from the layer's own GetLegendGraphic. It is the
+ * Okabe-Ito colourblind-safe set, so the classes are far apart in RGB and a
+ * nearest-colour match is unambiguous.
+ */
+const CDI_PALETTE: { rgb: [number, number, number]; value: DroughtStatus['level'] }[] = [
+  { rgb: [255, 255, 255], value: 'none' },              // Normal, no drought
+  { rgb: [240, 228, 66], value: 'watch' },              // Watch
+  { rgb: [230, 159, 0], value: 'warning' },             // Warning
+  { rgb: [220, 5, 12], value: 'alert' },                // Alert
+  { rgb: [0, 114, 178], value: 'recovery' },            // Full recovery
+  { rgb: [204, 121, 167], value: 'partial_recovery' },  // Temporary soil moisture recovery
+  { rgb: [0, 158, 115], value: 'partial_recovery' },    // Temporary fAPAR recovery
+  { rgb: [200, 200, 200], value: 'unknown' },           // No data
+]
 
 export function getDroughtWmsUrl(): string {
   return (
     `${EDO_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
-    `&LAYERS=cdi_current&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
+    `&LAYERS=${CDI_LAYER}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
     `&SRS=EPSG:3857&WIDTH=256&HEIGHT=256` +
     `&BBOX={bbox-epsg-3857}`
   )
 }
 
+/**
+ * Reads the drought class at a point off the CDI raster.
+ *
+ * GetFeatureInfo is not an option here — this service answers any such request
+ * with "Invalid request type" — so we classify the rendered pixel against the
+ * published legend instead.
+ */
 export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStatus> {
-  const delta = 0.05
-  const bbox = `${coords.lng - delta},${coords.lat - delta},${coords.lng + delta},${coords.lat + delta}`
-
-  const params = new URLSearchParams({
-    SERVICE: 'WMS',
-    VERSION: '1.1.1',
-    REQUEST: 'GetFeatureInfo',
-    LAYERS: 'cdi_current',
-    QUERY_LAYERS: 'cdi_current',
-    STYLES: '',
-    BBOX: bbox,
-    WIDTH: '10',
-    HEIGHT: '10',
-    SRS: 'EPSG:4326',
-    X: '5',
-    Y: '5',
-    INFO_FORMAT: 'text/plain',
-    FEATURE_COUNT: '1',
-  })
-
-  try {
-    const res = await fetch(`${EDO_WMS}?${params}`)
-    if (!res.ok) throw new Error('EDO WMS failed')
-    const text = await res.text()
-
-    // Parse CDI value from plain text response
-    // EDO returns something like: "CDI_value = 3" or similar
-    const cdiMatch = text.match(/CDI[_\s]*[Vv]alue\s*[=:]\s*(-?\d+\.?\d*)/i)
-    if (cdiMatch) {
-      const value = parseFloat(cdiMatch[1])
-      return cdiValueToStatus(value)
-    }
-
-    // Try to find any numeric value
-    const numMatch = text.match(/\b([1-5])\b/)
-    if (numMatch) {
-      return cdiValueToStatus(parseInt(numMatch[1]))
-    }
-  } catch {
-    // Fall through to unknown
-  }
-
-  return {
+  const today = new Date().toISOString().split('T')[0]
+  const unknown: DroughtStatus = {
     level: 'unknown',
     label: 'unknown',
-    updatedAt: new Date().toISOString().split('T')[0],
+    updatedAt: today,
     source: 'Copernicus EDO',
   }
-}
 
-// CDI values: 1=alert, 2=warning, 3=watch, 4=partial_recovery, 5=recovery/none
-function cdiValueToStatus(value: number): DroughtStatus {
-  const today = new Date().toISOString().split('T')[0]
-  const levelMap: Record<number, DroughtStatus['level']> = {
-    1: 'alert',
-    2: 'warning',
-    3: 'watch',
-    4: 'partial_recovery',
-    5: 'none',
+  try {
+    const px = await samplePixel(sampleUrl(EDO_WMS, CDI_LAYER, coords.lng, coords.lat))
+    // Outside the coverage the raster is simply not painted.
+    if (px.a === 0) return unknown
+    const level = nearestColour(px, CDI_PALETTE)
+    if (!level || level === 'unknown') return unknown
+    return { level, label: level, updatedAt: today, source: 'Copernicus EDO' }
+  } catch {
+    return unknown
   }
-  const level = levelMap[Math.round(value)] ?? 'unknown'
-  return { level, label: level, updatedAt: today, source: 'Copernicus EDO' }
 }

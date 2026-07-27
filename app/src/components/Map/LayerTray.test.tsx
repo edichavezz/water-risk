@@ -33,11 +33,12 @@ describe('layer tray', () => {
     const user = userEvent.setup()
     render(<LayerTray />)
     await user.click(screen.getByRole('button', { name: /map layers/i }))
-    // Copernicus EDO and the MITERD coastal WMS both return errors for every
-    // request, so offering these as toggles would be a guaranteed no-op.
-    expect(screen.getByRole('radio', { name: /drought status/i })).toBeDisabled()
-    await user.click(screen.getByRole('radio', { name: /drought status/i }))
-    expect(useAppStore.getState().primaryLayer).not.toBe('drought')
+    // The MITERD coastal WMS gateway returns a server error for every request,
+    // so offering it as a toggle would be a guaranteed no-op.
+    const coastal = screen.getByRole('radio', { name: /coastal zone/i })
+    expect(coastal).toBeDisabled()
+    await user.click(coastal)
+    expect(useAppStore.getState().primaryLayer).not.toBe('coastalFlood')
   })
 
   it('context checkboxes toggle overlays', async () => {

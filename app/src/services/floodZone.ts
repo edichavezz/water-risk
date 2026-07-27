@@ -1,4 +1,5 @@
 import type { Coordinates, FloodZoneResult } from '../types'
+import { samplePixel, sampleUrl } from './wmsSample'
 
 // SNCZI flood zones, served through the IDEE INSPIRE endpoint.
 //
@@ -37,42 +38,13 @@ export function getSNCZIWmsUrl(layer: string): string {
  * image and read the centre.
  */
 export function getSNCZISampleUrl(layer: string, coords: Coordinates): string {
-  // Roughly a 90 m box — small enough to be the point, big enough that the
-  // server does not collapse it to an empty raster.
-  const delta = 0.0004
-  const bbox =
-    `${coords.lng - delta},${coords.lat - delta},` +
-    `${coords.lng + delta},${coords.lat + delta}`
-  return (
-    `${SNCZI_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
-    `&LAYERS=${layer}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
-    `&SRS=EPSG:4326&WIDTH=3&HEIGHT=3&BBOX=${bbox}`
-  )
+  return sampleUrl(SNCZI_WMS, layer, coords.lng, coords.lat)
 }
 
 // True when the centre pixel of the sampled tile is painted, i.e. the point
 // lies inside the flood zone that layer draws.
 async function pointIsPainted(url: string): Promise<boolean> {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`WMS ${res.status}`)
-  const blob = await res.blob()
-  if (!blob.type.startsWith('image/')) throw new Error('WMS returned a non-image')
-
-  // A bitmap decoded from a blob carries no origin, so the canvas it is drawn
-  // into is never tainted and getImageData stays readable.
-  const bitmap = await createImageBitmap(blob)
-  try {
-    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
-    const ctx = canvas.getContext('2d')
-    if (!ctx) throw new Error('no 2d context')
-    ctx.drawImage(bitmap, 0, 0)
-    const cx = Math.floor(bitmap.width / 2)
-    const cy = Math.floor(bitmap.height / 2)
-    const [, , , alpha] = ctx.getImageData(cx, cy, 1, 1).data
-    return alpha > 0
-  } finally {
-    bitmap.close()
-  }
+  return (await samplePixel(url)).a > 0
 }
 
 /**
