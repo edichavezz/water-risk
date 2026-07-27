@@ -2,6 +2,9 @@ import type { Audience, DatasetId, PanelMode } from '../types/workspace'
 import { ALL_DATASET_IDS } from '../types/workspace'
 
 export interface RouteState {
+  /* Only ever 'about' — the map is the default page and stays out of the URL,
+     so an About link is shareable without changing every other link. */
+  page?: 'about'
   q?: string
   lat?: number
   lng?: number
@@ -15,6 +18,7 @@ const AUDIENCES: Audience[] = ['resident_owner', 'buyer_investor']
 export function parseRoute(search: string): RouteState {
   const p = new URLSearchParams(search)
   const out: RouteState = {}
+  if (p.get('page') === 'about') out.page = 'about'
   const lat = Number(p.get('lat'))
   const lng = Number(p.get('lng'))
   if (p.has('lat') && p.has('lng') && Number.isFinite(lat) && Number.isFinite(lng)) {
@@ -34,6 +38,7 @@ export function parseRoute(search: string): RouteState {
 
 export function serializeRoute(state: RouteState): string {
   const p = new URLSearchParams()
+  if (state.page === 'about') p.set('page', 'about')
   if (state.lat !== undefined && state.lng !== undefined) {
     if (state.q) p.set('q', state.q)
     p.set('lat', String(state.lat))

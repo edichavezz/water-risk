@@ -13,8 +13,14 @@ const MAX_CONTEXT_LAYERS = 2
 // query, but holds the user's own zoom when they picked the point themselves.
 export type SearchOrigin = 'query' | 'map'
 
+// Which top-level page the banner is showing. This is deliberately orthogonal
+// to `view`: the map keeps its camera, its layers and any active search while
+// About is on screen, so coming back lands exactly where the reader left.
+export type Page = 'map' | 'about'
+
 interface AppStore {
   language: Language
+  page: Page
   view: WorkspaceView
   location: SearchResult | null
   searchOrigin: SearchOrigin
@@ -27,8 +33,13 @@ interface AppStore {
   contextLayers: DatasetId[]
   results: Partial<Record<DatasetId, DatasetResult>>
   interpretation: InterpretationState
+  /* Bumped when something asks the entry field for focus (the About CTA).
+     A counter rather than a boolean, so repeat requests still fire. */
+  searchFocusNonce: number
 
   setLanguage: (lang: Language) => void
+  setPage: (page: Page) => void
+  goToSearch: () => void
   setAudience: (a: Audience | null) => void
   beginSearch: (location: SearchResult, origin?: SearchOrigin) => void
   goHome: () => void
@@ -46,6 +57,7 @@ const idleInterpretation: InterpretationState = { status: 'idle', scope: null }
 
 export const useAppStore = create<AppStore>((set, get) => ({
   language: 'en',
+  page: 'map',
   view: 'entry',
   location: null,
   searchOrigin: 'query',
@@ -58,6 +70,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   contextLayers: ['reservoirs'],
   results: {},
   interpretation: idleInterpretation,
+  searchFocusNonce: 0,
 
   setLanguage: language =>
     set(state => ({
@@ -66,6 +79,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
         state.interpretation.status === 'ready'
           ? { ...state.interpretation, status: 'stale' }
           : state.interpretation,
+    })),
+
+  setPage: page => set({ page }),
+
+  // The About page's "try it out" call to action. It never clears a search:
+  // a reader who already looked a place up gets their map back untouched,
+  // and only an untouched map gets the cursor put in the search field.
+  goToSearch: () =>
+    set(state => ({
+      page: 'map',
+      searchFocusNonce:
+        state.view === 'entry' ? state.searchFocusNonce + 1 : state.searchFocusNonce,
     })),
 
   setAudience: audience => set({ audience }),

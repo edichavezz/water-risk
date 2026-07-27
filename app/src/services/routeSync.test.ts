@@ -27,6 +27,22 @@ describe('route -> store', () => {
     expect(useAppStore.getState().view).toBe('entry')
   })
 
+  it('opens the About page from a link that carries no location', async () => {
+    await applyRouteToStore({ page: 'about' })
+    expect(useAppStore.getState().page).toBe('about')
+  })
+
+  it('restores the search behind an About link, so going back keeps it', async () => {
+    vi.mocked(geocoding.reverseGeocode).mockResolvedValue({
+      displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipio: 'Sevilla',
+    })
+    await applyRouteToStore({ page: 'about', lat: 37.39, lng: -5.98 })
+    const s = useAppStore.getState()
+    expect(s.page).toBe('about')
+    expect(s.view).toBe('searched')
+    expect(s.location?.municipio).toBe('Sevilla')
+  })
+
   it('never lands in AI mode with an auto-generated interpretation', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue({
       displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipio: 'Sevilla',

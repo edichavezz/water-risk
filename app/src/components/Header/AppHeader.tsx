@@ -1,20 +1,17 @@
-import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageToggle from '../LanguageToggle'
-import AboutDialog from './AboutDialog'
+import { useAppStore, type Page } from '../../store/useAppStore'
 import { APP_NAME } from './identity'
+
+const PAGES: Array<{ id: Page; label: string }> = [
+  { id: 'map', label: 'app.navMap' },
+  { id: 'about', label: 'app.navAbout' },
+]
 
 export default function AppHeader() {
   const { t } = useTranslation()
-  const [aboutOpen, setAboutOpen] = useState(false)
-  const aboutButton = useRef<HTMLButtonElement>(null)
-
-  // Send focus back to the trigger on close, so keyboard users resume where
-  // they left off instead of at the top of the document.
-  const closeAbout = () => {
-    setAboutOpen(false)
-    aboutButton.current?.focus()
-  }
+  const page = useAppStore(s => s.page)
+  const setPage = useAppStore(s => s.setPage)
 
   return (
     <header className="absolute inset-x-0 top-0 z-30 flex min-h-14 items-center gap-3 border-b border-gray-200 bg-canvas/95 px-4 py-2">
@@ -24,18 +21,27 @@ export default function AppHeader() {
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        <button
-          ref={aboutButton}
-          type="button"
-          onClick={() => setAboutOpen(true)}
-          className="rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-semibold text-ink hover:bg-subtle-cool"
-        >
-          {t('app.about')}
-        </button>
+        {/* Switching pages only flips `page`: the map, its layers and any
+            active search are left exactly as the reader left them. */}
+        <nav aria-label={t('app.nav')} className="flex items-center gap-1">
+          {PAGES.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setPage(id)}
+              aria-current={page === id ? 'page' : undefined}
+              className={`min-h-8 rounded-lg border px-2.5 py-1 text-xs font-semibold ${
+                page === id
+                  ? 'border-primary bg-primary-soft text-ink'
+                  : 'border-gray-200 text-ink hover:bg-subtle-cool'
+              }`}
+            >
+              {t(label)}
+            </button>
+          ))}
+        </nav>
         <LanguageToggle />
       </div>
-
-      {aboutOpen && <AboutDialog onClose={closeAbout} />}
     </header>
   )
 }

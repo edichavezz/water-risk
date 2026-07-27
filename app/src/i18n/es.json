@@ -1,7 +1,10 @@
 {
   "app": {
     "tagline": "Consulta los riesgos hídricos de un lugar de España",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "navMap": "Mapa",
+    "navAbout": "Acerca de",
+    "nav": "Secciones"
   },
   "layers": {
     "button": "Capas del mapa",
@@ -215,15 +218,64 @@
   },
   "about": {
     "title": "Acerca de {{name}}",
-    "close": "Cerrar",
-    "whatHeading": "Qué es esto",
-    "whatBody": "Una herramienta gratuita para consultar qué dicen los datos públicos sobre el agua en el lugar donde vives o donde estás pensando comprar. Introduce un lugar de España y reúne los registros de inundaciones, sequía, embalses, abastecimiento y calidad del agua de ese punto, y los explica en lenguaje claro.",
+    "introHeading": "Los datos públicos del agua de una dirección, en un solo sitio",
+    "introLead": "España publica muchísimos datos sobre el agua. El problema es que están dispersos: los mapas de inundación en un ministerio, los boletines de sequía en una agencia europea, el nivel de los embalses en las confederaciones hidrográficas, los registros de agua de boca en Sanidad. Todos son públicos y todos cuestan trabajo de leer.",
+    "introBodyOne": "Water Risk Explorer reúne esas fuentes y les hace la misma pregunta sobre un único punto del mapa. Escribe un código postal, un municipio o una dirección y obtienes una sola página: si el punto está en una zona inundable cartografiada, si la zona está en sequía, qué embalses la abastecen y cómo están de llenos, qué dice el registro del agua de boca y, en la costa, a qué distancia estás de la franja protegida del litoral.",
+    "introBodyTwo": "¿Por qué? Porque el agua es una de las grandes preguntas silenciosas sobre un lugar en España, y normalmente solo aparece cuando ya sale cara: después de una riada, durante una restricción de agua o a mitad de la compra de una casa. Esta herramienta existe para que puedas hacerte esa pregunta pronto, gratis y sin saber nada de hidrología.",
+    "introCta": "Pruébalo",
+    "introCtaHint": "Te lleva al mapa, listo para un código postal o un lugar.",
+    "aiHeading": "Cómo se usa la IA",
+    "aiBodyOne": "Todas las cifras de este sitio salen de un conjunto de datos público, nunca de un modelo. La IA tiene una única función, y llega al final: cuando tú lo pides, un modelo de Claude recibe los resultados que ya están en tu pantalla y escribe una lectura breve en lenguaje claro, junto con algunas preguntas útiles para seguir tirando del hilo.",
+    "aiBodyTwo": "Se le indica que cite la fuente de cada punto, que distinga lo que dicen los datos de lo que está deduciendo, que mantenga intactas todas las salvedades, que diga con claridad cuándo los datos no pueden responder algo y que nunca se invente una puntuación global de riesgo. No se genera nada hasta que pulsas el botón, y el resumen no sustituye a los datos: las cifras originales y sus fuentes siguen en la página para que puedas comprobarlo.",
+    "aiAudienceHeading": "Para qué sirve la pregunta de «propietario o comprador»",
+    "aiAudienceBody": "La aplicación hace una única pregunta opcional: si vives aquí o eres propietario/a, o si estás pensando en comprar. Se usa para dos cosas y nada más. Primero, reordena las consultas para que aparezcan antes las que suelen importarte más: a quien compra suele interesarle la sequía y los embalses, y a quien vive allí las inundaciones y el agua de boca. Segundo, se le pasa al modelo como enfoque: a quien es propietario/a se le dan pasos prácticos y a quién dirigirse; a quien compra, el ángulo legal y de seguros, como la nota simple, la zona inundable del SNCZI o el Consorcio de Compensación de Seguros.",
+    "aiAudienceNote": "Puedes saltártela o cambiarla cuando quieras. Nunca modifica los datos de origen: solo el orden en que se muestran y el tono del resumen. No hay cuenta de usuario ni se guarda ningún perfil.",
+    "dataHeading": "Qué preguntamos y a quién se lo preguntamos",
+    "dataIntro": "No hace falta saber de agua. Cada bloque es una pregunta sencilla sobre un lugar, lo que la aplicación consulta para responderla y el organismo público del que sale la respuesta.",
+    "dataQuestionLabel": "La pregunta",
+    "dataAnswerLabel": "Cómo la respondemos",
+    "dataSourceLabel": "Fuente",
+    "dataItems": {
+      "flood": {
+        "question": "¿Puede llegar hasta aquí la crecida de un río?",
+        "answer": "España cartografía las zonas que se espera que inunde un río según su frecuencia: aproximadamente una vez cada 10, 100 o 500 años. Comprobamos si tu punto cae dentro de alguna de ellas y de cuál. Quedar fuera no es una garantía: las inundaciones por alcantarillado, barrancos y tormentas repentinas muchas veces ni siquiera están cartografiadas."
+      },
+      "drought": {
+        "question": "¿Está esta zona en sequía ahora mismo?",
+        "answer": "Un indicador basado en satélite que combina cuánta lluvia ha caído, cómo de seco está el suelo y cómo de estresada se ve la vegetación, actualizado a lo largo del año. Refleja el estado de la zona amplia hoy, no el de un jardín concreto."
+      },
+      "reservoirs": {
+        "question": "¿De dónde viene el agua del grifo y cuánta reserva hay?",
+        "answer": "Averiguamos qué embalses abastecen realmente a esta zona y mostramos cuánto agua tiene cada uno ahora junto a su media histórica para esta época del año. La cifra que conviene mirar es estar muy por debajo de la media: es en eso en lo que se basan las restricciones."
+      },
+      "waterQuality": {
+        "question": "¿El agua del grifo es apta para beber?",
+        "answer": "El registro nacional del agua de consumo anota si el abastecimiento de cada municipio cumplió los estándares legales y si el agua procede de una fuente superficial, subterránea o mixta. Mostramos el registro más reciente del municipio."
+      },
+      "coastalFlood": {
+        "question": "¿Está demasiado cerca del mar?",
+        "answer": "La costa española tiene franjas protegidas por ley —unos 20 m de servidumbre y 100 m de policía tierra adentro desde la ribera— donde la construcción y las obras están restringidas y se prevé que la costa se mueva. Comprobamos si el punto cae dentro de ellas."
+      },
+      "groundwater": {
+        "question": "¿Se está usando el agua subterránea más rápido de lo que se repone?",
+        "answer": "Algunos acuíferos están declarados oficialmente sobreexplotados: cada año se extrae más de lo que la naturaleza repone. Estar en uno importa para los pozos, para el riego y para la seguridad del abastecimiento a largo plazo. Comprobamos si el punto está dentro de alguno."
+      },
+      "bathingWater": {
+        "question": "¿La playa más cercana está limpia para bañarse?",
+        "answer": "Las playas y zonas de baño con seguimiento en toda Europa reciben una calificación anual de calidad del agua a partir de años de muestreo. Mostramos la calificación del punto controlado más cercano y a qué distancia está."
+      }
+    },
     "coverageHeading": "Dónde funciona",
     "coverageBody": "Hay resultados detallados para Andalucía. En el resto de España seguirás viendo las capas de ámbito nacional, como las zonas inundables y el estado de sequía, pero pueden faltar los datos locales de abastecimiento y calidad del agua. Se añadirán más regiones con el tiempo.",
-    "aiHeading": "Sobre los resúmenes con IA",
-    "aiBody": "La interpretación escrita la genera un modelo de lenguaje a partir de los datos mostrados en la página. Puede contener errores u omisiones, y es opcional: se muestran todas las cifras de origen y sus fuentes para que puedas comprobarlas.",
     "disclaimerHeading": "No es asesoramiento profesional",
     "disclaimerBody": "Esta es información de contexto, no asesoramiento jurídico, financiero ni pericial. No te bases solo en ella para una compra, una decisión de seguro o una solicitud urbanística. Confirma siempre con la fuente oficial y con un profesional cualificado.",
+    "makerHeading": "Quién ha hecho esto, y por qué",
+    "makerBodyOne": "Soy Edita Chávez. Construí Water Risk Explorer como proyecto del curso studio de Terra.do, que te pide coger una pregunta climática que de verdad te importe y sacar adelante algo real con ella.",
+    "makerBodyTwo": "La mía era esta: viviendo en España, el agua sale constantemente en las conversaciones y casi nunca con cifras al lado. Los datos para responder ya existen y ya son públicos. Simplemente no eran utilizables por las personas de las que hablan. Este es mi intento de hacerlos utilizables: es un proyecto personal, no un servicio comercial, y seguirá cambiando.",
+    "makerSiteLabel": "editachavez.com",
+    "makerSiteSuffix": "reúne el resto de mi trabajo.",
+    "makerCourseLabel": "Terra.do",
+    "close": "Cerrar",
     "sourcesHeading": "Fuentes de datos"
   },
   "panel": {
