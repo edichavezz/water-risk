@@ -99,7 +99,10 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'coastalFlood',
     category: 'hazard',
-    source: { name: 'MITERD Coastal DPH' },
+    // The map layer is REDIAM's Andalucía zoning; the point verdict would come
+    // from MITERD DPH, which is down. The legend sits with the map, so it
+    // names what is actually drawn.
+    source: { name: 'REDIAM (Andalucía)' },
     mapRole: 'primary',
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },

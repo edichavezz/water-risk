@@ -183,8 +183,8 @@
       "alert": "Alert"
     },
     "coastalFlood": {
-      "servidumbre": "20 m servidumbre",
-      "policia": "100 m zone"
+      "perfiles": "Protection-zone profiles",
+      "tramos": "Management stretches"
     },
     "groundwater": {
       "over": "Declared overexploited unit"

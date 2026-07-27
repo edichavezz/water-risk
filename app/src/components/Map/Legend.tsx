@@ -21,9 +21,12 @@ function legendRows(primary: DatasetId, t: (k: string) => string): Row[] {
         { color: '#AD4942', label: t('legend.drought.alert') },
       ]
     case 'coastalFlood':
+      // Swatches match what REDIAM actually draws — yellow profile transects
+      // and pink management stretches — not the 20 m / 100 m strips the dead
+      // MITECO layers used to show.
       return [
-        { color: '#4B91AD', opacity: 0.55, label: t('legend.coastalFlood.servidumbre') },
-        { color: '#4B91AD', opacity: 0.35, label: t('legend.coastalFlood.policia') },
+        { color: '#E8C33C', label: t('legend.coastalFlood.perfiles') },
+        { color: '#D081B4', label: t('legend.coastalFlood.tramos') },
       ]
     case 'groundwater':
       return [{ color: '#B87535', opacity: 0.5, label: t('legend.groundwater.over') }]

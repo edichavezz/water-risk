@@ -10,8 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (result.status !== 200) return res.status(result.status).send(result.body)
 
-  // Coastal zoning changes on the order of years, so tiles cache hard. This is
-  // what keeps a proxied layer from costing a request per pan.
-  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=604800, immutable')
+  // Caching is what keeps a proxied layer from costing a request per pan.
+  if (result.cacheControl) res.setHeader('Cache-Control', result.cacheControl)
   res.status(200).send(Buffer.from(result.body as ArrayBuffer))
 }

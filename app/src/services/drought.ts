@@ -1,12 +1,18 @@
 import type { Coordinates, DroughtStatus } from '../types'
 import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
 
-// Copernicus EDO/GDO drought products.
+// Copernicus EDO/GDO drought products, relayed through this app's WMS proxy.
 //
 // The old endpoint (edo.jrc.ec.europa.eu/geoserver/edo/wms) redirects to
-// drought.emergency.copernicus.eu, where every /geoserver path 404s. The
-// service now lives under /api/wms and sends `Access-Control-Allow-Origin: *`.
-const EDO_WMS = 'https://drought.emergency.copernicus.eu/api/wms'
+// drought.emergency.copernicus.eu, where every /geoserver path 404s; the
+// service now lives under /api/wms.
+//
+// It cannot be fetched directly, though: it sends
+// `Access-Control-Allow-Origin: *` *twice*, and browsers reject duplicate ACAO
+// values per the Fetch spec, so every CORS-mode request fails with a bare
+// "Failed to fetch" while a plain <img> of the same URL loads fine. The proxy
+// exists to reissue a single well-formed header.
+const EDO_WMS = '/api/wms-proxy?upstream=copernicus-drought'
 
 // Combined Drought Indicator v4.1. Passing an explicit TIME is rejected with
 // DATE_OUT_OF_RANGE around the edges of the 10-day publishing cycle, so we let
@@ -31,7 +37,7 @@ const CDI_PALETTE: { rgb: [number, number, number]; value: DroughtStatus['level'
 
 export function getDroughtWmsUrl(): string {
   return (
-    `${EDO_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
+    `${EDO_WMS}&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
     `&LAYERS=${CDI_LAYER}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
     `&SRS=EPSG:3857&WIDTH=256&HEIGHT=256` +
     `&BBOX={bbox-epsg-3857}`

@@ -1,10 +1,11 @@
 /**
- * Relays tiles from WMS services that serve real data but send no CORS
- * headers, which the browser will not load directly.
+ * Relays tiles from WMS services the browser cannot load directly — either
+ * because they send no CORS headers at all, or because the headers they do
+ * send are malformed.
  *
- * Only used where there is no CORS-capable alternative. The flood (IDEE) and
- * drought (Copernicus) services both send `Access-Control-Allow-Origin: *`
- * and are fetched directly — they must not be routed through here.
+ * Only used where there is no working direct route. The flood service (IDEE)
+ * sends a single well-formed `Access-Control-Allow-Origin: *` and is fetched
+ * directly; it must not be routed through here.
  *
  * This is a proxy, so it is an SSRF risk if it forwards whatever it is given.
  * It does not: the caller names an upstream from a fixed table rather than
@@ -15,7 +16,11 @@
 interface Upstream {
   url: string
   layers: string[]
+  /** Browser cache lifetime for relayed tiles, in seconds. */
+  maxAge: number
 }
+
+const DAY = 86400
 
 export const UPSTREAMS: Record<string, Upstream> = {
   // MITECO's national DPMT gateway (wms.mapama.gob.es) has been returning a
@@ -25,6 +30,22 @@ export const UPSTREAMS: Record<string, Upstream> = {
   'rediam-coastal': {
     url: 'https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_perfiles_zonas_servidumbre_proteccion',
     layers: ['ZSP', 'Tramos_homogeneos'],
+    // Coastal zoning changes on the order of years.
+    maxAge: DAY,
+  },
+
+  // Copernicus sends `Access-Control-Allow-Origin: *` twice on every response.
+  // Chrome rejects duplicate ACAO values per the Fetch spec ("contains
+  // multiple values '*, *', but only one is allowed"), so a CORS-mode fetch
+  // fails even though the service is healthy and a plain <img> loads fine.
+  // That breaks both the raster tiles and the pixel sampling the panel needs,
+  // so this one is relayed purely to get a single well-formed CORS header.
+  'copernicus-drought': {
+    url: 'https://drought.emergency.copernicus.eu/api/wms',
+    layers: ['cdinx'],
+    // The CDI is published on a 10-day cycle; refresh daily so a new slice is
+    // picked up promptly without re-fetching on every pan.
+    maxAge: DAY,
   },
 }
 
@@ -41,6 +62,8 @@ export interface ProxyResult {
   status: number
   contentType: string
   body: ArrayBuffer | string
+  /** Cache-Control for a successful relay; absent on errors. */
+  cacheControl?: string
 }
 
 function fail(status: number, message: string): ProxyResult {
@@ -105,5 +128,10 @@ export async function proxyWms(
   // must not be passed off to the map as if it were a tile.
   if (!contentType.startsWith('image/')) return fail(502, 'Upstream returned a non-image')
 
-  return { status: 200, contentType, body: await res.arrayBuffer() }
+  return {
+    status: 200,
+    contentType,
+    body: await res.arrayBuffer(),
+    cacheControl: `public, max-age=${upstream.maxAge}, s-maxage=${upstream.maxAge * 7}`,
+  }
 }

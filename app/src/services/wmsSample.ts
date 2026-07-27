@@ -27,8 +27,11 @@ export function sampleUrl(
   delta = 0.0004,
 ): string {
   const bbox = `${lng - delta},${lat - delta},${lng + delta},${lat + delta}`
+  // The endpoint may already carry a query string — the proxy takes its
+  // upstream that way.
+  const sep = endpoint.includes('?') ? '&' : '?'
   return (
-    `${endpoint}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
+    `${endpoint}${sep}SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
     `&LAYERS=${encodeURIComponent(layer)}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
     `&SRS=EPSG:4326&WIDTH=3&HEIGHT=3&BBOX=${bbox}`
   )

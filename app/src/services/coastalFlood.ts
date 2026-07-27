@@ -59,7 +59,9 @@ export function isCoastalProvincia(provincia?: string, displayName?: string): bo
   return COASTAL_PROVINCES.some(c => haystacks.some(h => h.includes(c)))
 }
 
-async function queryLayer(coords: Coordinates, layer: string): Promise<boolean> {
+// Returns null — rather than false — when the service could not be reached,
+// so a dead upstream is distinguishable from a genuine "not in this zone".
+async function queryLayer(coords: Coordinates, layer: string): Promise<boolean | null> {
   const delta = 0.001
   const bbox = `${coords.lng - delta},${coords.lat - delta},${coords.lng + delta},${coords.lat + delta}`
 
@@ -82,24 +84,40 @@ async function queryLayer(coords: Coordinates, layer: string): Promise<boolean> 
 
   try {
     const res = await fetch(`${COASTAL_DPH_WMS}?${params}`)
-    if (!res.ok) return false
+    if (!res.ok) return null
     const text = await res.text()
+    // The gateway answers with a ServiceExceptionReport and a 200 while it is
+    // broken, which is an outage, not an absence of features.
+    if (text.includes('ServiceExceptionReport')) return null
     return (
       (text.includes('"features"') && !text.includes('"features":[]')) ||
       text.includes('<gml:featureMember>') ||
       (text.includes('NumberOfFeaturesMatched') && !text.includes('NumberOfFeaturesMatched="0"'))
     )
   } catch {
-    return false
+    return null
   }
 }
 
 export async function getCoastalFloodStatus(coords: Coordinates): Promise<CoastalFloodResult> {
-  const [inServidumbre, inPolicia] = await Promise.all([
+  const [servidumbre, policia] = await Promise.all([
     queryLayer(coords, COASTAL_LAYERS.servidumbre),
     queryLayer(coords, COASTAL_LAYERS.policia),
   ])
-  return { inServidumbre, inPolicia, source: 'MITERD DPH' }
+
+  // While the gateway is down every query fails, and reporting that as
+  // "outside the mapped coastal zones" would be a confident wrong answer about
+  // whether a property sits in the protection zone — the same false negative
+  // the dead flood endpoint was producing. Surface it as an error instead.
+  if (servidumbre === null && policia === null) {
+    throw new Error('MITERD coastal DPH service unavailable')
+  }
+
+  return {
+    inServidumbre: servidumbre ?? false,
+    inPolicia: policia ?? false,
+    source: 'MITERD DPH',
+  }
 }
 
 export function getCoastalWmsUrl(layer: string): string {
