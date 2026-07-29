@@ -53,8 +53,8 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 | Phase | State |
 |---|---|
 | P0 — dismantle the coverage gate | **Done.** Verified in the browser: Marseille returns live drought + bathing water with the Spain-only sources visibly unsupported; Ronda unchanged. |
-| P1 — visual patch + hazard families | Pending |
-| P2 — fire datasets | Pending |
+| P1 — visual patch + hazard families | **Done.** Rebrand, warm palette, Petrona titles, two-circle mark, hazard field + pills, two-group layers card, family-grouped list with a collapsing empty tail, Live news tab shell. |
+| P2 — fire datasets | In progress |
 | P3 — live news | **Deferred** (tab shell only, in P1) |
 | P4 — water widening + supply graph | Pending |
 | P5 — About page redo | Pending, **needs real copy from the user** |
