@@ -50,4 +50,6 @@ export interface InterpretationState {
   questions?: string[]
   basis?: DatasetId[]
   language?: 'en' | 'es'
+  // Why a ready text went stale, so the banner can name the actual reason.
+  staleReason?: 'language' | 'audience'
 }

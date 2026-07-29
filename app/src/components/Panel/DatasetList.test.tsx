@@ -33,6 +33,26 @@ describe('dataset list', () => {
     expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument()
   })
 
+  it('lists rows with a reading before rows without, under a divider', () => {
+    useAppStore.getState().setResult('flood', { status: 'unavailable' })
+    useAppStore.getState().setResult('drought', { status: 'error', error: 'x' })
+    useAppStore.getState().setResult('reservoirs', { status: 'available', data: [] })
+    render(<DatasetList />)
+
+    const rendered = screen.getByText(/no result for this location/i)
+    expect(rendered).toBeInTheDocument()
+
+    // Reservoirs (has a reading) must appear before the divider; the two
+    // empty rows after it.
+    const body = document.body.textContent ?? ''
+    expect(body.indexOf('Reservoir')).toBeLessThan(body.indexOf('No result for this location'))
+  })
+
+  it('shows no divider while everything is still loading', () => {
+    render(<DatasetList />)
+    expect(screen.queryByText(/no result for this location/i)).not.toBeInTheDocument()
+  })
+
   it('selecting a row opens detail and activates its primary layer', async () => {
     const user = userEvent.setup()
     useAppStore.getState().setResult('flood', { status: 'available', data: { inZone: false, source: 'SNCZI' } })

@@ -101,6 +101,27 @@ describe('workspace store', () => {
     useAppStore.getState().setInterpretation({ status: 'ready', text: 'x', scope: { type: 'location' } })
     useAppStore.getState().setLanguage('es')
     expect(useAppStore.getState().interpretation.status).toBe('stale')
+    expect(useAppStore.getState().interpretation.staleReason).toBe('language')
+  })
+
+  it('audience change marks a ready interpretation stale but keeps the results', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    useAppStore.getState().setResult('flood', { status: 'available', data: {} })
+    useAppStore.getState().setInterpretation({ status: 'ready', text: 'x', scope: { type: 'location' } })
+    useAppStore.getState().setAudience('buyer_investor')
+    const s = useAppStore.getState()
+    expect(s.interpretation.status).toBe('stale')
+    expect(s.interpretation.text).toBe('x')
+    expect(s.results.flood?.status).toBe('available')
+    // The banner names the real reason rather than blaming the language.
+    expect(s.interpretation.staleReason).toBe('audience')
+  })
+
+  it('audience change leaves a non-ready interpretation alone', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    useAppStore.getState().setInterpretation({ status: 'loading', scope: { type: 'location' } })
+    useAppStore.getState().setAudience('resident_owner')
+    expect(useAppStore.getState().interpretation.status).toBe('loading')
   })
 
   it('goHome returns to entry keeping audience', () => {

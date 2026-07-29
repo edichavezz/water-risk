@@ -77,25 +77,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
       language,
       interpretation:
         state.interpretation.status === 'ready'
-          ? { ...state.interpretation, status: 'stale' }
+          ? { ...state.interpretation, status: 'stale', staleReason: 'language' }
           : state.interpretation,
     })),
 
-  // Returning to the map by hand clears any pending focus request, so a plain
-  // navigation never pops the keyboard open the way the CTA deliberately does.
-  setPage: page => set(page === 'map' ? { page, searchFocusNonce: 0 } : { page }),
-
-  // The About page's "try it out" call to action. It never clears a search:
-  // a reader who already looked a place up gets their map back untouched,
-  // and only an untouched map gets the cursor put in the search field.
-  goToSearch: () =>
+  // Audience changes the framing of an interpretation, not the data behind it.
+  // Nothing refetches; a ready text goes stale so the reader is never shown
+  // buyer-framed prose under a resident selection (same rule as language).
+  setAudience: audience =>
     set(state => ({
-      page: 'map',
-      searchFocusNonce:
-        state.view === 'entry' ? state.searchFocusNonce + 1 : state.searchFocusNonce,
+      audience,
+      interpretation:
+        state.interpretation.status === 'ready'
+          ? { ...state.interpretation, status: 'stale', staleReason: 'audience' }
+          : state.interpretation,
     })),
-
-  setAudience: audience => set({ audience }),
 
   beginSearch: (location, origin = 'query') =>
     set({

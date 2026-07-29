@@ -276,6 +276,10 @@
     "makerCourseLabel": "Terra.do"
   },
   "panel": {
+    "noResultGroup": "No result for this location",
+    "audienceLabel": "Reading as",
+    "audienceResident": "I live or own here",
+    "audienceBuyer": "I'm buying",
     "publicData": "Public data",
     "aiTab": "What does this mean?",
     "back": "All public data",
@@ -333,6 +337,7 @@
     "error": "Interpretation could not be generated.",
     "unsupported": "Detailed data is not available here, so no interpretation can be made. Check authoritative regional sources instead.",
     "stale": "The language changed. Regenerate the interpretation?",
+    "staleAudience": "You changed who this is for. Regenerate the explanation?",
     "regenerate": "Regenerate",
     "followUpLabel": "Ask a follow-up about this data",
     "followUpSend": "Ask",

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { orderedDatasets } from '../../registry/datasets'
+import { rankByAvailability } from '../../registry/ordering'
 import { resultSummary } from './resultSummary'
 import PanelBody from './PanelBody'
 
@@ -33,7 +34,9 @@ export default function MobileSheet() {
   const cycleUp = () => setPosition(p => (p === 'peek' ? 'half' : 'full'))
   const cycleDown = () => setPosition(p => (p === 'full' ? 'half' : 'peek'))
 
-  const signals = orderedDatasets(location, audience).slice(0, 3)
+  // Three lines is all the peek shows, so spend them on rows that have a
+  // reading — same ranking the full list uses.
+  const signals = rankByAvailability(orderedDatasets(location, audience), results).slice(0, 3)
 
   return (
     <section
