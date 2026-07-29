@@ -90,14 +90,17 @@ export default function EntryCard() {
               className={`min-h-11 rounded-[10px] px-3 py-2 text-left text-[13px] text-ink ${
                 audience === a
                   ? 'border-[1.5px] border-primary bg-primary-soft'
-                  : 'border border-field bg-canvas hover:bg-subtle-cool'
+                  /* Half-strength wash: the token equals `primary-soft`, so a
+                     full-strength hover would fill an unselected option
+                     exactly like the selected one. */
+                  : 'border border-field bg-canvas hover:bg-subtle-cool/50'
               }`}
             >
               {t(a === 'resident_owner' ? 'entry.resident' : 'entry.buyer')}
             </button>
           ))}
         </div>
-        <p className="mt-1.5 text-[11px] text-micro">{t('entry.changeLater')}</p>
+        <p className="mt-1.5 text-[11px] text-muted">{t('entry.changeLater')}</p>
       </div>
 
       <button
@@ -108,7 +111,7 @@ export default function EntryCard() {
       >
         {t('entry.submit')}
       </button>
-      <p className="mt-2.5 text-center text-[11px] text-micro">{t('entry.exploreHint')}</p>
+      <p className="mt-2.5 text-center text-[11px] text-muted">{t('entry.exploreHint')}</p>
     </div>
   )
 }

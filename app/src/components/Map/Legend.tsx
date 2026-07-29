@@ -61,7 +61,7 @@ export default function Legend() {
 
   return (
     <div className="border-t border-hairline-soft pt-3">
-      <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-micro">
+      <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-muted">
         {t('layers.legendHeading')}
       </p>
 
@@ -78,10 +78,10 @@ export default function Legend() {
               </li>
             ))}
           </ul>
-          <p className="mt-1.5 text-[10px] text-micro">
+          <p className="mt-1.5 text-[10px] text-muted">
             {t('legend.source', { source: def.source.name })}
           </p>
-          <p className="text-[10px] text-micro">{t(`registry.${primaryLayer}.cadence`)}</p>
+          <p className="text-[10px] text-muted">{t(`registry.${primaryLayer}.cadence`)}</p>
         </>
       )}
 
@@ -91,7 +91,9 @@ export default function Legend() {
             <span
               aria-hidden
               className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-[#4B91AD]"
-              style={{ boxShadow: '0 0 0 2px #1E2A38' }}
+              /* Matches the ring `dataLayers` actually strokes on the map —
+                 the swatch has to keep agreeing with the paint. */
+              style={{ boxShadow: '0 0 0 2px #204E62' }}
             />
             <span className="text-ink">{t('legend.reservoirs.supply')}</span>
           </li>
@@ -100,7 +102,7 @@ export default function Legend() {
               aria-hidden
               className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-[#4B91AD] opacity-35"
             />
-            <span className="text-micro">{t('legend.reservoirs.other')}</span>
+            <span className="text-muted">{t('legend.reservoirs.other')}</span>
           </li>
         </ul>
       )}

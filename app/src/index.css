@@ -37,8 +37,9 @@
   --color-hairline-soft: #E9E1CF;
   --color-field: #D8CFBC;
 
-  /* Micro-copy (cadence, source lines) and the inactive tab label. */
-  --color-micro: #8A8172;
+  /* Inactive tab label. Micro-copy (cadence, source lines) uses `muted`, as
+     the handoff's type scale specifies — the mocks' lighter #8A8172 only
+     reaches 3.6:1 on canvas, under the 4.5:1 these sizes need. */
   --color-tab-idle: #9C8A6E;
 
   --color-coverage: #7FA38C;

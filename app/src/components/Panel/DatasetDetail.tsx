@@ -59,17 +59,17 @@ export default function DatasetDetail() {
       {floodNote && <p className="-mt-1.5 text-[12.5px] text-muted">{floodNote}</p>}
       {reservoirScope && <p className="-mt-1.5 text-[12.5px] text-muted">{reservoirScope}</p>}
       {reservoirAsOf && (
-        <p className="-mt-1.5 text-[11px] text-micro">
+        <p className="-mt-1.5 text-[11px] text-muted">
           {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}
         </p>
       )}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
-        <dt className="font-bold text-micro">{t('panel.cadence')}</dt>
+        <dt className="font-bold text-muted">{t('panel.cadence')}</dt>
         <dd className="text-ink">{t(`registry.${id}.cadence`)}</dd>
-        <dt className="font-bold text-micro">{t('panel.geography')}</dt>
+        <dt className="font-bold text-muted">{t('panel.geography')}</dt>
         <dd className="text-ink">{t(`registry.${id}.resolution`)}</dd>
-        <dt className="font-bold text-micro">{t('legend.source', { source: '' }).replace(/:\s*$/, '')}</dt>
+        <dt className="font-bold text-muted">{t('legend.source', { source: '' }).replace(/:\s*$/, '')}</dt>
         <dd className="text-ink">{def.source.name}</dd>
       </dl>
 

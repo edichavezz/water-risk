@@ -70,7 +70,7 @@ function DataQuestions() {
           <p className="mt-1.5 text-sm leading-relaxed text-[#33424C]">
             {t(`about.dataItems.${d.id}.answer`)}
           </p>
-          <p className="mt-2 text-[11.5px] text-micro">
+          <p className="mt-2 text-[11.5px] text-muted">
             <span className="font-bold uppercase tracking-wide">
               {t('about.dataSourceLabel')}
             </span>{' '}
@@ -165,7 +165,7 @@ export default function AboutPage() {
     >
       {/* Title block — left-aligned, generous top padding, no photo hero. */}
       <div className="px-6 pt-[112px] sm:px-12">
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-[.06em] text-micro">
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-[.06em] text-muted">
           {t('about.title', { name: APP_NAME })}
         </p>
         <h1 className="font-display text-[32px] font-bold leading-tight text-ink sm:text-[34px]">

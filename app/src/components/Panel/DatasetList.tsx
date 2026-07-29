@@ -30,7 +30,7 @@ export default function DatasetList() {
       {datasets.map((d, i) => (
         <Fragment key={d.id}>
           {i === firstEmpty && (
-            <p className="mt-3 pb-1 text-[10px] font-bold uppercase tracking-[.04em] text-micro">
+            <p className="mt-3 pb-1 text-[10px] font-bold uppercase tracking-[.04em] text-muted">
               {t('panel.noResultGroup')}
             </p>
           )}

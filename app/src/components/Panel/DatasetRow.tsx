@@ -20,7 +20,7 @@ const STATUS_GLYPH: Record<string, string> = {
 // so the list's live signal stands out at a glance.
 const STATUS_TONE: Record<string, string> = {
   available: 'text-primary',
-  loading: 'text-micro',
+  loading: 'text-muted',
   error: 'text-accent',
   unavailable: 'text-[#8A9AA1]',
   unsupported: 'text-[#8A9AA1]',
@@ -61,7 +61,7 @@ export default function DatasetRow({ def }: { def: DatasetDef }) {
         <span className="ml-4 text-[11.5px] leading-snug text-ink">
           {resultSummary(def.id, result, t)}
         </span>
-        <span className="ml-4 text-[10px] text-micro">{t(`registry.${def.id}.cadence`)}</span>
+        <span className="ml-4 text-[10px] text-muted">{t(`registry.${def.id}.cadence`)}</span>
       </button>
       {status === 'error' && (
         <div className="ml-4 pb-2">

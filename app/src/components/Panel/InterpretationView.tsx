@@ -73,7 +73,7 @@ export default function InterpretationView() {
       </p>
 
       {interpretation.basis && interpretation.basis.length > 0 && (
-        <p className="-mt-1.5 text-[11px] text-micro">
+        <p className="-mt-1.5 text-[11px] text-muted">
           {t('ai.basis', {
             sources: interpretation.basis.map(id => t(`registry.${id}.name`)).join(', '),
           })}
@@ -98,7 +98,7 @@ export default function InterpretationView() {
         <>
           {interpretation.questions && interpretation.questions.length > 0 && (
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[.03em] text-micro">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[.03em] text-muted">
                 {t('ai.suggested')}
               </p>
               <div className="flex flex-col gap-1.5">
@@ -118,7 +118,7 @@ export default function InterpretationView() {
           {/* Follow-up appears only after an interpretation exists, and stays
               scoped to the evidence already shown (spec §10.2). */}
           <div>
-            <label htmlFor="ai-followup" className="mb-1.5 block text-[11px] font-bold text-micro">
+            <label htmlFor="ai-followup" className="mb-1.5 block text-[11px] font-bold text-muted">
               {t('ai.followUpLabel')}
             </label>
             <div className="flex items-center gap-2">

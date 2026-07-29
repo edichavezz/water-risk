@@ -20,7 +20,7 @@ export default function AudienceSwitcher() {
 
   return (
     <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <span className="text-[11px] text-micro">{t('panel.audienceLabel')}</span>
+      <span className="text-[11px] text-muted">{t('panel.audienceLabel')}</span>
       <div className="flex flex-wrap gap-1.5">
         {OPTIONS.map(o => (
           <button

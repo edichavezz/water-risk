@@ -12,7 +12,7 @@ export default function CoverageKey() {
         <span className="inline-block h-2.5 w-2.5 rounded-sm bg-hairline" />
         <span className="text-ink">{t('entry.keyUnavailable')}</span>
       </div>
-      <p className="mt-2.5 leading-relaxed text-micro">{t('entry.coverageNote')}</p>
+      <p className="mt-2.5 leading-relaxed text-muted">{t('entry.coverageNote')}</p>
     </div>
   )
 }

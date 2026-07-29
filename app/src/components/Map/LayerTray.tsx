@@ -45,8 +45,12 @@ function ControlRow({
 export default function LayerTray() {
   const { t } = useTranslation()
   // Local UI state: which layers are drawn is global, but whether this card is
-  // folded is nobody's business but this card's.
-  const [open, setOpen] = useState(true)
+  // folded is nobody's business but this card's. Expanded on desktop, as `3a`
+  // shows it; folded to its pill on a phone, where an open card would cover
+  // the map it is describing.
+  const [open, setOpen] = useState(
+    () => typeof window === 'undefined' || window.innerWidth >= 768,
+  )
   const primaryLayer = useAppStore(s => s.primaryLayer)
   const contextLayers = useAppStore(s => s.contextLayers)
   const setPrimaryLayer = useAppStore(s => s.setPrimaryLayer)
@@ -91,7 +95,7 @@ export default function LayerTray() {
 
       {open && (
         <>
-          <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-micro">
+          <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-muted">
             {t('layers.primaryHeading')}
           </p>
           <div role="radiogroup" aria-label={t('layers.primaryHeading')} className="mb-3">
@@ -120,7 +124,7 @@ export default function LayerTray() {
             ))}
           </div>
 
-          <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-micro">
+          <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-muted">
             {t('layers.contextHeading')}
           </p>
           <div className="mb-3.5">
