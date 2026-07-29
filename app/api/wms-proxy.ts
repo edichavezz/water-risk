@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { proxyWms } from '../server/wmsProxyCore'
+// Extension is required — see the note in api/interpret.ts.
+import { proxyWms } from '../server/wmsProxyCore.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })
