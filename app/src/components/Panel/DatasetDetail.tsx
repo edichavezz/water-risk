@@ -42,25 +42,29 @@ export default function DatasetDetail() {
   }
 
   return (
+    /* The mode tabs stay above this view in PanelBody — the back link returns
+       to the list within the same tab, it does not replace the tabs. */
     <div className="flex flex-col gap-3">
       <button
         onClick={backToList}
-        className="flex min-h-11 items-center gap-1 self-start text-sm font-bold text-primary hover:text-primary-hover"
+        className="-my-2 flex min-h-11 items-center gap-1.5 self-start text-[12.5px] font-bold text-primary hover:text-primary-hover"
       >
         <span aria-hidden>←</span> {t('panel.back')}
       </button>
 
-      <h2 className="text-lg font-bold text-ink">{t(`registry.${id}.name`)}</h2>
-      <p className="text-base text-ink">{resultSummary(id, result, t)}</p>
-      {floodNote && <p className="text-sm text-muted">{floodNote}</p>}
-      {reservoirScope && <p className="text-sm text-muted">{reservoirScope}</p>}
+      <h2 className="font-display text-xl font-semibold leading-tight text-ink">
+        {t(`registry.${id}.name`)}
+      </h2>
+      <p className="-mt-1 text-sm text-ink">{resultSummary(id, result, t)}</p>
+      {floodNote && <p className="-mt-1.5 text-[12.5px] text-muted">{floodNote}</p>}
+      {reservoirScope && <p className="-mt-1.5 text-[12.5px] text-muted">{reservoirScope}</p>}
       {reservoirAsOf && (
-        <p className="text-xs text-muted">
+        <p className="-mt-1.5 text-[11px] text-muted">
           {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}
         </p>
       )}
 
-      <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>
         <dd className="text-ink">{t(`registry.${id}.cadence`)}</dd>
         <dt className="font-bold text-muted">{t('panel.geography')}</dt>
@@ -69,9 +73,11 @@ export default function DatasetDetail() {
         <dd className="text-ink">{def.source.name}</dd>
       </dl>
 
-      <div className="rounded-xl bg-subtle-warm p-3">
-        <p className="mb-1 text-xs font-bold text-ink">{t('panel.doesNotShow')}</p>
-        <ul className="list-disc pl-4 text-xs text-ink">
+      {/* Outlined rather than filled: the limitations are a caveat to read,
+          not a warning block competing with the result above them. */}
+      <div className="rounded-xl border border-[#E9D9C2] p-3.5">
+        <p className="mb-1.5 text-[11.5px] font-bold text-accent-ink">{t('panel.doesNotShow')}</p>
+        <ul className="list-disc pl-4 text-[11.5px] leading-relaxed text-[#4A3A2C]">
           {limitations.map((l, i) => <li key={i}>{l}</li>)}
         </ul>
       </div>
@@ -81,7 +87,7 @@ export default function DatasetDetail() {
           href={def.source.url}
           target="_blank"
           rel="noreferrer"
-          className="text-sm font-bold text-primary hover:text-primary-hover"
+          className="self-start text-[12.5px] font-bold text-primary underline hover:text-primary-hover"
         >
           {t('panel.sourceLink')}
         </a>
@@ -90,9 +96,9 @@ export default function DatasetDetail() {
       {def.aiAllowed && (
         <button
           onClick={explain}
-          className="min-h-11 rounded-lg bg-primary-soft px-3 py-2 text-sm font-bold text-primary hover:bg-primary hover:text-white"
+          className="min-h-11 rounded-[10px] bg-primary px-3 py-2.5 text-[13px] font-bold text-white hover:bg-primary-hover"
         >
-          {t('panel.explain')}
+          {t('panel.explain')} <span aria-hidden>→</span>
         </button>
       )}
     </div>

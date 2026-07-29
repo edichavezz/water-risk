@@ -1,9 +1,9 @@
 {
   "app": {
     "tagline": "Consulta los riesgos hídricos de un lugar de España",
-    "navMap": "Mapa",
     "navAbout": "Acerca de",
-    "nav": "Secciones"
+    "nav": "Secciones",
+    "backToMap": "Volver al mapa"
   },
   "layers": {
     "button": "Capas del mapa",
@@ -12,7 +12,11 @@
     "none": "Ninguna",
     "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
     "close": "Cerrar",
-    "unavailable": "Sin capa disponible"
+    "unavailable": "Sin capa disponible",
+    "collapse": "Contraer capas del mapa",
+    "expand": "Desplegar capas del mapa",
+    "legendHeading": "Leyenda",
+    "noData": "Nada que mostrar aquí"
   },
   "risk": {
     "title": "Perfil de riesgo",
@@ -273,7 +277,13 @@
     "makerBodyTwo": "La mía era esta: viviendo en España, el agua sale constantemente en las conversaciones y casi nunca con cifras al lado. Los datos para responder ya existen y ya son públicos. Simplemente no eran utilizables por las personas de las que hablan. Este es mi intento de hacerlos utilizables: es un proyecto personal, no un servicio comercial, y seguirá cambiando.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "reúne el resto de mi trabajo.",
-    "makerCourseLabel": "Terra.do"
+    "makerCourseLabel": "Terra.do",
+    "navHeading": "En esta página",
+    "secTool": "La herramienta",
+    "secData": "Los datos",
+    "secAi": "La IA",
+    "secMe": "Yo",
+    "subhead": "Qué es, de dónde vienen los datos, cómo funciona la IA y quién la creó."
   },
   "panel": {
     "noResultGroup": "Sin resultado para esta ubicación",
@@ -331,7 +341,7 @@
   "ai": {
     "assistedLabel": "Asistido por IA",
     "titleLocation": "Qué pueden significar los datos de esta ubicación",
-    "titleDataset": "Qué puede significar este resultado",
+    "titleDataset": "Qué puede significar «{{dataset}}»",
     "basis": "Basado en: {{sources}}",
     "loading": "Generando interpretación…",
     "error": "No se pudo generar la interpretación.",

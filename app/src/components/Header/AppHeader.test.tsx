@@ -30,12 +30,19 @@ describe('AppHeader', () => {
     ).toBeInTheDocument()
   })
 
-  it('offers Map and About as banner navigation, with the map current by default', () => {
+  it('offers About as the banner destination while the map is showing', () => {
     render(<AppHeader />)
 
     expect(screen.getByRole('navigation')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Map' })).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('button', { name: 'About' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('button', { name: 'About' })).toBeInTheDocument()
+  })
+
+  it('becomes a way back once About is the page', () => {
+    useAppStore.setState({ page: 'about' })
+    render(<AppHeader />)
+
+    expect(screen.getByRole('button', { name: /back to map/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'About' })).not.toBeInTheDocument()
   })
 
   it('switches the page without touching the map view or an active search', async () => {
@@ -49,7 +56,8 @@ describe('AppHeader', () => {
     expect(state.page).toBe('about')
     expect(state.view).toBe('searched')
     expect(state.primaryLayer).toBe('flood')
-    expect(screen.getByRole('button', { name: 'About' })).toHaveAttribute('aria-current', 'page')
+    // The control becomes the way back, and the search is still standing.
+    expect(screen.getByRole('button', { name: /back to map/i })).toBeInTheDocument()
   })
 
   it('opens no dialog — About is a page, not a modal', async () => {
