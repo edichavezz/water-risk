@@ -40,28 +40,30 @@ export default function MobileSheet() {
 
   return (
     <section
-      className={`fixed inset-x-0 bottom-0 z-20 flex flex-col rounded-t-2xl bg-canvas p-4 shadow-2xl transition-[height] duration-[var(--dur-panel)] md:hidden ${HEIGHT[position]}`}
+      className={`fixed inset-x-0 bottom-0 z-20 flex flex-col rounded-t-2xl bg-canvas p-5 shadow-[0_-8px_28px_rgba(30,42,56,.18)] transition-[height] duration-[var(--dur-panel)] md:hidden ${HEIGHT[position]}`}
     >
-      <div className="mb-2 flex items-center justify-between gap-2">
+      <div className="mb-2.5 flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold text-ink">
+          <p className="truncate font-display text-base font-semibold leading-tight text-ink">
             {location.municipio || location.displayName.split(',')[0]}
           </p>
-          {location.provincia && <p className="text-xs text-muted">{location.provincia}</p>}
+          {location.provincia && (
+            <p className="truncate text-[11.5px] text-muted">{location.provincia}</p>
+          )}
         </div>
         {/* Explicit controls, not gesture-only (spec §11.3) */}
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 gap-1.5">
           <button
             onClick={cycleDown}
             aria-label={t('sheet.collapse')}
-            className="min-h-11 min-w-11 rounded-lg bg-subtle-warm px-3 font-bold text-ink hover:bg-subtle-cool"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink hover:bg-subtle-cool"
           >
             <span aria-hidden>▾</span>
           </button>
           <button
             onClick={cycleUp}
             aria-label={t('sheet.expand')}
-            className="min-h-11 min-w-11 rounded-lg bg-subtle-warm px-3 font-bold text-ink hover:bg-subtle-cool"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink hover:bg-subtle-cool"
           >
             <span aria-hidden>▴</span>
           </button>
@@ -69,7 +71,7 @@ export default function MobileSheet() {
       </div>
 
       {position === 'peek' ? (
-        <ul className="overflow-hidden text-xs">
+        <ul className="overflow-hidden text-[11.5px]">
           {signals.map(d => (
             <li key={d.id} className="truncate text-ink">
               <span className="font-bold">{t(`registry.${d.id}.name`)}: </span>

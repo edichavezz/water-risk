@@ -281,7 +281,8 @@
     "secTool": "The tool",
     "secData": "The data",
     "secAi": "The AI",
-    "secMe": "Me"
+    "secMe": "Me",
+    "subhead": "What it is, where the data comes from, how the AI works, and who built it."
   },
   "panel": {
     "noResultGroup": "No result for this location",

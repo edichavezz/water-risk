@@ -281,7 +281,8 @@
     "secTool": "La herramienta",
     "secData": "Los datos",
     "secAi": "La IA",
-    "secMe": "Yo"
+    "secMe": "Yo",
+    "subhead": "Qué es, de dónde vienen los datos, cómo funciona la IA y quién la creó."
   },
   "panel": {
     "noResultGroup": "Sin resultado para esta ubicación",
