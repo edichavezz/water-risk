@@ -35,6 +35,12 @@ function legendRows(primary: DatasetId, t: (k: string) => string): Row[] {
   }
 }
 
+/**
+ * The key to what is currently drawn on the map. No longer a floating card of
+ * its own: the layer tray and the legend answer the same question, so this
+ * renders as the tray's bottom section, under a hairline divider. Returns
+ * null when nothing is drawn, taking its divider with it.
+ */
 export default function Legend() {
   const { t } = useTranslation()
   const primaryLayer = useAppStore(s => s.primaryLayer)
@@ -54,47 +60,49 @@ export default function Legend() {
   const rows = primaryLayer ? legendRows(primaryLayer, t) : []
 
   return (
-    <div className="absolute bottom-8 right-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
+    <div className="border-t border-hairline-soft pt-3">
+      <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-micro">
+        {t('layers.legendHeading')}
+      </p>
+
       {primaryLayer && def && (
         <>
-          <p className="mb-1.5 font-bold text-ink">{t(`registry.${primaryLayer}.name`)}</p>
           <ul className="space-y-1">
             {rows.map((r, i) => (
-              <li key={i} className="flex items-center gap-2">
+              <li key={i} className="flex items-center gap-1.5 text-[11px]">
                 <span
-                  className="inline-block h-3 w-3 shrink-0 rounded-sm"
+                  className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm"
                   style={{ background: r.color, opacity: r.opacity ?? 1 }}
                 />
                 <span className="text-ink">{r.label}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-muted">{t('legend.source', { source: def.source.name })}</p>
-          <p className="text-muted">{t(`registry.${primaryLayer}.cadence`)}</p>
+          <p className="mt-1.5 text-[10px] text-micro">
+            {t('legend.source', { source: def.source.name })}
+          </p>
+          <p className="text-[10px] text-micro">{t(`registry.${primaryLayer}.cadence`)}</p>
         </>
       )}
 
       {highlighted.length > 0 && (
-        <div className={primaryLayer ? 'mt-3 border-t border-gray-200 pt-2' : ''}>
-          <p className="mb-1.5 font-bold text-ink">{t('registry.reservoirs.name')}</p>
-          <ul className="space-y-1">
-            <li className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className="inline-block h-3 w-3 shrink-0 rounded-full bg-[#4B91AD]"
-                style={{ boxShadow: '0 0 0 2px #204E62' }}
-              />
-              <span className="text-ink">{t('legend.reservoirs.supply')}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className="inline-block h-3 w-3 shrink-0 rounded-full bg-[#4B91AD] opacity-35"
-              />
-              <span className="text-muted">{t('legend.reservoirs.other')}</span>
-            </li>
-          </ul>
-        </div>
+        <ul className={`space-y-1 ${primaryLayer ? 'mt-2.5' : ''}`}>
+          <li className="flex items-center gap-1.5 text-[11px]">
+            <span
+              aria-hidden
+              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-[#4B91AD]"
+              style={{ boxShadow: '0 0 0 2px #1E2A38' }}
+            />
+            <span className="text-ink">{t('legend.reservoirs.supply')}</span>
+          </li>
+          <li className="flex items-center gap-1.5 text-[11px]">
+            <span
+              aria-hidden
+              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-[#4B91AD] opacity-35"
+            />
+            <span className="text-micro">{t('legend.reservoirs.other')}</span>
+          </li>
+        </ul>
       )}
     </div>
   )

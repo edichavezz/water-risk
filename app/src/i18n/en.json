@@ -1,9 +1,9 @@
 {
   "app": {
     "tagline": "Check water risks for a place in Spain",
-    "navMap": "Map",
     "navAbout": "About",
-    "nav": "Sections"
+    "nav": "Sections",
+    "backToMap": "Back to map"
   },
   "layers": {
     "button": "Map layers",
@@ -12,7 +12,10 @@
     "none": "None",
     "readabilityWarning": "Two overlays can make the map harder to read.",
     "close": "Close",
-    "unavailable": "No map layer available"
+    "unavailable": "No map layer available",
+    "collapse": "Collapse map layers",
+    "expand": "Expand map layers",
+    "legendHeading": "Legend"
   },
   "risk": {
     "title": "Risk Profile",
@@ -273,7 +276,12 @@
     "makerBodyTwo": "Mine was this: living in Spain, water comes up constantly in conversation and almost never with numbers attached. The data to answer it already exists and is already public. It just was not usable by the people it is about. This is my attempt at making it usable — it is a personal project, not a commercial service, and it will keep changing.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "has the rest of my work.",
-    "makerCourseLabel": "Terra.do"
+    "makerCourseLabel": "Terra.do",
+    "navHeading": "On this page",
+    "secTool": "The tool",
+    "secData": "The data",
+    "secAi": "The AI",
+    "secMe": "Me"
   },
   "panel": {
     "noResultGroup": "No result for this location",
@@ -331,7 +339,7 @@
   "ai": {
     "assistedLabel": "AI-assisted",
     "titleLocation": "What this location's data may mean",
-    "titleDataset": "What this result may mean",
+    "titleDataset": "What “{{dataset}}” may mean",
     "basis": "Based on: {{sources}}",
     "loading": "Generating interpretation…",
     "error": "Interpretation could not be generated.",

@@ -30,12 +30,14 @@ export default function EntryCard() {
   const toggleAudience = (a: Audience) => setAudience(audience === a ? null : a)
 
   return (
-    <div className="absolute left-6 top-1/2 z-10 w-[380px] max-w-[calc(100vw-3rem)] -translate-y-1/2 rounded-2xl bg-canvas p-6 shadow-xl">
+    /* Docked left and sized to its content — never stretched to full height,
+       so the map stays readable behind and beside it. */
+    <div className="absolute left-8 top-[88px] z-10 max-h-[calc(100dvh-7.5rem)] w-[360px] max-w-[calc(100vw-4rem)] overflow-y-auto rounded-2xl bg-canvas p-6 shadow-[0_10px_28px_rgba(30,42,56,.16)]">
       {/* The heading this card used to carry is now the header tagline. */}
-      <p className="text-sm text-muted">{t('entry.supporting')}</p>
+      <p className="text-[13px] leading-relaxed text-muted">{t('entry.supporting')}</p>
 
       <div className="relative mt-4">
-        <label htmlFor={inputId} className="mb-1 block text-sm font-bold text-ink">
+        <label htmlFor={inputId} className="mb-1.5 block text-xs font-bold text-ink">
           {t('entry.locationLabel')}
         </label>
         <input
@@ -46,18 +48,18 @@ export default function EntryCard() {
           autoComplete="off"
           onChange={e => onInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && suggestions.length > 0) choose(suggestions[0]) }}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-primary"
+          className="min-h-11 w-full rounded-[10px] border border-field bg-canvas px-3 py-2 text-sm outline-none focus:border-primary"
         />
-        {searching && <span className="absolute right-3 top-9 text-xs text-muted">…</span>}
+        {searching && <span className="absolute right-3 top-10 text-xs text-muted">…</span>}
         {suggestions.length > 0 && (
-          <ul role="listbox" className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-canvas shadow-lg">
+          <ul role="listbox" className="absolute z-20 mt-1 w-full overflow-hidden rounded-[10px] border border-hairline bg-canvas shadow-[0_10px_28px_rgba(30,42,56,.16)]">
             {suggestions.map((s, i) => (
               <li key={i}>
                 <button
                   role="option"
                   aria-selected={false}
                   onClick={() => choose(s)}
-                  className="block w-full px-3 py-2 text-left text-sm hover:bg-subtle-cool"
+                  className="block min-h-11 w-full px-3 py-2 text-left text-sm hover:bg-subtle-cool"
                 >
                   <span className="font-bold text-ink">{s.municipio || s.displayName.split(',')[0]}</span>
                   {s.provincia && <span className="text-muted"> · {s.provincia}</span>}
@@ -66,13 +68,15 @@ export default function EntryCard() {
             ))}
           </ul>
         )}
-        {failed && <p className="mt-1 text-sm text-danger">{t('entry.noResults')}</p>}
+        {failed && <p className="mt-1.5 text-[13px] text-danger">{t('entry.noResults')}</p>}
       </div>
 
       <div className="mt-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-ink">{t('entry.audiencePrompt')}</span>
-          <span className="rounded-md bg-subtle-warm px-1.5 py-0.5 text-xs text-muted">{t('entry.optional')}</span>
+          <span className="text-xs font-bold text-ink">{t('entry.audiencePrompt')}</span>
+          <span className="rounded-md bg-accent-soft px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent-ink">
+            {t('entry.optional')}
+          </span>
         </div>
         <div className="mt-2 flex flex-col gap-2">
           {(['resident_owner', 'buyer_investor'] as Audience[]).map(a => (
@@ -81,28 +85,30 @@ export default function EntryCard() {
               type="button"
               aria-pressed={audience === a}
               onClick={() => toggleAudience(a)}
-              className={`min-h-11 rounded-lg border px-3 py-2 text-left text-sm ${
+              /* Selected reads as a deliberate 1.5px teal outline over the cool
+                 wash, rather than a heavier filled state. */
+              className={`min-h-11 rounded-[10px] px-3 py-2 text-left text-[13px] text-ink ${
                 audience === a
-                  ? 'border-primary bg-primary-soft text-ink'
-                  : 'border-gray-300 bg-canvas text-ink hover:bg-subtle-cool'
+                  ? 'border-[1.5px] border-primary bg-primary-soft'
+                  : 'border border-field bg-canvas hover:bg-subtle-cool'
               }`}
             >
               {t(a === 'resident_owner' ? 'entry.resident' : 'entry.buyer')}
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-muted">{t('entry.changeLater')}</p>
+        <p className="mt-1.5 text-[11px] text-micro">{t('entry.changeLater')}</p>
       </div>
 
       <button
         type="button"
         disabled={suggestions.length === 0}
         onClick={() => suggestions.length > 0 && choose(suggestions[0])}
-        className="mt-4 min-h-11 w-full rounded-lg bg-primary py-2 font-bold text-white hover:bg-primary-hover disabled:opacity-50"
+        className="mt-4 min-h-11 w-full rounded-[10px] bg-primary py-2 text-[13px] font-bold text-white hover:bg-primary-hover disabled:opacity-50"
       >
         {t('entry.submit')}
       </button>
-      <p className="mt-2 text-center text-xs text-muted">{t('entry.exploreHint')}</p>
+      <p className="mt-2.5 text-center text-[11px] text-micro">{t('entry.exploreHint')}</p>
     </div>
   )
 }

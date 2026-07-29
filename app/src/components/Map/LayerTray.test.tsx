@@ -10,18 +10,31 @@ import '../../i18n'
 beforeEach(() => useAppStore.setState(useAppStore.getInitialState()))
 
 describe('layer tray', () => {
-  it('labels the button without a layer count', () => {
+  it('names the card without a layer count', () => {
     render(<LayerTray />)
-    const button = screen.getByRole('button', { name: /map layers/i })
-    expect(button).toBeInTheDocument()
+    const card = screen.getByText(/map layers/i)
+    expect(card).toBeInTheDocument()
     // The bare count next to the label read as meaningless, so it was removed.
-    expect(button.textContent).not.toMatch(/\d/)
+    expect(card.textContent).not.toMatch(/\d/)
+  })
+
+  it('opens expanded, and the chevron folds it to a pill', async () => {
+    const user = userEvent.setup()
+    render(<LayerTray />)
+    // Layers and the legend now share one card, shown expanded by default.
+    expect(screen.getByRole('radiogroup')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /collapse map layers/i }))
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
+    expect(screen.getByText(/map layers/i)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /expand map layers/i }))
+    expect(screen.getByRole('radiogroup')).toBeInTheDocument()
   })
 
   it('primary selection is a radio group — one active at most', async () => {
     const user = userEvent.setup()
     render(<LayerTray />)
-    await user.click(screen.getByRole('button', { name: /map layers/i }))
     await user.click(screen.getByRole('radio', { name: /river flood zones/i }))
     expect(useAppStore.getState().primaryLayer).toBe('flood')
     await user.click(screen.getByRole('radio', { name: /groundwater/i }))
@@ -40,7 +53,6 @@ describe('layer tray', () => {
     floodDataset.mapUnavailable = true
     try {
       render(<LayerTray />)
-      await user.click(screen.getByRole('button', { name: /map layers/i }))
       const flood = screen.getByRole('radio', { name: /river flood zones/i })
       expect(flood).toBeDisabled()
       await user.click(flood)
@@ -53,7 +65,6 @@ describe('layer tray', () => {
   it('context checkboxes toggle overlays', async () => {
     const user = userEvent.setup()
     render(<LayerTray />)
-    await user.click(screen.getByRole('button', { name: /map layers/i }))
     await user.click(screen.getByRole('checkbox', { name: /supply reservoirs/i }))
     expect(useAppStore.getState().contextLayers).toEqual([])
   })

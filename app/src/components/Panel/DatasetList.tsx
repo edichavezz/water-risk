@@ -24,11 +24,15 @@ export default function DatasetList() {
   const firstEmpty = datasets.findIndex(d => !hasResult(results[d.id]))
 
   return (
-    <div className="flex flex-col gap-2">
+    /* Each row draws its own top hairline; the list closes the last one off,
+       so the run of rules reads as a table rather than a trailing edge. */
+    <div className="flex flex-col border-b border-hairline-soft">
       {datasets.map((d, i) => (
         <Fragment key={d.id}>
           {i === firstEmpty && (
-            <p className="mt-1 px-1 text-xs font-bold text-muted">{t('panel.noResultGroup')}</p>
+            <p className="mt-3 pb-1 text-[10px] font-bold uppercase tracking-[.04em] text-micro">
+              {t('panel.noResultGroup')}
+            </p>
           )}
           <DatasetRow def={d} />
         </Fragment>
