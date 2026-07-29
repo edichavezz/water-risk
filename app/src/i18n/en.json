@@ -91,6 +91,15 @@
       "unknown": "Not assessed this season",
       "distance": "{{distance}} km away",
       "source": "Source: EEA Bathing Water Directive — {{year}} season"
+    },
+    "fireDanger": {
+      "low": "Low fire danger forecast",
+      "moderate": "Moderate fire danger forecast",
+      "high": "High fire danger forecast",
+      "very_high": "Very high fire danger forecast",
+      "extreme": "Extreme fire danger forecast",
+      "very_extreme": "Very extreme fire danger forecast",
+      "unknown": "No forecast available"
     }
   },
   "registry": {
@@ -159,6 +168,36 @@
         "Does not reflect conditions on a given day",
         "Assessment year is approximate for this source"
       ]
+    },
+    "fireDanger": {
+      "name": "Fire danger forecast",
+      "cadence": "Updated daily (EFFIS Fire Weather Index)",
+      "resolution": "~8 km grid",
+      "limitations": [
+        "Does not show whether a fire is burning now",
+        "Describes the weather that drives fire, not the fuel or terrain at your address",
+        "A forecast class, not a measurement"
+      ]
+    },
+    "fireHistory": {
+      "name": "Past fires nearby",
+      "cadence": "Updated through the season (EFFIS burnt areas)",
+      "resolution": "Perimeters from satellite, fires above roughly 30 ha",
+      "limitations": [
+        "Small fires are not mapped, so absence is not proof nothing burned",
+        "Records where fire has been, not where it is likely to go next",
+        "Perimeters are satellite-derived and approximate"
+      ]
+    },
+    "firePrevention": {
+      "name": "Prevention plan",
+      "cadence": "Checked by hand; date shown with the link",
+      "resolution": "Regional",
+      "limitations": [
+        "Links to the published plan; does not summarise what it requires of you",
+        "Says nothing about risk at this address",
+        "A plan existing is not evidence it is funded or enforced"
+      ]
     }
   },
   "map": {
@@ -204,6 +243,17 @@
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
+    },
+    "fireDanger": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "very_high": "Very high",
+      "extreme": "Extreme",
+      "very_extreme": "Very extreme"
+    },
+    "fireHistory": {
+      "burnt": "Burnt area"
     }
   },
   "entry": {
@@ -268,6 +318,18 @@
       "bathingWater": {
         "question": "Is the nearest beach clean enough to swim in?",
         "answer": "Monitored beaches and bathing sites across Europe get an annual water-quality rating from years of sampling. We show the rating for the closest monitored site and how far away it is."
+      },
+      "fireDanger": {
+        "question": "How dangerous is fire weather here right now?",
+        "answer": "Europe's fire information system forecasts, each day, how readily a fire would start and spread given the weather — heat, wind, humidity and how dry the ground has become. We read the class for your point off that forecast. It describes conditions, not whether anything is alight."
+      },
+      "fireHistory": {
+        "question": "Has this area burned before?",
+        "answer": "Satellites map the outline of larger fires across Europe. We list the ones recorded within 30 km, with their size and how long ago. Small fires never make it into this record, so a short list is not proof of a quiet history."
+      },
+      "firePrevention": {
+        "question": "Does my region have a wildfire plan?",
+        "answer": "Most Mediterranean regions publish one — INFOCA in Andalucía, PPFCI in southern France, piani AIB in Italy. None of them is machine-readable, so this is a hand-checked list of links with the date we last looked."
       }
     },
     "coverageHeading": "Where it works",
@@ -321,10 +383,18 @@
       },
       "waterQuality": {
         "value": "{{compliance}} · {{year}}"
+      },
+      "fireHistory": {
+        "none": "No mapped fire within {{km}} km since {{since}}",
+        "count": "{{count}} mapped fires within {{km}} km — largest {{largest}} ha, most recent {{year}}"
+      },
+      "firePrevention": {
+        "plan": "{{region}} publishes {{plan}}"
       }
     },
     "noResultCount": "{{count}} checks have no source here — show them",
-    "newsTab": "Live news"
+    "newsTab": "Live news",
+    "preventionCheckedAt": "Link last checked {{date}}"
   },
   "states": {
     "loading": "Checking source…",

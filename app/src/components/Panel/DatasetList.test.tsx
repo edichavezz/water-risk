@@ -67,7 +67,8 @@ describe('outside the detailed region', () => {
   const marseille = {
     displayName: 'Marseille, France',
     coordinates: { lat: 43.29, lng: 5.37 },
-    municipality: 'Marseille', countryCode: 'fr', provinceName: 'Bouches-du-Rhône',
+    municipality: 'Marseille', countryCode: 'fr', region: 'FR-PAC',
+    provinceName: 'Bouches-du-Rhône',
   }
 
   // The behaviour the coverage gate used to make impossible: this search
@@ -86,9 +87,10 @@ describe('outside the detailed region', () => {
 
     render(<DatasetList />)
 
-    // Two of seven today: Copernicus drought and the EEA bathing-water
-    // register. Hub'Eau moves France up a tier when it lands.
-    expect(screen.getByText(/limited here: 2 of 7 checks/i)).toBeInTheDocument()
+    // Five of ten in Marseille: Copernicus drought, the EEA bathing-water
+    // register, both EFFIS fire layers, and the PACA prevention plan. Partial
+    // rather than limited, because those last three are not continental.
+    expect(screen.getByText(/partial here: 5 of 10 checks/i)).toBeInTheDocument()
 
     // Five empty rows is past the collapse threshold, so the tail is behind a
     // count. It must still state that the checks have no source — a collapsed

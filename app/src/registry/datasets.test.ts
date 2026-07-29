@@ -45,11 +45,25 @@ describe('dataset registry', () => {
     expect(resident[0]).toBe('drought')
   })
 
-  it('map roles: four primaries, reservoirs is context, waterQuality and bathingWater are panel-only', () => {
+  it('map roles: five primaries, two context overlays, the rest panel-only', () => {
     expect(DATASETS.filter(d => d.mapRole === 'primary').map(d => d.id).sort())
-      .toEqual(['coastalFlood', 'drought', 'flood', 'groundwater'])
-    expect(getDataset('reservoirs').mapRole).toBe('context')
+      .toEqual(['coastalFlood', 'drought', 'fireDanger', 'flood', 'groundwater'])
+    expect(DATASETS.filter(d => d.mapRole === 'context').map(d => d.id).sort())
+      .toEqual(['fireHistory', 'reservoirs'])
     expect(getDataset('waterQuality').mapRole).toBe('none')
     expect(getDataset('bathingWater').mapRole).toBe('none')
+    expect(getDataset('firePrevention').mapRole).toBe('none')
+  })
+
+  it('splits into the two hazard families the UI groups by', () => {
+    expect(DATASETS.filter(d => d.hazard === 'fire').map(d => d.id).sort())
+      .toEqual(['fireDanger', 'fireHistory', 'firePrevention'])
+    expect(DATASETS.every(d => d.hazard === 'water' || d.hazard === 'fire')).toBe(true)
+  })
+
+  // A prevention plan's existence says nothing about risk at a point, so there
+  // is nothing here for the model to interpret.
+  it('keeps the curated prevention links out of AI evidence', () => {
+    expect(getDataset('firePrevention').aiAllowed).toBe(false)
   })
 })

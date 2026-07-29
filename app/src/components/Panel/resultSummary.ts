@@ -2,6 +2,7 @@ import type { DatasetId, DatasetResult } from '../../types/workspace'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalFloodResult, GroundwaterResult, BathingWaterResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult,
 } from '../../types'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
@@ -62,6 +63,32 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       const d = r!.data as BathingWaterResult
       return t('panel.summary.bathingWater.site', {
         name: d.siteName, rating: d.rating, km: d.distanceKm,
+      })
+    }
+    case 'fireDanger': {
+      const d = r!.data as FireDangerResult
+      return t(`risk.fireDanger.${d.danger}`)
+    }
+    case 'fireHistory': {
+      const d = r!.data as FireHistoryResult
+      // An empty archive is an answer, not a gap — but it must be scoped, or
+      // "no fires" reads as a guarantee rather than as a record of what was
+      // mapped within a radius since a given year.
+      if (d.fires.length === 0) {
+        return t('panel.summary.fireHistory.none', { km: d.radiusKm, since: d.since })
+      }
+      const worst = [...d.fires].sort((a, b) => b.areaHa - a.areaHa)[0]
+      return t('panel.summary.fireHistory.count', {
+        count: d.fires.length,
+        km: d.radiusKm,
+        largest: worst.areaHa,
+        year: d.fires[0].date.slice(0, 4),
+      })
+    }
+    case 'firePrevention': {
+      const d = r!.data as FirePreventionResult
+      return t('panel.summary.firePrevention.plan', {
+        plan: d.planName, region: d.regionName,
       })
     }
   }

@@ -4,6 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalFloodResult, GroundwaterResult, BathingWaterResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -48,6 +49,27 @@ function summarize(id: DatasetId, r: DatasetResult): string {
     case 'bathingWater': {
       const d = r.data as BathingWaterResult
       return `Nearest bathing site ${d.siteName} at ${d.distanceKm} km, rating ${d.rating} (source EEA).`
+    }
+    case 'fireDanger': {
+      const d = r.data as FireDangerResult
+      // Named as a published forecast class, not a number we derived — the
+      // model must not describe it as a measurement.
+      return `EFFIS fire danger forecast class for ${d.forDate}: ${d.danger.replace('_', ' ')} (source Copernicus EFFIS).`
+    }
+    case 'fireHistory': {
+      const d = r.data as FireHistoryResult
+      if (d.fires.length === 0) {
+        return `No burnt area recorded within ${d.radiusKm} km since ${d.since} (source Copernicus EFFIS).`
+      }
+      const listed = d.fires
+        .slice(0, 5)
+        .map(f => `${f.date}, ${f.areaHa} ha, ${f.distanceKm} km away${f.commune ? ` near ${f.commune}` : ''}`)
+        .join('; ')
+      return `${d.fires.length} burnt area(s) recorded within ${d.radiusKm} km since ${d.since}: ${listed} (source Copernicus EFFIS).`
+    }
+    case 'firePrevention': {
+      const d = r.data as FirePreventionResult
+      return `${d.regionName} has a published wildfire prevention plan (${d.planName}, ${d.source}). Existence of a plan says nothing about risk at this point.`
     }
   }
 }

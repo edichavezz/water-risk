@@ -49,6 +49,14 @@ const DETAILED_REGIONS: DetailedRegion[] = [
   },
 ]
 
+/**
+ * Datasets that answer anywhere the app answers, because their source is
+ * continental rather than national — Copernicus drought and the two EFFIS fire
+ * layers. Add to this when a new pan-European source lands, or `minimal` will
+ * quietly stop meaning anything.
+ */
+const CONTINENTAL = new Set<DatasetId>(['drought', 'fireDanger', 'fireHistory'])
+
 function detailedRegionAt(coords: Coordinates): DetailedRegion | undefined {
   const pt = point([coords.lng, coords.lat])
   return DETAILED_REGIONS.find(r => booleanPointInPolygon(pt, r.geometry))
@@ -70,7 +78,12 @@ export function coverageProfile(place: PlaceContext): CoverageProfile {
   }
 
   const region = detailedRegionAt(place.coordinates)
-  const tier: DetailTier = region ? 'detailed' : covered.length <= 2 ? 'minimal' : 'partial'
+  // `minimal` means "nothing here beyond the continent-wide layers". Defined
+  // against the list below rather than a row count, because a bare count rots
+  // the moment a dataset is added — when fire landed it silently made minimal
+  // unreachable, since every place suddenly had three readings.
+  const onlyContinental = covered.every(id => CONTINENTAL.has(id))
+  const tier: DetailTier = region ? 'detailed' : onlyContinental ? 'minimal' : 'partial'
 
   return {
     tier,

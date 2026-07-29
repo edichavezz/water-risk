@@ -8,6 +8,9 @@ import { getCoastalFloodStatus } from '../services/coastalFlood'
 import { isCoastal } from '../services/coastline'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
+import { getFireDanger } from '../services/fireDanger'
+import { getFireHistory } from '../services/fireHistory'
+import { getPreventionPlan, PREVENTION_REGIONS } from '../data/firePrevention'
 
 /**
  * Whether this dataset can say anything here.
@@ -191,6 +194,70 @@ export const DATASETS: DatasetDef[] = [
       try {
         const s = await getNearestBathingSite(loc.coordinates)
         return s === null ? { status: 'unavailable' } : ok(s)
+      } catch (e) { return err(e) }
+    },
+  },
+  {
+    id: 'fireDanger',
+    hazard: 'fire',
+    category: 'hazard',
+    source: {
+      name: 'Copernicus EFFIS',
+      url: 'https://forest-fire.emergency.copernicus.eu/',
+    },
+    mapRole: 'primary',
+    aiAllowed: true,
+    audienceWeight: { resident_owner: 1, buyer_investor: 2 },
+    defaultOrder: 8,
+    // ECMWF-driven and continental: the one fire dataset that works anywhere
+    // the app answers.
+    applicability: () => 'covered',
+    fetch: async p => {
+      try {
+        const d = await getFireDanger(p.coordinates)
+        return d.danger === 'unknown' ? { status: 'unavailable' } : ok(d)
+      } catch (e) { return err(e) }
+    },
+  },
+  {
+    id: 'fireHistory',
+    hazard: 'fire',
+    category: 'hazard',
+    source: {
+      name: 'Copernicus EFFIS burnt areas',
+      url: 'https://forest-fire.emergency.copernicus.eu/',
+    },
+    mapRole: 'context',
+    aiAllowed: true,
+    audienceWeight: { resident_owner: 2, buyer_investor: 1 },
+    defaultOrder: 9,
+    applicability: () => 'covered',
+    fetch: async p => {
+      try {
+        // An empty archive is a real answer here — "nothing has burned within
+        // 30 km since 2012" is information, not a missing reading — so this
+        // stays `available` with an empty list rather than going `unavailable`.
+        return ok(await getFireHistory(p.coordinates))
+      } catch (e) { return err(e) }
+    },
+  },
+  {
+    id: 'firePrevention',
+    hazard: 'fire',
+    category: 'quality',
+    source: { name: 'Regional forest authorities' },
+    mapRole: 'none',
+    // Curated links, not a reading. There is nothing here for the model to
+    // interpret and a plan's existence says nothing about risk at this point.
+    aiAllowed: false,
+    audienceWeight: { resident_owner: 8, buyer_investor: 8 },
+    defaultOrder: 10,
+    applicability: p =>
+      p.region && PREVENTION_REGIONS.has(p.region) ? 'covered' : 'unsupported',
+    fetch: async p => {
+      try {
+        const plan = getPreventionPlan(p)
+        return plan === null ? { status: 'unavailable' } : ok(plan)
       } catch (e) { return err(e) }
     },
   },

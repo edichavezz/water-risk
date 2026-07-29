@@ -6,8 +6,11 @@ export const DATASET_MAP_LAYERS: Record<DatasetId, string[]> = {
   coastalFlood: ['coastal-tramos', 'coastal-zsp'],
   groundwater: ['groundwater-fill', 'groundwater-line'],
   reservoirs: ['reservoirs-halo', 'reservoirs-circle', 'reservoirs-label', 'reservoirs-name'],
+  fireDanger: ['fire-danger-layer'],
+  fireHistory: ['fire-history-fill', 'fire-history-line'],
   waterQuality: [],
   bathingWater: [],
+  firePrevention: [],
 }
 
 export function visibleLayerIds(primary: DatasetId | null, context: DatasetId[]): Set<string> {

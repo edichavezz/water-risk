@@ -7,7 +7,7 @@ import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
 import { addDetailRegionLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
-  applyReservoirHighlight, fitReservoirsInView,
+  applyReservoirHighlight, fitReservoirsInView, updateFireHistorySource,
 } from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
 import { reservoirLngLat } from '../../services/reservoirs'
@@ -126,11 +126,14 @@ export default function MapView() {
     if (!map) return
     if (view === 'searched' && location) {
       const { lat, lng } = location.coordinates
+      // Point the burnt-area overlay at this place, whether or not the reader
+      // has it switched on — so turning it on paints immediately.
+      updateFireHistorySource(map, location.coordinates)
       markerRef.current?.remove()
       const el = document.createElement('div')
       el.style.cssText =
-        'width:20px;height:20px;border-radius:50% 50% 50% 0;background:#285F77;' +
-        'border:2px solid #fff;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(32,49,42,.35)'
+        'width:20px;height:20px;border-radius:50% 50% 50% 0;background:#2B6E86;' +
+        'border:2px solid #FBF8F2;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(30,42,56,.35)'
       markerRef.current = new maplibregl.Marker({ element: el, anchor: 'bottom' })
         .setLngLat([lng, lat]).addTo(map)
       // A typed query lands at a fixed zoom; a point the user picked on the

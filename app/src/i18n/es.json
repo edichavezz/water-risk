@@ -91,6 +91,15 @@
       "unknown": "No evaluado esta temporada",
       "distance": "A {{distance}} km",
       "source": "Fuente: Directiva de Aguas de Baño de la UE (EEA) — temporada {{year}}"
+    },
+    "fireDanger": {
+      "low": "Previsión de peligro bajo",
+      "moderate": "Previsión de peligro moderado",
+      "high": "Previsión de peligro alto",
+      "very_high": "Previsión de peligro muy alto",
+      "extreme": "Previsión de peligro extremo",
+      "very_extreme": "Previsión de peligro muy extremo",
+      "unknown": "Sin previsión disponible"
     }
   },
   "registry": {
@@ -159,6 +168,36 @@
         "No refleja las condiciones de un día concreto",
         "El año de evaluación es aproximado para esta fuente"
       ]
+    },
+    "fireDanger": {
+      "name": "Previsión de peligro de incendio",
+      "cadence": "Actualizado a diario (índice EFFIS de peligro meteorológico)",
+      "resolution": "Malla de ~8 km",
+      "limitations": [
+        "No indica si hay un incendio activo ahora mismo",
+        "Describe la meteorología que favorece el fuego, no el combustible ni el terreno de tu dirección",
+        "Es una clase de previsión, no una medición"
+      ]
+    },
+    "fireHistory": {
+      "name": "Incendios anteriores cerca",
+      "cadence": "Actualizado durante la campaña (áreas quemadas EFFIS)",
+      "resolution": "Perímetros por satélite, incendios de más de unas 30 ha",
+      "limitations": [
+        "Los incendios pequeños no se cartografían: su ausencia no prueba que no haya habido fuego",
+        "Registra dónde ha habido fuego, no hacia dónde es probable que vaya",
+        "Los perímetros son aproximados y derivados de satélite"
+      ]
+    },
+    "firePrevention": {
+      "name": "Plan de prevención",
+      "cadence": "Comprobado a mano; la fecha se muestra con el enlace",
+      "resolution": "Regional",
+      "limitations": [
+        "Enlaza al plan publicado; no resume lo que exige",
+        "No dice nada sobre el riesgo en esta dirección",
+        "Que exista un plan no prueba que esté financiado ni que se aplique"
+      ]
     }
   },
   "map": {
@@ -204,6 +243,17 @@
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
+    },
+    "fireDanger": {
+      "low": "Bajo",
+      "moderate": "Moderado",
+      "high": "Alto",
+      "very_high": "Muy alto",
+      "extreme": "Extremo",
+      "very_extreme": "Muy extremo"
+    },
+    "fireHistory": {
+      "burnt": "Área quemada"
     }
   },
   "entry": {
@@ -268,6 +318,18 @@
       "bathingWater": {
         "question": "¿La playa más cercana está limpia para bañarse?",
         "answer": "Las playas y zonas de baño con seguimiento en toda Europa reciben una calificación anual de calidad del agua a partir de años de muestreo. Mostramos la calificación del punto controlado más cercano y a qué distancia está."
+      },
+      "fireDanger": {
+        "question": "¿Qué peligro meteorológico de incendio hay aquí ahora?",
+        "answer": "El sistema europeo de información sobre incendios prevé cada día con qué facilidad se iniciaría y avanzaría un fuego según la meteorología: calor, viento, humedad y lo seco que está el suelo. Leemos la clase correspondiente a tu punto. Describe las condiciones, no si hay algo ardiendo."
+      },
+      "fireHistory": {
+        "question": "¿Ha habido incendios antes en esta zona?",
+        "answer": "Los satélites cartografían el perímetro de los incendios grandes en Europa. Enumeramos los registrados en 30 km, con su superficie y cuándo ocurrieron. Los incendios pequeños no entran en este registro, así que una lista corta no prueba que la zona haya estado tranquila."
+      },
+      "firePrevention": {
+        "question": "¿Tiene mi región un plan contra incendios?",
+        "answer": "Casi todas las regiones mediterráneas publican uno: INFOCA en Andalucía, PPFCI en el sur de Francia, piani AIB en Italia. Ninguno es legible por máquina, así que esto es una lista de enlaces comprobada a mano, con la fecha de la última revisión."
       }
     },
     "coverageHeading": "Dónde funciona",
@@ -321,10 +383,18 @@
       },
       "waterQuality": {
         "value": "{{compliance}} · {{year}}"
+      },
+      "fireHistory": {
+        "none": "Ningún incendio cartografiado en {{km}} km desde {{since}}",
+        "count": "{{count}} incendios cartografiados en {{km}} km — el mayor de {{largest}} ha, el más reciente en {{year}}"
+      },
+      "firePrevention": {
+        "plan": "{{region}} publica {{plan}}"
       }
     },
     "noResultCount": "{{count}} comprobaciones sin fuente aquí — mostrarlas",
-    "newsTab": "Noticias"
+    "newsTab": "Noticias",
+    "preventionCheckedAt": "Enlace comprobado el {{date}}"
   },
   "states": {
     "loading": "Consultando la fuente…",

@@ -58,6 +58,53 @@ export interface GroundwaterResult {
   source: 'IGME'
 }
 
+export type FireDangerClass =
+  | 'low'
+  | 'moderate'
+  | 'high'
+  | 'very_high'
+  | 'extreme'
+  | 'very_extreme'
+  | 'unknown'
+
+export interface FireDangerResult {
+  danger: FireDangerClass
+  /** The day the raster describes, ISO date. */
+  forDate: string
+  source: 'Copernicus EFFIS'
+}
+
+export interface BurntArea {
+  /** ISO date of the fire's start, as EFFIS records it. */
+  date: string
+  areaHa: number
+  commune?: string
+  province?: string
+  /** Straight-line distance from the searched point to the burn, km. */
+  distanceKm: number
+  /** Share of the burn inside a Natura 2000 site, percent. */
+  protectedPercent?: number
+}
+
+export interface FireHistoryResult {
+  /** Burns within the search radius, most recent first. */
+  fires: BurntArea[]
+  radiusKm: number
+  /** Earliest year the archive covers, so "none found" can be scoped. */
+  since: number
+  source: 'Copernicus EFFIS'
+}
+
+export interface FirePreventionResult {
+  /** Region the plan belongs to, in the reader's terms. */
+  regionName: string
+  planName: string
+  url: string
+  /** When we last confirmed the link resolved. Government URLs rot. */
+  checkedAt: string
+  source: string
+}
+
 export interface BathingWaterResult {
   siteName: string
   distanceKm: number
