@@ -93,6 +93,20 @@ export const useAppStore = create<AppStore>((set, get) => ({
           : state.interpretation,
     })),
 
+  setPage: page => set({ page }),
+
+  // "Try it out" on the About page. Returns to the map without touching the
+  // search state — a reader who already has results open should find them
+  // still there. The focus nonce is only bumped from the entry view, where
+  // there is a search field waiting; bumping it over open results would yank
+  // focus out of what the reader was reading.
+  goToSearch: () =>
+    set(state => ({
+      page: 'map',
+      searchFocusNonce:
+        state.view === 'entry' ? state.searchFocusNonce + 1 : state.searchFocusNonce,
+    })),
+
   beginSearch: (location, origin = 'query') =>
     set({
       view: 'searched',
