@@ -7,24 +7,13 @@ export interface Coordinates {
   lng: number
 }
 
-export interface SearchResult {
-  displayName: string
-  coordinates: Coordinates
-  municipio?: string
-  provincia?: string
-  basin?: SpainBasin
-}
+export type { PlaceContext, BasinRef } from './place'
 
-export type SpainBasin =
-  | 'guadalquivir'
-  | 'sur'
-  | 'segura'
-  | 'guadiana'
-  | 'tajo'
-  | 'duero'
-  | 'ebro'
-  | 'jucar'
-  | 'other'
+/**
+ * @deprecated Migration alias for `PlaceContext`. The name survives only so the
+ * rename can land in steps; new code should import `PlaceContext`.
+ */
+export type { PlaceContext as SearchResult } from './place'
 
 export interface FloodZoneResult {
   inZone: boolean

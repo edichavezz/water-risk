@@ -4,7 +4,7 @@ import type { DatasetDef } from '../registry/datasets'
 import type { SearchResult } from '../types'
 
 const loc: SearchResult = {
-  displayName: 'X', coordinates: { lat: 37, lng: -5 }, municipio: 'X',
+  displayName: 'X', coordinates: { lat: 37, lng: -5 }, municipality: 'X',
 }
 
 function def(id: string, fetch: DatasetDef['fetch']): DatasetDef {

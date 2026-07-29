@@ -4,11 +4,11 @@ import type { SearchResult } from '../types'
 
 const sevilla: SearchResult = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir',
+  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 const madrid: SearchResult = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.70 },
-  municipio: 'Madrid', provincia: 'Madrid',
+  municipality: 'Madrid', provinceName: 'Madrid',
 }
 
 beforeEach(() => {

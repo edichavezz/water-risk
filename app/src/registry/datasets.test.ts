@@ -8,9 +8,9 @@ import type { SearchResult } from '../types'
 const sevilla: SearchResult = {
   displayName: 'Sevilla, Andalucía, España',
   coordinates: { lat: 37.39, lng: -5.98 },
-  municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir',
+  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
-const cordoba: SearchResult = { ...sevilla, municipio: 'Córdoba', provincia: 'Córdoba' }
+const cordoba: SearchResult = { ...sevilla, municipality: 'Córdoba', provinceName: 'Córdoba' }
 
 describe('dataset registry', () => {
   it('registers every dataset id exactly once', () => {

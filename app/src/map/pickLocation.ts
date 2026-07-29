@@ -59,8 +59,8 @@ function stateContent(state: PickState, onConfirm: (r: SearchResult) => void): H
   const { result, inCoverage } = state
   const name = document.createElement('div')
   name.className = 'pick-popup__name'
-  name.textContent = result.municipio || result.displayName.split(',')[0]
-  if (result.provincia) name.textContent += ` · ${result.provincia}`
+  name.textContent = result.municipality || result.displayName.split(',')[0]
+  if (result.provinceName) name.textContent += ` · ${result.provinceName}`
   el.append(name)
 
   if (!inCoverage) {

@@ -24,9 +24,9 @@ export default function WorkspacePanel() {
       <header className="mb-3 flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-bold text-ink">
-            {location.municipio || location.displayName.split(',')[0]}
+            {location.municipality || location.displayName.split(',')[0]}
           </p>
-          {location.provincia && <p className="text-xs text-muted">{location.provincia}</p>}
+          {location.provinceName && <p className="text-xs text-muted">{location.provinceName}</p>}
         </div>
         <button
           onClick={goHome}

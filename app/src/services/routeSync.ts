@@ -26,7 +26,7 @@ export function subscribeStoreToRoute(): () => void {
     const route: RouteState = s.view === 'searched' && s.location
       ? {
           page,
-          q: s.location.municipio || s.location.displayName,
+          q: s.location.municipality || s.location.displayName,
           lat: s.location.coordinates.lat,
           lng: s.location.coordinates.lng,
           aud: s.audience ?? undefined,

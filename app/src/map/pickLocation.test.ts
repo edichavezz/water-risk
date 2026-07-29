@@ -6,11 +6,11 @@ vi.mock('../services/geocoding')
 
 const ecija = {
   displayName: 'Écija, Sevilla', coordinates: { lat: 37.54, lng: -5.08 },
-  municipio: 'Écija', provincia: 'Sevilla', basin: 'guadalquivir' as const,
+  municipality: 'Écija', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 const madrid = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.7 },
-  municipio: 'Madrid', provincia: 'Madrid',
+  municipality: 'Madrid', provinceName: 'Madrid',
 }
 
 beforeEach(() => vi.resetAllMocks())

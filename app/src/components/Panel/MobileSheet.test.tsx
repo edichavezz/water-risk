@@ -10,7 +10,7 @@ vi.mock('../../services/orchestrator', () => ({ runProfile: vi.fn(async () => {}
 
 const sevilla = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir' as const,
+  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 
 beforeEach(() => {

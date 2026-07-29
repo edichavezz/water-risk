@@ -88,10 +88,10 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 4, buyer_investor: 6 },
     defaultOrder: 4,
-    appliesTo: loc => Boolean(loc.municipio),
+    appliesTo: loc => Boolean(loc.municipality),
     fetch: async loc => {
       try {
-        const q = await getWaterQualityByMunicipality(loc.municipio ?? '')
+        const q = await getWaterQualityByMunicipality(loc.municipality ?? '')
         return q === null ? { status: 'unavailable' } : ok(q)
       } catch (e) { return err(e) }
     },
@@ -107,7 +107,7 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,
-    appliesTo: loc => isCoastalProvincia(loc.provincia),
+    appliesTo: loc => isCoastalProvincia(loc.provinceName),
     fetch: async loc => {
       try { return ok(await getCoastalFloodStatus(loc.coordinates)) } catch (e) { return err(e) }
     },
@@ -133,7 +133,7 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 7, buyer_investor: 7 },
     defaultOrder: 7,
-    appliesTo: loc => isCoastalProvincia(loc.provincia),
+    appliesTo: loc => isCoastalProvincia(loc.provinceName),
     fetch: async loc => {
       try {
         const s = await getNearestBathingSite(loc.coordinates)

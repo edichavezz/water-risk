@@ -45,9 +45,9 @@ export default function MobileSheet() {
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-ink">
-            {location.municipio || location.displayName.split(',')[0]}
+            {location.municipality || location.displayName.split(',')[0]}
           </p>
-          {location.provincia && <p className="text-xs text-muted">{location.provincia}</p>}
+          {location.provinceName && <p className="text-xs text-muted">{location.provinceName}</p>}
         </div>
         {/* Explicit controls, not gesture-only (spec §11.3) */}
         <div className="flex shrink-0 gap-1">

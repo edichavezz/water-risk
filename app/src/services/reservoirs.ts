@@ -119,7 +119,7 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
  */
 export function getReservoirsForLocation(location: SearchResult): Reservoir[] {
   const coords = location.coordinates
-  const municipio = location.municipio ? normalizeMunicipio(location.municipio) : ''
+  const municipio = location.municipality ? normalizeMunicipio(location.municipality) : ''
 
   if (!municipio) return []
 

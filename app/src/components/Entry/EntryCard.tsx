@@ -22,7 +22,7 @@ export default function EntryCard() {
   }, [searchFocusNonce])
 
   const choose = (result: SearchResult) => {
-    setQuery(result.municipio || result.displayName.split(',')[0])
+    setQuery(result.municipality || result.displayName.split(',')[0])
     clear()
     void submitLocation(result)
   }
@@ -59,8 +59,8 @@ export default function EntryCard() {
                   onClick={() => choose(s)}
                   className="block w-full px-3 py-2 text-left text-sm hover:bg-subtle-cool"
                 >
-                  <span className="font-bold text-ink">{s.municipio || s.displayName.split(',')[0]}</span>
-                  {s.provincia && <span className="text-muted"> · {s.provincia}</span>}
+                  <span className="font-bold text-ink">{s.municipality || s.displayName.split(',')[0]}</span>
+                  {s.provinceName && <span className="text-muted"> · {s.provinceName}</span>}
                 </button>
               </li>
             ))}

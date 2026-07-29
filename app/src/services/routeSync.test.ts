@@ -13,7 +13,7 @@ describe('route -> store', () => {
   it('restores a searched location with audience and dataset', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue({
       displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-      municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir',
+      municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
     })
     await applyRouteToStore({ lat: 37.39, lng: -5.98, aud: 'buyer_investor', ds: 'flood', mode: 'data' })
     const s = useAppStore.getState()
@@ -34,18 +34,18 @@ describe('route -> store', () => {
 
   it('restores the search behind an About link, so going back keeps it', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue({
-      displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipio: 'Sevilla',
+      displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipality: 'Sevilla',
     })
     await applyRouteToStore({ page: 'about', lat: 37.39, lng: -5.98 })
     const s = useAppStore.getState()
     expect(s.page).toBe('about')
     expect(s.view).toBe('searched')
-    expect(s.location?.municipio).toBe('Sevilla')
+    expect(s.location?.municipality).toBe('Sevilla')
   })
 
   it('never lands in AI mode with an auto-generated interpretation', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue({
-      displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipio: 'Sevilla',
+      displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 }, municipality: 'Sevilla',
     })
     await applyRouteToStore({ lat: 37.39, lng: -5.98, mode: 'ai' })
     const s = useAppStore.getState()

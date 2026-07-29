@@ -15,8 +15,8 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: 'Alcalá de Guadaíra, Sevilla, Spain',
       coordinates: { lat: 37.338, lng: -5.847 },
-      municipio: 'Alcalá de Guadaíra',
-      provincia: 'Sevilla',
+      municipality: 'Alcalá de Guadaíra',
+      provinceName: 'Sevilla',
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBe(7)
@@ -33,8 +33,8 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: 'Somewhere unmapped, Spain',
       coordinates: { lat: 37.338, lng: -5.847 }, // well within 80 km of the EMASESA reservoirs
-      municipio: 'Not A Real Mapped Town',
-      provincia: 'Sevilla',
+      municipality: 'Not A Real Mapped Town',
+      provinceName: 'Sevilla',
     }
     expect(getReservoirsForLocation(location)).toEqual([])
   })
@@ -48,8 +48,8 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: 'Córdoba, Spain',
       coordinates: { lat: 37.8882, lng: -4.7794 },
-      municipio: 'Córdoba',
-      provincia: 'Córdoba',
+      municipality: 'Córdoba',
+      provinceName: 'Córdoba',
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBeGreaterThan(0)
@@ -75,7 +75,7 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
       coordinates: { lat: 37.3433569, lng: -5.8402153 },
-      municipio,
+      municipality: municipio,
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBe(7)
