@@ -214,6 +214,8 @@ export interface ReservoirProps {
   fillPercent: number
   storedHm3: number | null
   capacityHm3: number | null
+  mean5yr: number | null
+  mean10yr: number | null
   basin: string
   river: string
   province: string
@@ -243,6 +245,21 @@ export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
       capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
     }))
   }
+  // Today's level only means something next to a normal year. Rendered as a
+  // signed gap because "34% full" reads fine until you learn late July usually
+  // sits at 61%. Absent averages are omitted, never shown as zero.
+  for (const [key, years] of [['mean5yr', 5], ['mean10yr', 10]] as const) {
+    const mean = props[key]
+    if (mean == null) continue
+    const gap = Math.round(props.fillPercent - mean)
+    lines.push(i18n.t('map.reservoir.vsAverage', {
+      years,
+      mean,
+      direction: i18n.t(gap < 0 ? 'map.reservoir.below' : 'map.reservoir.above'),
+      gap: Math.abs(gap),
+    }))
+  }
+
   if (props.river) lines.push(titleCase(props.river))
   if (props.basin) {
     lines.push(i18n.t('map.reservoir.basin', { basin: titleCase(props.basin) }))

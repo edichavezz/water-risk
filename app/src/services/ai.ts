@@ -29,7 +29,16 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       const asOf = rs[0]?.fillPercentAsOf
       const system = rs[0]?.systemName
       const scope = system ? `Reservoirs supplying this area via ${system}` : 'Supply reservoirs'
-      return `${scope}: ${rs.map(x => `${x.name} ${x.fillPercent}% full (mean ${x.historicalMeanPercent ?? '?'}%)`).join('; ')} (source REDIAM${asOf ? `, levels read ${asOf}` : ''}).`
+      // The averages are the context that makes a fill % interpretable, so the
+      // model gets them too — omitted rather than guessed when unavailable.
+      const level = (x: Reservoir) => {
+        const vs = [
+          x.mean5yr != null ? `5-yr avg ${x.mean5yr}%` : null,
+          x.mean10yr != null ? `10-yr avg ${x.mean10yr}%` : null,
+        ].filter(Boolean).join(', ')
+        return `${x.name} ${x.fillPercent}% full${vs ? ` (${vs} for this date)` : ''}`
+      }
+      return `${scope}: ${rs.map(level).join('; ')} (source REDIAM${asOf ? `, levels read ${asOf}` : ''}).`
     }
     case 'waterQuality': {
       const d = r.data as WaterQualityResult

@@ -168,6 +168,9 @@
     "reservoir": {
       "storage": "{{stored}} de {{capacity}} hm³ embalsados",
       "basin": "Cuenca: {{basin}}",
+      "vsAverage": "media {{years}} años {{mean}}% — {{gap}} pts {{direction}}",
+      "above": "por encima",
+      "below": "por debajo",
       "asOf": "Nivel a fecha de {{date}}"
     },
     "pickLoading": "Buscando este lugar…",

@@ -168,6 +168,9 @@
     "reservoir": {
       "storage": "{{stored}} of {{capacity}} hm³ stored",
       "basin": "Basin: {{basin}}",
+      "vsAverage": "{{years}}-yr avg {{mean}}% — {{gap}} pts {{direction}}",
+      "above": "above",
+      "below": "below",
       "asOf": "Level as of {{date}}"
     },
     "pickLoading": "Finding this place…",
