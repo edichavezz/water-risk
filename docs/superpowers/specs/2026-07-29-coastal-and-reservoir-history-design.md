@@ -1,7 +1,34 @@
 # Coastal availability and reservoir history — design
 
 **Date:** 2026-07-29
-**Status:** approved
+**Status:** partly superseded — see "Correction" below
+
+## Correction (2026-07-29, after implementation began)
+
+The coastal half of this spec was written against a **stale worktree**
+(`worktree-interface-redesign`) and its diagnosis of `main` was wrong. On `main`:
+
+- **The coastal map layer already works.** `24783a8` restored it through
+  `/api/wms-proxy` using REDIAM's Andalucía zoning of the same protection zone
+  (`ZSP`, `Tramos_homogeneos`). Re-verified live: valid GetCapabilities, and
+  non-blank tiles over Marbella, Cádiz and Almería.
+- **The false clean bill of health was already fixed.** `53ac5ac` made
+  `queryLayer` return `null` on failure, and `getCoastalFloodStatus` throws when
+  every query fails, so the card shows `error` rather than "outside the zones".
+- **Only the national in-servitude verdict is genuinely unavailable** — MITECO's
+  `wms.aspx` gateway is still dead, as originally described.
+
+Consequences for this spec:
+
+- The **health probe and dynamic hide (§Coastal, Tasks 4–5) are cancelled.**
+  Hiding the dataset would have deleted a working map layer. The user's
+  "hide it entirely" decision was made on the false premise that nothing
+  worked, so it was not applied — see the follow-up question instead.
+- The **`appliesTo` bug is real and was the one live coastal defect.** Fixed.
+- `CoastalFloodResult.degraded` was added and then reverted; the existing throw
+  already covers it.
+
+The reservoir half of this spec was unaffected and was implemented as written.
 
 ## Problem
 

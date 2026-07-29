@@ -8,6 +8,16 @@
 
 **Tech Stack:** TypeScript, React, zustand, MapLibre GL, vitest, i18next, Node ESM build scripts.
 
+> **Status after execution (2026-07-29).** Tasks 1–3 and 6 were implemented.
+> **Tasks 4 and 5 were cancelled** — they rested on a stale reading of the
+> coastal code (see the Correction section of the spec). `main` already had a
+> working proxied REDIAM map layer and already surfaced outages as `error`, so
+> the health probe and dynamic hide would have removed a working layer. The one
+> real defect in those tasks — `appliesTo` not passing `displayName` — was
+> fixed, with a Marbella regression test. Task 3 also grew a `ReservoirLevels`
+> panel component, because the averages needed to appear in the results panel,
+> not only the map popup.
+
 ## Global Constraints
 
 - Spec: `docs/superpowers/specs/2026-07-29-coastal-and-reservoir-history-design.md`.
