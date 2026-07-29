@@ -5,6 +5,7 @@ import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
 import { formatLongDate } from '../../i18n/formatDate'
 import type { FloodZoneResult, Reservoir } from '../../types'
+import ReservoirLevels from './ReservoirLevels'
 
 export default function DatasetDetail() {
   const { t } = useTranslation()
@@ -63,6 +64,8 @@ export default function DatasetDetail() {
           {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}
         </p>
       )}
+
+      {reservoirs && <ReservoirLevels reservoirs={reservoirs} />}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>

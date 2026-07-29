@@ -12,6 +12,8 @@ const props: ReservoirProps = {
   basin: 'GUADALQUIVIR',
   river: 'Río Guadalquivir',
   province: 'Jaén',
+  mean5yr: 34.1,
+  mean10yr: 43.8,
   asOf: '2026-07-24',
 }
 
@@ -24,6 +26,26 @@ describe('reservoirDetailContent', () => {
     expect(text).toContain('505.7')
     expect(text).toContain('Basin: Guadalquivir')
     expect(text).toContain('Level as of 24 July 2026')
+  })
+
+  it('compares today against both averages as a signed gap', () => {
+    const text = reservoirDetailContent(props).textContent ?? ''
+    // 83.6 vs 34.1 -> 49 pts above (49.4999… in float, so it rounds down);
+    // 83.6 vs 43.8 -> 40 pts above
+    expect(text).toContain('5-yr avg 34.1% — 49 pts above')
+    expect(text).toContain('10-yr avg 43.8% — 40 pts above')
+  })
+
+  it('reports a shortfall as below, not as a negative number', () => {
+    const text = reservoirDetailContent({ ...props, fillPercent: 20 }).textContent ?? ''
+    expect(text).toContain('5-yr avg 34.1% — 14 pts below')
+    expect(text).not.toContain('-14')
+  })
+
+  it('omits an average the station has too little history for', () => {
+    const text = reservoirDetailContent({ ...props, mean5yr: null }).textContent ?? ''
+    expect(text).not.toContain('5-yr avg')
+    expect(text).toContain('10-yr avg')
   })
 
   it('omits the storage line when the feed has no volumes', () => {

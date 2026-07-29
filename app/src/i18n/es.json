@@ -168,6 +168,9 @@
     "reservoir": {
       "storage": "{{stored}} de {{capacity}} hm³ embalsados",
       "basin": "Cuenca: {{basin}}",
+      "vsAverage": "media {{years}} años {{mean}}% — {{gap}} pts {{direction}}",
+      "above": "por encima",
+      "below": "por debajo",
       "asOf": "Nivel a fecha de {{date}}"
     },
     "pickLoading": "Buscando este lugar…",
@@ -311,7 +314,9 @@
       "reservoirs": {
         "headline": "{{name}} · {{percent}}% de llenado",
         "supplyScope": "Resaltados en el mapa: los embalses de {{system}}, que abastece esta zona.",
-        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio"
+        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio",
+        "avg": "media {{years}} años {{mean}}%",
+        "comparisonLabel": "{{gap}} puntos {{direction}} de la media de {{years}} años"
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeMunicipio, getReservoirsForLocation } from './reservoirs'
+import { normalizeMunicipio, getReservoirsForLocation, getAllReservoirsGeoJSON } from './reservoirs'
 import type { SearchResult } from '../types'
 
 describe('normalizeMunicipio', () => {
@@ -80,5 +80,34 @@ describe('getReservoirsForLocation', () => {
     const result = getReservoirsForLocation(location)
     expect(result.length).toBe(7)
     expect(result.every(r => r.systemName === 'EMASESA')).toBe(true)
+  })
+})
+
+describe('reservoir history', () => {
+  it('carries both averages onto every map feature', () => {
+    const f = getAllReservoirsGeoJSON().features[0]
+    expect(f.properties).toHaveProperty('mean5yr')
+    expect(f.properties).toHaveProperty('mean10yr')
+    expect(f.properties).not.toHaveProperty('historicalMeanPercent')
+  })
+
+  it('never substitutes zero for a missing average', () => {
+    for (const f of getAllReservoirsGeoJSON().features) {
+      for (const k of ['mean5yr', 'mean10yr'] as const) {
+        const v = f.properties![k]
+        expect(v === null || typeof v === 'number').toBe(true)
+      }
+    }
+  })
+
+  it('carries the averages through to the supply-system result', () => {
+    const location: SearchResult = {
+      displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
+      coordinates: { lat: 37.3433569, lng: -5.8402153 },
+      municipio: 'Alcalá de Guadaíra',
+    }
+    const result = getReservoirsForLocation(location)
+    expect(result.length).toBeGreaterThan(0)
+    expect(result.every(r => typeof r.mean10yr === 'number')).toBe(true)
   })
 })

@@ -45,7 +45,11 @@ export interface Reservoir {
   name: string
   fillPercent: number
   fillPercentAsOf: string
-  historicalMeanPercent?: number
+  // Mean fill % on this same calendar date across the last 5 / 10 years.
+  // Null where the station has fewer than 3 reporting years — a thin average
+  // would read as authoritative "normal" when it is two wet years.
+  mean5yr: number | null
+  mean10yr: number | null
   distanceKm: number
   basin: string
   systemName?: string

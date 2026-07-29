@@ -35,6 +35,20 @@ describe('dataset registry', () => {
     expect(getDataset('flood').appliesTo(cordoba)).toBe(true)
   })
 
+  it('coastal datasets apply when only displayName names the province', () => {
+    // Nominatim gives Marbella a comarca ("Costa del Sol Occidental") in place
+    // of its province, so provincia alone misses a plainly coastal address.
+    // isCoastalProvincia has always accepted displayName as a second signal;
+    // appliesTo simply never passed it.
+    const marbella: SearchResult = {
+      displayName: 'Marbella, Costa del Sol Occidental, Málaga, Andalucía, España',
+      coordinates: { lat: 36.51, lng: -4.88 },
+      municipio: 'Marbella', provincia: 'Costa del Sol Occidental', basin: 'guadalquivir',
+    }
+    expect(getDataset('coastalFlood').appliesTo(marbella)).toBe(true)
+    expect(getDataset('bathingWater').appliesTo(marbella)).toBe(true)
+  })
+
   it('audience reorders emphasis without changing membership', () => {
     const neutral = orderedDatasets(sevilla, null).map(d => d.id)
     const buyer = orderedDatasets(sevilla, 'buyer_investor').map(d => d.id)

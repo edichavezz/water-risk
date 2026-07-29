@@ -65,7 +65,7 @@ Search any Spanish address → get a risk profile with:
 
 - **Flood zone** — SNCZI T10/T100/T500 riverine flood zone status (MITERD)
 - **Drought** — Copernicus CDI level (alert/warning/watch/none), updated weekly
-- **Reservoirs** — Nearest 3 reservoirs with fill % and historical mean
+- **Reservoirs** — The reservoirs supplying this area, with fill % against 5- and 10-year averages for the same date
 - **Drinking water** — SINAC tap water compliance and source type
 - **Coastal zone** — MITERD DPH building-restriction zones (coastal locations only)
 - **Groundwater** — IGME overexploited aquifer status
