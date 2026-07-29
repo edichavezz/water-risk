@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { normalizeMunicipio, getReservoirsForLocation } from './reservoirs'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
 describe('normalizeMunicipio', () => {
   it('lowercases and strips diacritics', () => {
@@ -12,7 +12,7 @@ describe('normalizeMunicipio', () => {
 
 describe('getReservoirsForLocation', () => {
   it('returns all 7 EMASESA reservoirs for Alcalá de Guadaíra (postcode 41500 area)', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Alcalá de Guadaíra, Sevilla, Spain',
       coordinates: { lat: 37.338, lng: -5.847 },
       municipality: 'Alcalá de Guadaíra', countryCode: 'es',
@@ -30,7 +30,7 @@ describe('getReservoirsForLocation', () => {
   // No proximity fallback: a reservoir near a town may serve irrigation and
   // supply nobody, so nearness must never stand in for a supply record.
   it('returns nothing when the municipality has no supply-system record', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Somewhere unmapped, Spain',
       coordinates: { lat: 37.338, lng: -5.847 }, // well within 80 km of the EMASESA reservoirs
       municipality: 'Not A Real Mapped Town',
@@ -40,12 +40,12 @@ describe('getReservoirsForLocation', () => {
   })
 
   it('returns nothing when municipio is missing entirely', () => {
-    const location: SearchResult = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
+    const location: PlaceContext = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
     expect(getReservoirsForLocation(location)).toEqual([])
   })
 
   it('every returned reservoir names the system it was matched through', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Córdoba, Spain',
       coordinates: { lat: 37.8882, lng: -4.7794 },
       municipality: 'Córdoba', countryCode: 'es',
@@ -72,7 +72,7 @@ describe('getReservoirsForLocation', () => {
       (nominatimAddress as any).municipality ||
       ''
 
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
       coordinates: { lat: 37.3433569, lng: -5.8402153 },
       municipality: municipio,

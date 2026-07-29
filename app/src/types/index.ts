@@ -9,12 +9,6 @@ export interface Coordinates {
 
 export type { PlaceContext, BasinRef } from './place'
 
-/**
- * @deprecated Migration alias for `PlaceContext`. The name survives only so the
- * rename can land in steps; new code should import `PlaceContext`.
- */
-export type { PlaceContext as SearchResult } from './place'
-
 export interface FloodZoneResult {
   inZone: boolean
   returnPeriod?: '10' | '100' | '500' // years

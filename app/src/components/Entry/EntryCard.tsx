@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { useLocationSearch } from './useLocationSearch'
 import { submitLocation } from './submitLocation'
-import type { SearchResult } from '../../types'
+import type { PlaceContext } from '../../types/place'
 import type { Audience } from '../../types/workspace'
 
 export default function EntryCard() {
@@ -21,7 +21,7 @@ export default function EntryCard() {
     if (searchFocusNonce > 0) input.current?.focus()
   }, [searchFocusNonce])
 
-  const choose = (result: SearchResult) => {
+  const choose = (result: PlaceContext) => {
     setQuery(result.municipality || result.displayName.split(',')[0])
     clear()
     void submitLocation(result)

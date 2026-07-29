@@ -215,8 +215,8 @@
     "submit": "Consultar esta zona",
     "exploreHint": "o haz clic en cualquier punto del mapa",
     "coverageNote": "Funciona en todo el Mediterráneo, con el mayor detalle en Andalucía. En el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
-    "keyAvailable": "Datos detallados disponibles",
-    "keyUnavailable": "Aún no disponible",
+    "keyAvailable": "Mayor detalle aquí",
+    "keyUnavailable": "Menos registros locales",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
   },
   "about": {

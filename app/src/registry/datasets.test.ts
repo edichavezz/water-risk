@@ -3,14 +3,14 @@ import { DATASETS, orderedDatasets, getDataset } from './datasets'
 import { ALL_DATASET_IDS } from '../types/workspace'
 import en from '../i18n/en.json'
 import es from '../i18n/es.json'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
-const sevilla: SearchResult = {
+const sevilla: PlaceContext = {
   displayName: 'Sevilla, Andalucía, España',
   coordinates: { lat: 37.39, lng: -5.98 },
   municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
-const cordoba: SearchResult = { ...sevilla, municipality: 'Córdoba', countryCode: 'es', provinceName: 'Córdoba' }
+const cordoba: PlaceContext = { ...sevilla, municipality: 'Córdoba', countryCode: 'es', provinceName: 'Córdoba' }
 
 describe('dataset registry', () => {
   it('registers every dataset id exactly once', () => {

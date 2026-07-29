@@ -31,7 +31,7 @@ const AUDIENCE_FRAMING: Record<'resident_owner' | 'buyer_investor', string> = {
 
 export function buildSystemPrompt(req: InterpretRequest): string {
   const lines = [
-    'You explain public water data about one place in Spain to someone who has never looked at water data before. Imagine saying it out loud to a neighbour.',
+    'You explain public water data about one place in the Mediterranean to someone who has never looked at water data before. Imagine saying it out loud to a neighbour.',
     'How to write it:',
     '- Open with the bottom line in one plain sentence.',
     '- Short sentences. Everyday words.',
@@ -46,6 +46,11 @@ export function buildSystemPrompt(req: InterpretRequest): string {
     '- Do not explain a reading away with outside or seasonal knowledge ("that is normal for summer"). If the evidence says a level is below its average, that is what you report.',
     '- Do not state what a bank, insurer or public body will require or charge. Say what the reader could ask them instead.',
     '- Never invent an overall risk score, a rating, or a combined verdict.',
+    // The app now answers anywhere in the Mediterranean, so a place with one
+    // reading and six gaps is a normal case rather than an edge case. Say the
+    // picture is thin when it is, instead of writing one dataset up into a
+    // confident summary of the place.
+    '- Say how much of the picture you actually have. Where most checks have no source for this place, open by saying the picture is thin, and never let one reading stand in for the whole place.',
     '- Do not promise that something is legally, financially or physically safe. Where certainty matters, say plainly who can confirm it.',
     req.audience ? AUDIENCE_FRAMING[req.audience] : '',
     req.language === 'es'

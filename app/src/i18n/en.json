@@ -215,8 +215,8 @@
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
     "coverageNote": "Works anywhere in the Mediterranean, with the most detail in Andalucía. Everywhere else the app shows which checks it could not run.",
-    "keyAvailable": "Detailed data available",
-    "keyUnavailable": "Not yet available",
+    "keyAvailable": "Most detail here",
+    "keyUnavailable": "Fewer local records",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
   },
   "about": {

@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useAppStore } from './useAppStore'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
-const sevilla: SearchResult = {
+const sevilla: PlaceContext = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
   municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
-const madrid: SearchResult = {
+const madrid: PlaceContext = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.70 },
   municipality: 'Madrid', countryCode: 'es', provinceName: 'Madrid',
 }
