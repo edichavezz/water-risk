@@ -18,7 +18,37 @@ export function parseGeom(geom) {
   return { lat: Math.round(lat * 10000) / 10000, lng: Math.round(lng * 10000) / 10000 }
 }
 
-export function shapeReservoir(station, today) {
+// A station needs at least this many reporting years before an average is
+// worth showing — two wet years would otherwise masquerade as "normal".
+const MIN_YEARS = 3
+
+function meanOf(values) {
+  if (values.length < MIN_YEARS) return null
+  const sum = values.reduce((a, b) => a + b, 0)
+  return Math.round((sum / values.length) * 10) / 10
+}
+
+/**
+ * Mean fill % for one station across the same calendar date in past years.
+ * `history` is ordered most-recent-first, so the 5-year window is a prefix of
+ * the 10-year one. Years where the station reported nothing (built later, or
+ * out of service) are skipped rather than counted as zero.
+ */
+export function historicalMeans(codEst, history) {
+  const valueAt = i => {
+    const v = history[i]?.[`${codEst}_por`]
+    return typeof v === 'number' ? v : null
+  }
+  const window = n =>
+    Array.from({ length: n }, (_, i) => valueAt(i)).filter(v => v !== null)
+
+  return {
+    mean5yr: meanOf(window(5)),
+    mean10yr: meanOf(window(10)),
+  }
+}
+
+export function shapeReservoir(station, today, history = []) {
   const codEst = station.cod_est
   const fillPercent = today[`${codEst}_por`]
   if (fillPercent == null) return null
@@ -35,7 +65,35 @@ export function shapeReservoir(station, today) {
     fillPercent,
     storedHm3: today[`${codEst}_res`],
     capacityHm3: today[`${codEst}_cap`],
+    ...historicalMeans(codEst, history),
   }
+}
+
+const HISTORY_YEARS = 10
+
+// REDIAM is date-indexed on the same endpoint as today's bulletin. Requests are
+// sequential with a small gap: this is a build-time script hitting a public
+// service, and ten polite requests cost a few seconds once a day.
+async function fetchHistory(fecha) {
+  const [y, m, d] = fecha.split('-').map(Number)
+  const days = []
+  for (let back = 1; back <= HISTORY_YEARS; back++) {
+    const past = `${y - back}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+    try {
+      const res = await fetch(`${TODAY_URL}/${past}`)
+      if (!res.ok) {
+        console.warn(`No bulletin for ${past} (HTTP ${res.status}) — skipping that year.`)
+        days.push({})
+      } else {
+        days.push(await res.json())
+      }
+    } catch (err) {
+      console.warn(`History fetch failed for ${past} (${err.message}) — skipping that year.`)
+      days.push({})
+    }
+    await new Promise(r => setTimeout(r, 250))
+  }
+  return days
 }
 
 async function main() {
@@ -55,9 +113,15 @@ async function main() {
     throw err
   }
 
+  // History is best-effort: a failure here must never cost us today's levels.
+  const history = await fetchHistory(today.fecha)
+
   const reservoirs = stations
-    .map(s => shapeReservoir(s, today))
+    .map(s => shapeReservoir(s, today, history))
     .filter(Boolean)
+
+  const withHistory = reservoirs.filter(r => r.mean10yr !== null).length
+  console.log(`${withHistory}/${reservoirs.length} reservoirs have a 10-year average.`)
 
   const skipped = stations.length - reservoirs.length
   if (skipped > 0) {
