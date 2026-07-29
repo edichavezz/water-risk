@@ -4,7 +4,8 @@ import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
 import { getReservoirsForLocation } from '../services/reservoirs'
 import { getWaterQualityByMunicipality } from '../services/waterQuality'
-import { getCoastalFloodStatus, isCoastalProvincia } from '../services/coastalFlood'
+import { getCoastalFloodStatus } from '../services/coastalFlood'
+import { isCoastal } from '../services/coastline'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
 
@@ -107,7 +108,7 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,
-    appliesTo: loc => isCoastalProvincia(loc.provinceName),
+    appliesTo: loc => isCoastal(loc.coordinates),
     fetch: async loc => {
       try { return ok(await getCoastalFloodStatus(loc.coordinates)) } catch (e) { return err(e) }
     },
@@ -133,7 +134,7 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 7, buyer_investor: 7 },
     defaultOrder: 7,
-    appliesTo: loc => isCoastalProvincia(loc.provinceName),
+    appliesTo: loc => isCoastal(loc.coordinates),
     fetch: async loc => {
       try {
         const s = await getNearestBathingSite(loc.coordinates)
