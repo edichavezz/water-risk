@@ -15,7 +15,8 @@
     "unavailable": "No map layer available",
     "collapse": "Collapse map layers",
     "expand": "Expand map layers",
-    "legendHeading": "Legend"
+    "legendHeading": "Legend",
+    "noData": "Nothing to show here"
   },
   "risk": {
     "title": "Risk Profile",

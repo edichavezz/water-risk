@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LayerTray from './LayerTray'
 import { useAppStore } from '../../store/useAppStore'
@@ -67,5 +67,42 @@ describe('layer tray', () => {
     render(<LayerTray />)
     await user.click(screen.getByRole('checkbox', { name: /supply reservoirs/i }))
     expect(useAppStore.getState().contextLayers).toEqual([])
+  })
+
+  it('disables a layer the searched place has no data for', async () => {
+    const user = userEvent.setup()
+    // A coastal layer for an inland town: the panel drops the row, so the map
+    // must not go on offering a toggle that would paint nothing.
+    useAppStore.setState({
+      results: { coastalFlood: { status: 'not_applicable' } },
+    })
+    render(<LayerTray />)
+
+    const coastal = screen.getByRole('radio', { name: /coastal/i })
+    expect(coastal).toBeDisabled()
+    await user.click(coastal)
+    expect(useAppStore.getState().primaryLayer).not.toBe('coastalFlood')
+
+    // A dataset that does apply is untouched.
+    expect(screen.getByRole('radio', { name: /river flood zones/i })).not.toBeDisabled()
+  })
+
+  it('keeps offering layers whose reading is merely missing at this point', () => {
+    // "Outside the mapped zone" is a reason to look at the map, not to lock it:
+    // the raster still shows the zones around the point.
+    useAppStore.setState({ results: { flood: { status: 'unavailable' } } })
+    render(<LayerTray />)
+    expect(screen.getByRole('radio', { name: /river flood zones/i })).not.toBeDisabled()
+  })
+
+  it('drops a selected layer that stops applying, rather than stranding it', async () => {
+    useAppStore.setState({ primaryLayer: 'coastalFlood' })
+    const { rerender } = render(<LayerTray />)
+    expect(useAppStore.getState().primaryLayer).toBe('coastalFlood')
+
+    useAppStore.setState({ results: { coastalFlood: { status: 'not_applicable' } } })
+    rerender(<LayerTray />)
+
+    await waitFor(() => expect(useAppStore.getState().primaryLayer).toBeNull())
   })
 })

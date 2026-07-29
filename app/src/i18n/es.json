@@ -15,7 +15,8 @@
     "unavailable": "Sin capa disponible",
     "collapse": "Contraer capas del mapa",
     "expand": "Desplegar capas del mapa",
-    "legendHeading": "Leyenda"
+    "legendHeading": "Leyenda",
+    "noData": "Nada que mostrar aquí"
   },
   "risk": {
     "title": "Perfil de riesgo",

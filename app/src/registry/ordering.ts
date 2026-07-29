@@ -29,6 +29,30 @@ export function hasResult(result: DatasetResult | undefined): boolean {
 }
 
 /**
+ * Whether a dataset applies to the place currently being looked at.
+ *
+ * Two things rule one out: the coverage record for this area not listing it,
+ * or the check itself coming back `not_applicable` — a coastal layer for an
+ * inland town. Either way there is nothing to say and nothing to draw, so the
+ * panel omits the row *and* the layer tray disables the toggle. Sharing one
+ * predicate is what stops those two drifting apart and offering a map layer
+ * for a dataset the panel will not even list.
+ *
+ * Deliberately narrower than `hasResult`: `unavailable` and `error` mean this
+ * point has no reading, not that the layer paints nothing. The flood and
+ * drought rasters still show the zones around a location that sits outside
+ * one, which is often the reason to turn them on.
+ */
+export function isApplicableHere(
+  id: DatasetId,
+  coverage: { datasets: DatasetId[] } | null,
+  results: Partial<Record<DatasetId, DatasetResult>>,
+): boolean {
+  if (coverage && coverage.datasets.length > 0 && !coverage.datasets.includes(id)) return false
+  return results[id]?.status !== 'not_applicable'
+}
+
+/**
  * Relevance order, re-sorted so rows that carry a value come first. Sorting is
  * stable, so the incoming relevance order survives inside each rank.
  *

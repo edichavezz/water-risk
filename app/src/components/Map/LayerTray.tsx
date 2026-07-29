@@ -1,7 +1,8 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { DATASETS } from '../../registry/datasets'
+import { isApplicableHere } from '../../registry/ordering'
 import Legend from './Legend'
 import type { DatasetId } from '../../types/workspace'
 
@@ -55,9 +56,30 @@ export default function LayerTray() {
   const contextLayers = useAppStore(s => s.contextLayers)
   const setPrimaryLayer = useAppStore(s => s.setPrimaryLayer)
   const toggleContextLayer = useAppStore(s => s.toggleContextLayer)
+  const coverage = useAppStore(s => s.coverage)
+  const results = useAppStore(s => s.results)
 
   const primaries = DATASETS.filter(d => d.mapRole === 'primary')
   const contexts = DATASETS.filter(d => d.mapRole === 'context')
+
+  /* Two separate reasons a layer cannot be drawn, kept apart because they say
+     different things: the dataset publishes no map layer at all, or it does
+     not apply to this particular place. */
+  const reasonUnavailable = (id: DatasetId, mapUnavailable?: boolean) =>
+    mapUnavailable
+      ? t('layers.unavailable')
+      : isApplicableHere(id, coverage, results)
+        ? null
+        : t('layers.noData')
+
+  // A layer selected before the reader moved somewhere it does not apply would
+  // otherwise stay selected while greyed out, painting nothing and offering no
+  // way back. Drop it, so the radio group and the map agree.
+  useEffect(() => {
+    if (primaryLayer && !isApplicableHere(primaryLayer, coverage, results)) {
+      setPrimaryLayer(null)
+    }
+  }, [primaryLayer, coverage, results, setPrimaryLayer])
 
   const dot = (active: boolean, disabled = false) => (
     <span
@@ -108,43 +130,53 @@ export default function LayerTray() {
             >
               {t('layers.none')}
             </ControlRow>
-            {primaries.map(d => (
-              <ControlRow
-                key={d.id}
-                type="radio"
-                name="primary"
-                checked={primaryLayer === d.id}
-                disabled={d.mapUnavailable}
-                onChange={() => setPrimaryLayer(d.id as DatasetId)}
-                swatch={dot(primaryLayer === d.id, d.mapUnavailable)}
-              >
-                {t(`registry.${d.id}.name`)}
-                {d.mapUnavailable && <> ({t('layers.unavailable')})</>}
-              </ControlRow>
-            ))}
+            {primaries.map(d => {
+              const reason = reasonUnavailable(d.id, d.mapUnavailable)
+              return (
+                <ControlRow
+                  key={d.id}
+                  type="radio"
+                  name="primary"
+                  checked={primaryLayer === d.id}
+                  disabled={reason !== null}
+                  onChange={() => setPrimaryLayer(d.id as DatasetId)}
+                  swatch={dot(primaryLayer === d.id, reason !== null)}
+                >
+                  {t(`registry.${d.id}.name`)}
+                  {reason && <> ({reason})</>}
+                </ControlRow>
+              )
+            })}
           </div>
 
           <p className="mb-[7px] text-[10.5px] font-bold uppercase tracking-[.04em] text-muted">
             {t('layers.contextHeading')}
           </p>
           <div className="mb-3.5">
-            {contexts.map(d => (
-              <ControlRow
-                key={d.id}
-                type="checkbox"
-                checked={contextLayers.includes(d.id)}
-                onChange={() => toggleContextLayer(d.id)}
-                swatch={
-                  <span
-                    className={`block h-3 w-3 rounded ${
-                      contextLayers.includes(d.id) ? 'bg-primary' : 'border-[1.5px] border-field'
-                    }`}
-                  />
-                }
-              >
-                {t(`registry.${d.id}.name`)}
-              </ControlRow>
-            ))}
+            {contexts.map(d => {
+              const reason = reasonUnavailable(d.id, d.mapUnavailable)
+              return (
+                <ControlRow
+                  key={d.id}
+                  type="checkbox"
+                  checked={contextLayers.includes(d.id)}
+                  disabled={reason !== null}
+                  onChange={() => toggleContextLayer(d.id)}
+                  swatch={
+                    <span
+                      className={`block h-3 w-3 rounded ${
+                        contextLayers.includes(d.id) && !reason
+                          ? 'bg-primary'
+                          : 'border-[1.5px] border-field'
+                      }`}
+                    />
+                  }
+                >
+                  {t(`registry.${d.id}.name`)}
+                  {reason && <> ({reason})</>}
+                </ControlRow>
+              )
+            })}
             {contextLayers.length >= 2 && (
               <p className="mt-1.5 text-[10.5px] text-warning">{t('layers.readabilityWarning')}</p>
             )}
