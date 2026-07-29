@@ -352,7 +352,7 @@
   },
   "coverage": {
     "tier": {
-      "detailed": "Detallado aquí: {{count}} de {{total}} comprobaciones, incluidos los embalses que abastecen a este municipio.",
+      "detailed": "Detallado aquí: {{count}} de {{total}} comprobaciones. Es donde la aplicación tiene más registros locales.",
       "partial": "Parcial aquí: {{count}} de {{total}} comprobaciones. Faltan los registros locales de abastecimiento y agua de boca.",
       "minimal": "Limitado aquí: {{count}} de {{total}} comprobaciones. Solo están disponibles las capas de ámbito europeo."
     },

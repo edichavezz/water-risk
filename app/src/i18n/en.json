@@ -352,7 +352,7 @@
   },
   "coverage": {
     "tier": {
-      "detailed": "Detailed here: {{count}} of {{total}} checks, including which reservoirs supply this municipality.",
+      "detailed": "Detailed here: {{count}} of {{total}} checks. This is where the app holds the most local records.",
       "partial": "Partial here: {{count}} of {{total}} checks. Local supply and drinking-water records are missing.",
       "minimal": "Limited here: {{count}} of {{total}} checks. Only the Europe-wide layers are available."
     },
