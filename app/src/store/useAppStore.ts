@@ -49,6 +49,7 @@ interface AppStore {
   backToList: () => void
   openDataMode: () => void
   openAiMode: () => void
+  openNewsMode: () => void
   setPrimaryLayer: (id: DatasetId | null) => void
   toggleContextLayer: (id: DatasetId) => void
   setInterpretation: (partial: Partial<InterpretationState>) => void
@@ -156,6 +157,10 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   openAiMode: () => set({ panelMode: 'ai', panelDepth: 'interpretation' }),
+
+  // Depth is left alone: news is a mode, and coming back to Public data should
+  // land on whatever the reader had open.
+  openNewsMode: () => set({ panelMode: 'news' }),
 
   setPrimaryLayer: id => {
     if (id !== null && getDataset(id).mapRole !== 'primary') return

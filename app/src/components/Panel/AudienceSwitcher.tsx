@@ -32,7 +32,7 @@ export default function AudienceSwitcher() {
             className={`rounded-lg border px-2 py-1 text-xs font-bold ${
               audience === o.id
                 ? 'border-primary bg-primary-soft text-primary'
-                : 'border-gray-300 text-muted hover:bg-subtle-cool'
+                : 'border-border text-muted hover:bg-subtle-cool'
             }`}
           >
             {t(o.key)}

@@ -1,6 +1,6 @@
 {
   "app": {
-    "tagline": "Consulta los riesgos hídricos de un lugar de España",
+    "tagline": "Riesgos de agua e incendio en el Mediterráneo",
     "navMap": "Mapa",
     "navAbout": "Acerca de",
     "nav": "Secciones"
@@ -12,7 +12,9 @@
     "none": "Ninguna",
     "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
     "close": "Cerrar",
-    "unavailable": "Sin capa disponible"
+    "unavailable": "Sin capa disponible",
+    "primaryNote": "Solo una, entre ambas.",
+    "mixedFamilyWarning": "Una capa de incendio y otra de agua a la vez pueden ser difíciles de leer."
   },
   "risk": {
     "title": "Perfil de riesgo",
@@ -205,7 +207,7 @@
     }
   },
   "entry": {
-    "supporting": "Datos públicos sobre inundaciones, sequía, embalses y calidad del agua.",
+    "supporting": "Datos públicos sobre inundaciones, sequía, embalses, calidad del agua e incendios.",
     "locationLabel": "Código postal, municipio o dirección",
     "audiencePrompt": "¿Qué te trae por aquí?",
     "optional": "Opcional",
@@ -320,7 +322,9 @@
       "waterQuality": {
         "value": "{{compliance}} · {{year}}"
       }
-    }
+    },
+    "noResultCount": "{{count}} comprobaciones sin fuente aquí — mostrarlas",
+    "newsTab": "Noticias"
   },
   "states": {
     "loading": "Consultando la fuente…",
@@ -357,5 +361,14 @@
       "minimal": "Limitado aquí: {{count}} de {{total}} comprobaciones. Solo están disponibles las capas de ámbito europeo."
     },
     "detailRegionLabel": "Más detalle aquí"
+  },
+  "hazard": {
+    "water": "Agua",
+    "fire": "Incendio"
+  },
+  "news": {
+    "pendingTitle": "Todavía sin conectar",
+    "pendingBody": "Esta pestaña mostrará titulares recientes que mencionen esta zona, etiquetados según si hablan de agua o de incendios.",
+    "disclaimer": "Cuando esté activa, los titulares se recogerán automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados."
   }
 }

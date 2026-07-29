@@ -46,11 +46,11 @@ export default function EntryCard() {
           autoComplete="off"
           onChange={e => onInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && suggestions.length > 0) choose(suggestions[0]) }}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-primary"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
         />
         {searching && <span className="absolute right-3 top-9 text-xs text-muted">…</span>}
         {suggestions.length > 0 && (
-          <ul role="listbox" className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-canvas shadow-lg">
+          <ul role="listbox" className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-hairline bg-canvas shadow-lg">
             {suggestions.map((s, i) => (
               <li key={i}>
                 <button
@@ -84,7 +84,7 @@ export default function EntryCard() {
               className={`min-h-11 rounded-lg border px-3 py-2 text-left text-sm ${
                 audience === a
                   ? 'border-primary bg-primary-soft text-ink'
-                  : 'border-gray-300 bg-canvas text-ink hover:bg-subtle-cool'
+                  : 'border-border bg-canvas text-ink hover:bg-subtle-cool'
               }`}
             >
               {t(a === 'resident_owner' ? 'entry.resident' : 'entry.buyer')}

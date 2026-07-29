@@ -72,7 +72,7 @@ describe('outside the detailed region', () => {
 
   // The behaviour the coverage gate used to make impossible: this search
   // returned no rows at all and a "not available for this area" screen.
-  it('still renders a list, and says how much of it is covered', () => {
+  it('still renders a list, and says how much of it is covered', async () => {
     useAppStore.setState(useAppStore.getInitialState())
     useAppStore.getState().beginSearch(marseille)
     const { coverage } = useAppStore.getState()
@@ -89,6 +89,15 @@ describe('outside the detailed region', () => {
     // Two of seven today: Copernicus drought and the EEA bathing-water
     // register. Hub'Eau moves France up a tier when it lands.
     expect(screen.getByText(/limited here: 2 of 7 checks/i)).toBeInTheDocument()
+
+    // Five empty rows is past the collapse threshold, so the tail is behind a
+    // count. It must still state that the checks have no source — a collapsed
+    // row the reader never opens cannot be allowed to read as "fine".
+    const disclosure = screen.getByRole('button', { name: /checks have no source here/i })
+    expect(disclosure).toBeInTheDocument()
+    expect(screen.queryByText(/no source covers this here yet/i)).not.toBeInTheDocument()
+
+    await userEvent.setup().click(disclosure)
     expect(screen.getAllByText(/no source covers this here yet/i).length).toBeGreaterThan(0)
   })
 

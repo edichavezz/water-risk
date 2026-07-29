@@ -34,7 +34,7 @@ export default function InterpretationView() {
         <p className="text-sm text-ink">{t('ai.error')}</p>
         <button
           onClick={regenerate}
-          className="min-h-11 rounded-lg border border-gray-300 px-3 py-2 text-sm font-bold text-ink hover:bg-subtle-cool"
+          className="min-h-11 rounded-lg border border-border px-3 py-2 text-sm font-bold text-ink hover:bg-subtle-cool"
         >
           {t('ai.regenerate')}
         </button>
@@ -51,7 +51,7 @@ export default function InterpretationView() {
   return (
     <div className="flex flex-col gap-3">
       <AssistedLabel text={t('ai.assistedLabel')} />
-      <h2 className="text-lg font-bold text-ink">{title}</h2>
+      <h2 className="font-title text-lg font-bold text-ink">{title}</h2>
 
       {interpretation.basis && interpretation.basis.length > 0 && (
         <p className="text-xs text-muted">
@@ -111,7 +111,7 @@ export default function InterpretationView() {
                 value={followUp}
                 onChange={e => setFollowUp(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') ask(followUp) }}
-                className="min-h-11 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-primary"
+                className="min-h-11 flex-1 rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
               />
               <button
                 onClick={() => ask(followUp)}

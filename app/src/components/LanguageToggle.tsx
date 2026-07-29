@@ -12,15 +12,15 @@ export default function LanguageToggle() {
   }
 
   return (
-    <div className="flex items-center gap-0 rounded-lg border border-gray-200 overflow-hidden text-xs font-semibold">
+    <div className="flex items-center gap-0 overflow-hidden rounded-lg border border-border text-xs font-semibold">
       {(['en', 'es'] as Language[]).map(lang => (
         <button
           key={lang}
           onClick={() => toggle(lang)}
-          className={`px-2.5 py-1 uppercase transition-colors ${
+          className={`min-h-8 px-2.5 py-1 uppercase transition-colors ${
             language === lang
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-600 hover:bg-gray-50'
+              ? 'bg-primary text-canvas'
+              : 'bg-canvas text-muted hover:bg-subtle-cool'
           }`}
         >
           {lang}

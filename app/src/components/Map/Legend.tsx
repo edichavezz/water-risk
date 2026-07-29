@@ -75,7 +75,7 @@ export default function Legend() {
       )}
 
       {highlighted.length > 0 && (
-        <div className={primaryLayer ? 'mt-3 border-t border-gray-200 pt-2' : ''}>
+        <div className={primaryLayer ? 'mt-3 border-t border-hairline pt-2' : ''}>
           <p className="mb-1.5 font-bold text-ink">{t('registry.reservoirs.name')}</p>
           <ul className="space-y-1">
             <li className="flex items-center gap-2">

@@ -1,5 +1,5 @@
 import type { PlaceContext } from '../types/place'
-import type { Audience, DatasetId, DatasetResult } from '../types/workspace'
+import type { Audience, DatasetId, DatasetResult, HazardFamily } from '../types/workspace'
 import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
 import { getReservoirsForLocation } from '../services/reservoirs'
@@ -27,6 +27,7 @@ export type Applicability = 'covered' | 'unsupported' | 'not_applicable'
 
 export interface DatasetDef {
   id: DatasetId
+  hazard: HazardFamily
   category: 'hazard' | 'supply' | 'quality'
   source: { name: string; url?: string }
   mapRole: 'primary' | 'context' | 'none'
@@ -57,6 +58,7 @@ function err(e: unknown): DatasetResult {
 export const DATASETS: DatasetDef[] = [
   {
     id: 'flood',
+    hazard: 'water',
     category: 'hazard',
     source: { name: 'SNCZI — MITERD', url: 'https://sig.mapama.gob.es/snczi/' },
     mapRole: 'primary',
@@ -72,6 +74,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'drought',
+    hazard: 'water',
     category: 'hazard',
     source: {
       name: 'Copernicus EDO',
@@ -94,6 +97,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'reservoirs',
+    hazard: 'water',
     category: 'supply',
     source: { name: 'REDIAM / MITERD' },
     mapRole: 'context',
@@ -113,6 +117,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'waterQuality',
+    hazard: 'water',
     category: 'quality',
     source: { name: 'SINAC — Ministerio de Sanidad', url: 'https://sinac.sanidad.gob.es/' },
     mapRole: 'none',
@@ -133,6 +138,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'coastalFlood',
+    hazard: 'water',
     category: 'hazard',
     // The map layer is REDIAM's Andalucía zoning; the point verdict would come
     // from MITERD DPH, which is down. The legend sits with the map, so it
@@ -156,6 +162,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'groundwater',
+    hazard: 'water',
     category: 'hazard',
     source: { name: 'IGME' },
     mapRole: 'primary',
@@ -170,6 +177,7 @@ export const DATASETS: DatasetDef[] = [
   },
   {
     id: 'bathingWater',
+    hazard: 'water',
     category: 'quality',
     source: { name: 'EEA Bathing Water' },
     mapRole: 'none',

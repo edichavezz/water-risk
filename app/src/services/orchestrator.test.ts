@@ -10,7 +10,7 @@ const loc: PlaceContext = {
 
 function def(id: string, fetch: DatasetDef['fetch']): DatasetDef {
   return {
-    id: id as DatasetDef['id'], category: 'hazard',
+    id: id as DatasetDef['id'], hazard: 'water', category: 'hazard',
     source: { name: 's' }, mapRole: 'none', aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 1 },
     defaultOrder: 1, applicability: () => 'covered', fetch,

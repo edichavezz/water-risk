@@ -14,19 +14,19 @@ describe('AppHeader', () => {
 
   it('names the app as the page heading, untranslated', async () => {
     render(<AppHeader />)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Water Risk Explorer')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Fire and Rain')
 
     await i18n.changeLanguage('es')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Water Risk Explorer')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Fire and Rain')
   })
 
   it('shows the tagline in the active language', async () => {
     render(<AppHeader />)
-    expect(screen.getByText('Check water risks for a place in Spain')).toBeInTheDocument()
+    expect(screen.getByText('Water and fire risk across the Mediterranean')).toBeInTheDocument()
 
     await i18n.changeLanguage('es')
     expect(
-      screen.getByText('Consulta los riesgos hídricos de un lugar de España'),
+      screen.getByText('Riesgos de agua e incendio en el Mediterráneo'),
     ).toBeInTheDocument()
   })
 

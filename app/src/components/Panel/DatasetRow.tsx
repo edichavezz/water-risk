@@ -27,11 +27,37 @@ export default function DatasetRow({ def }: { def: DatasetDef }) {
         onClick={() => selectDataset(def.id)}
         className="flex min-h-11 w-full flex-col items-start gap-0.5 rounded-xl px-3 py-2.5 text-left"
       >
-        <span className="flex items-center gap-2">
-          <span aria-hidden className="text-xs text-muted">{STATUS_GLYPH[status]}</span>
-          <span className="text-sm font-bold text-ink">{t(`registry.${def.id}.name`)}</span>
+        <span className="flex flex-wrap items-center gap-2">
+          {/* Hazard colour is added to the glyph, never substituted for it: the
+              glyph stays the non-colour status cue. Only `available` takes the
+              family colour — a terracotta hollow ring would read as a fire
+              finding rather than a missing fire reading. */}
+          <span
+            aria-hidden
+            className={`text-xs ${
+              status === 'available'
+                ? def.hazard === 'fire'
+                  ? 'text-accent'
+                  : 'text-primary'
+                : 'text-muted'
+            }`}
+          >
+            {STATUS_GLYPH[status]}
+          </span>
+          <span className="font-title text-sm font-bold text-ink">
+            {t(`registry.${def.id}.name`)}
+          </span>
+          <span
+            className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+              def.hazard === 'fire'
+                ? 'bg-accent-soft text-[#8A5A34]'
+                : 'bg-primary-soft text-[#1F4F63]'
+            }`}
+          >
+            {t(`hazard.${def.hazard}`)}
+          </span>
           {def.mapRole !== 'none' && (
-            <span className="rounded-md bg-canvas px-1.5 py-0.5 text-[10px] text-muted">
+            <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted">
               {t('panel.mapLayer')}
             </span>
           )}
@@ -45,7 +71,7 @@ export default function DatasetRow({ def }: { def: DatasetDef }) {
         <div className="px-3 pb-2">
           <button
             onClick={() => void retryDataset(def.id)}
-            className="min-h-11 rounded-lg border border-gray-300 px-2 py-1 text-xs font-bold text-ink hover:bg-canvas"
+            className="min-h-11 rounded-lg border border-border px-2 py-1 text-xs font-bold text-ink hover:bg-canvas"
           >
             {t('states.retry')}
           </button>

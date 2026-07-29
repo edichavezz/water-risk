@@ -50,7 +50,7 @@ export default function DatasetDetail() {
         <span aria-hidden>←</span> {t('panel.back')}
       </button>
 
-      <h2 className="text-lg font-bold text-ink">{t(`registry.${id}.name`)}</h2>
+      <h2 className="font-title text-lg font-bold text-ink">{t(`registry.${id}.name`)}</h2>
       <p className="text-base text-ink">{resultSummary(id, result, t)}</p>
       {floodNote && <p className="text-sm text-muted">{floodNote}</p>}
       {reservoirScope && <p className="text-sm text-muted">{reservoirScope}</p>}

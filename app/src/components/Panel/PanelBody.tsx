@@ -5,6 +5,7 @@ import AudienceSwitcher from './AudienceSwitcher'
 import DatasetList from './DatasetList'
 import DatasetDetail from './DatasetDetail'
 import InterpretationView from './InterpretationView'
+import NewsFeed from './NewsFeed'
 
 /**
  * Mode tabs + depth switching, shared by the desktop panel and the mobile
@@ -17,6 +18,7 @@ export default function PanelBody() {
   const panelDepth = useAppStore(s => s.panelDepth)
   const openDataMode = useAppStore(s => s.openDataMode)
   const openAiMode = useAppStore(s => s.openAiMode)
+  const openNewsMode = useAppStore(s => s.openNewsMode)
   const interpretation = useAppStore(s => s.interpretation)
 
   const openAi = () => {
@@ -28,9 +30,16 @@ export default function PanelBody() {
     }
   }
 
-  const tabClass = (active: boolean) =>
-    `min-h-11 flex-1 rounded-lg px-3 py-2 text-sm font-bold ${
-      active ? 'bg-primary-soft text-primary' : 'text-muted hover:bg-subtle-cool'
+  // The AI tab underlines in terracotta, the data tabs in teal — the same
+  // two-colour logic the rest of the app uses, applied to interpretation vs
+  // evidence rather than to a hazard family.
+  const tabClass = (active: boolean, accent = false) =>
+    `min-h-11 flex-1 rounded-lg px-2 py-2 font-title text-[13px] font-bold leading-tight ${
+      active
+        ? accent
+          ? 'bg-accent-soft text-accent'
+          : 'bg-primary-soft text-primary'
+        : 'text-muted hover:bg-subtle-cool'
     }`
 
   return (
@@ -50,17 +59,27 @@ export default function PanelBody() {
           role="tab"
           aria-selected={panelMode === 'ai'}
           onClick={openAi}
-          className={tabClass(panelMode === 'ai')}
+          className={tabClass(panelMode === 'ai', true)}
         >
           {t('panel.aiTab')}
+        </button>
+        <button
+          role="tab"
+          aria-selected={panelMode === 'news'}
+          onClick={openNewsMode}
+          className={tabClass(panelMode === 'news')}
+        >
+          {t('panel.newsTab')}
         </button>
       </div>
 
       {panelMode === 'ai'
         ? <InterpretationView />
-        : panelDepth === 'detail'
-          ? <DatasetDetail />
-          : <DatasetList />}
+        : panelMode === 'news'
+          ? <NewsFeed />
+          : panelDepth === 'detail'
+            ? <DatasetDetail />
+            : <DatasetList />}
     </>
   )
 }

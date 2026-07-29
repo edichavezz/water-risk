@@ -1,5 +1,12 @@
 export type Audience = 'resident_owner' | 'buyer_investor'
 
+/**
+ * Which threat a dataset speaks to. Orthogonal to `category`, which says what
+ * kind of fact it is — `fireDanger` is hazard 'fire', category 'hazard', while
+ * `reservoirs` is hazard 'water', category 'supply'.
+ */
+export type HazardFamily = 'water' | 'fire'
+
 export type DatasetId =
   | 'flood'
   | 'drought'
@@ -36,7 +43,9 @@ export function isRenderableValue(r: DatasetResult | undefined): boolean {
 }
 
 export type WorkspaceView = 'entry' | 'searched'
-export type PanelMode = 'data' | 'ai'
+/* 'news' is a mode with no data behind it yet: the tab and its shell ship now
+   so the three-tab layout is real, but the live pull is a separate task. */
+export type PanelMode = 'data' | 'ai' | 'news'
 export type PanelDepth = 'list' | 'detail' | 'interpretation'
 
 export type InterpretationScope =

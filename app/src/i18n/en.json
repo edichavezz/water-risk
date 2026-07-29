@@ -1,6 +1,6 @@
 {
   "app": {
-    "tagline": "Check water risks for a place in Spain",
+    "tagline": "Water and fire risk across the Mediterranean",
     "navMap": "Map",
     "navAbout": "About",
     "nav": "Sections"
@@ -12,7 +12,9 @@
     "none": "None",
     "readabilityWarning": "Two overlays can make the map harder to read.",
     "close": "Close",
-    "unavailable": "No map layer available"
+    "unavailable": "No map layer available",
+    "primaryNote": "One at a time, across both.",
+    "mixedFamilyWarning": "A fire layer and a water layer at once can be hard to read."
   },
   "risk": {
     "title": "Risk Profile",
@@ -205,7 +207,7 @@
     }
   },
   "entry": {
-    "supporting": "Public data on flooding, drought, reservoirs and water quality.",
+    "supporting": "Public data on flooding, drought, reservoirs, water quality and wildfire.",
     "locationLabel": "Postcode, town or address",
     "audiencePrompt": "What brings you here?",
     "optional": "Optional",
@@ -320,7 +322,9 @@
       "waterQuality": {
         "value": "{{compliance}} · {{year}}"
       }
-    }
+    },
+    "noResultCount": "{{count}} checks have no source here — show them",
+    "newsTab": "Live news"
   },
   "states": {
     "loading": "Checking source…",
@@ -357,5 +361,14 @@
       "minimal": "Limited here: {{count}} of {{total}} checks. Only the Europe-wide layers are available."
     },
     "detailRegionLabel": "More detail here"
+  },
+  "hazard": {
+    "water": "Water",
+    "fire": "Fire"
+  },
+  "news": {
+    "pendingTitle": "Not connected yet",
+    "pendingBody": "This tab will show recent headlines mentioning this area, tagged by whether they are about water or fire.",
+    "disclaimer": "When it is live, headlines will be pulled automatically from public news sources — matched by place name, not verified."
   }
 }

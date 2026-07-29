@@ -8,21 +8,40 @@
 @import "maplibre-gl/dist/maplibre-gl.css" layer(maplibre);
 
 @theme {
-  --color-canvas: #FFFFFF;
-  --color-ink: #20312A;
-  --color-muted: #68766F;
-  --color-primary: #285F77;
-  --color-primary-hover: #204E62;
-  --color-primary-soft: #E4EFF3;
+  --color-canvas: #FBF8F2;
+  --color-page: #F7F1E7;
+  --color-ink: #1E2A38;
+  --color-muted: #5C6B72;
+
+  /* Water is the primary. Fire is the accent. Both carry hazard meaning, so
+     nothing decorative may use either — see --color-hairline for borders. */
+  --color-primary: #2B6E86;
+  --color-primary-hover: #1F4F63;
+  --color-primary-soft: #DCEAEE;
+  --color-accent: #C1663D;
+  --color-accent-soft: #F1DDCB;
+
   --color-focus: #78A9BD;
-  --color-subtle-cool: #F5F8F9;
-  --color-subtle-warm: #F7F7F3;
+  --color-subtle-cool: #F2F6F7;
+  --color-subtle-warm: #F5EFE4;
+
+  /* Borders had no token at all: a dozen components reached for Tailwind's
+     grey palette, which reads cold against a warm canvas. */
+  --color-hairline: #E9E1CF;
+  --color-border: #E4DAC8;
+
   --color-coverage: #7FA38C;
   --color-water: #4B91AD;
   --color-positive: #397353;
-  --color-warning: #B87535;
+  /* Nudged amber-ward. At #B87535 this sat close enough to the new terracotta
+     accent to be mistaken for it where a warning overlay meets a fire layer. */
+  --color-warning: #C98A2E;
   --color-danger: #AD4942;
+
   --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  /* Titles only. Body and UI stay on Atkinson — that is the accessibility
+     credential and it is not up for renegotiation on aesthetic grounds. */
+  --font-title: "Petrona", Georgia, serif;
 }
 
 :root {
@@ -36,7 +55,46 @@
 
 body {
   margin: 0;
-  @apply font-sans text-ink bg-canvas;
+  @apply font-sans text-ink;
+  background: var(--color-page);
+}
+
+/* The two-circle mark: a teal droplet and a terracotta flame, overlapping at
+   the droplet's lower right. Pure CSS — no asset, and it scales with the
+   wordmark. The droplet's squared corner points down-left the way a falling
+   drop does; the flame's points up. */
+.brand-mark { position: relative; width: 28px; height: 24px; flex: none; }
+
+.brand-mark__water,
+.brand-mark__fire { position: absolute; }
+
+.brand-mark__water {
+  left: 0;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--color-primary);
+}
+
+/* Squared corner at the top-left, rotated clockwise onto the top edge, so the
+   flame's tip points up while the droplet's points down. */
+.brand-mark__fire {
+  right: 0;
+  bottom: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  background: var(--color-accent);
+}
+
+/* Reads as one gradient rather than a border, so the header ends in the two
+   hazard colours the app is about instead of a hairline. */
+.brand-rule {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 }
 
 :focus-visible {
@@ -65,7 +123,7 @@ body {
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
   border: 2px dashed var(--color-primary);
-  background: rgb(255 255 255 / 0.85);
+  background: rgb(251 248 242 / 0.85);
 }
 
 .pick-popup {

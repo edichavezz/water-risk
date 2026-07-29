@@ -20,15 +20,15 @@ function DataQuestions() {
       {ordered.map(d => (
         <li
           key={d.id}
-          className="rounded-2xl border border-gray-200 bg-canvas p-5 shadow-sm"
+          className="rounded-2xl border border-hairline bg-canvas p-5 shadow-sm"
         >
-          <h3 className="text-base font-bold leading-snug text-ink">
+          <h3 className="font-title text-base font-bold leading-snug text-ink">
             {t(`about.dataItems.${d.id}.question`)}
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             {t(`about.dataItems.${d.id}.answer`)}
           </p>
-          <p className="mt-3 border-t border-gray-200 pt-3 text-xs text-muted">
+          <p className="mt-3 border-t border-hairline pt-3 text-xs text-muted">
             <span className="font-bold uppercase tracking-wide">
               {t('about.dataSourceLabel')}
             </span>{' '}
@@ -72,7 +72,7 @@ export default function AboutPage() {
           <p className="text-xs font-bold uppercase tracking-widest text-muted">
             {t('about.title', { name: APP_NAME })}
           </p>
-          <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
+          <h2 className="mt-2 font-title text-3xl font-bold leading-tight text-ink sm:text-4xl">
             {t('about.introHeading')}
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-ink">{t('about.introLead')}</p>
@@ -92,13 +92,13 @@ export default function AboutPage() {
         </section>
 
         {/* ── The AI, and what the owner/buyer answer is used for ──────── */}
-        <section className="mt-14 border-t border-gray-200 pt-10">
-          <h2 className="text-2xl font-bold text-ink">{t('about.aiHeading')}</h2>
+        <section className="mt-14 border-t border-hairline pt-10">
+          <h2 className="font-title text-2xl font-bold text-ink">{t('about.aiHeading')}</h2>
           <p className="mt-4 leading-relaxed text-muted">{t('about.aiBodyOne')}</p>
           <p className="mt-4 leading-relaxed text-muted">{t('about.aiBodyTwo')}</p>
 
           <div className="mt-6 rounded-2xl bg-subtle-cool p-5">
-            <h3 className="text-base font-bold text-ink">{t('about.aiAudienceHeading')}</h3>
+            <h3 className="font-title text-base font-bold text-ink">{t('about.aiAudienceHeading')}</h3>
             <p className="mt-2 leading-relaxed text-muted">{t('about.aiAudienceBody')}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted">
               {t('about.aiAudienceNote')}
@@ -107,15 +107,15 @@ export default function AboutPage() {
         </section>
 
         {/* ── The data: one plain question per dataset ─────────────────── */}
-        <section className="mt-14 border-t border-gray-200 pt-10">
-          <h2 className="text-2xl font-bold text-ink">{t('about.dataHeading')}</h2>
+        <section className="mt-14 border-t border-hairline pt-10">
+          <h2 className="font-title text-2xl font-bold text-ink">{t('about.dataHeading')}</h2>
           <p className="mt-4 leading-relaxed text-muted">{t('about.dataIntro')}</p>
           <DataQuestions />
 
           <div className="mt-6 rounded-2xl bg-subtle-warm p-5">
-            <h3 className="text-base font-bold text-ink">{t('about.coverageHeading')}</h3>
+            <h3 className="font-title text-base font-bold text-ink">{t('about.coverageHeading')}</h3>
             <p className="mt-2 leading-relaxed text-muted">{t('about.coverageBody')}</p>
-            <h3 className="mt-4 text-base font-bold text-ink">
+            <h3 className="mt-4 font-title text-base font-bold text-ink">
               {t('about.disclaimerHeading')}
             </h3>
             <p className="mt-2 leading-relaxed text-muted">{t('about.disclaimerBody')}</p>
@@ -123,8 +123,8 @@ export default function AboutPage() {
         </section>
 
         {/* ── The person behind it ─────────────────────────────────────── */}
-        <section className="mt-14 border-t border-gray-200 pt-10">
-          <h2 className="text-2xl font-bold text-ink">{t('about.makerHeading')}</h2>
+        <section className="mt-14 border-t border-hairline pt-10">
+          <h2 className="font-title text-2xl font-bold text-ink">{t('about.makerHeading')}</h2>
           <p className="mt-4 leading-relaxed text-muted">{t('about.makerBodyOne')}</p>
           <p className="mt-4 leading-relaxed text-muted">{t('about.makerBodyTwo')}</p>
           <p className="mt-5 leading-relaxed text-muted">
