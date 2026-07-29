@@ -115,17 +115,27 @@ export default function AboutPage() {
   // reader inside it, the way a real navigation would.
   useEffect(() => { top.current?.focus() }, [])
 
-  // The mini-nav dot follows the reader down the page. Guarded, because the
-  // observer does not exist in the jsdom the tests run under — without it the
-  // nav simply rests on the first section, which is a fine default.
+  // The mini-nav dot follows the reader down the page. The observer reports
+  // only what *changed*, so a running set of what is currently in the band is
+  // kept and the earliest section in it wins — reacting to entries alone would
+  // strand the dot on whichever section happened to be visible at mount.
+  // Guarded, because jsdom has no IntersectionObserver; without it the nav
+  // rests on the first section, which is a fine default.
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return
+    const inBand = new Set<SectionId>()
     const observer = new IntersectionObserver(
       entries => {
-        const visible = entries.filter(e => e.isIntersecting)
-        if (visible.length > 0) setActive(visible[0].target.id as SectionId)
+        for (const e of entries) {
+          const id = e.target.id as SectionId
+          if (e.isIntersecting) inBand.add(id)
+          else inBand.delete(id)
+        }
+        const first = SECTIONS.find(s => inBand.has(s.id))
+        if (first) setActive(first.id)
       },
-      { rootMargin: '-80px 0px -60% 0px' },
+      // A thin band just under the header, so one section is current at a time.
+      { rootMargin: '-80px 0px -75% 0px' },
     )
     for (const { id } of SECTIONS) {
       const el = document.getElementById(id)
