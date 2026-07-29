@@ -5,7 +5,7 @@ import type { SearchResult } from '../types'
 
 const sevilla: SearchResult = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
+  municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 const madrid: SearchResult = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.70 },

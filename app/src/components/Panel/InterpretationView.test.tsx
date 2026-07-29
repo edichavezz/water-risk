@@ -9,7 +9,7 @@ vi.mock('../../services/ai', () => ({ requestInterpretation: vi.fn() }))
 
 const sevilla = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
+  municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 
 beforeEach(() => {

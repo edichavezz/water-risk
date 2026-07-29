@@ -25,7 +25,7 @@ function fakeMap(overrides: Partial<Record<string, unknown>> = {}) {
 const SEVILLA: SearchResult = {
   displayName: 'Sevilla, Andalucía, Spain',
   coordinates: { lat: 37.3891, lng: -5.9845 },
-  municipality: 'Sevilla',
+  municipality: 'Sevilla', countryCode: 'es',
   provinceName: 'Sevilla',
 }
 

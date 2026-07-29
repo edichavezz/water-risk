@@ -8,9 +8,9 @@ import type { SearchResult } from '../types'
 const sevilla: SearchResult = {
   displayName: 'Sevilla, Andalucía, España',
   coordinates: { lat: 37.39, lng: -5.98 },
-  municipality: 'Sevilla', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
+  municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
-const cordoba: SearchResult = { ...sevilla, municipality: 'Córdoba', provinceName: 'Córdoba' }
+const cordoba: SearchResult = { ...sevilla, municipality: 'Córdoba', countryCode: 'es', provinceName: 'Córdoba' }
 
 describe('dataset registry', () => {
   it('registers every dataset id exactly once', () => {
@@ -30,9 +30,9 @@ describe('dataset registry', () => {
   })
 
   it('coastal datasets do not apply inland', () => {
-    expect(getDataset('coastalFlood').appliesTo(cordoba)).toBe(false)
-    expect(getDataset('bathingWater').appliesTo(cordoba)).toBe(false)
-    expect(getDataset('flood').appliesTo(cordoba)).toBe(true)
+    expect(getDataset('coastalFlood').applicability(cordoba)).toBe('not_applicable')
+    expect(getDataset('bathingWater').applicability(cordoba)).toBe('not_applicable')
+    expect(getDataset('flood').applicability(cordoba)).toBe('covered')
   })
 
   it('audience reorders emphasis without changing membership', () => {
@@ -40,6 +40,7 @@ describe('dataset registry', () => {
     const buyer = orderedDatasets(sevilla, 'buyer_investor').map(d => d.id)
     const resident = orderedDatasets(sevilla, 'resident_owner').map(d => d.id)
     expect([...buyer].sort()).toEqual([...neutral].sort())
+    expect(neutral.length).toBe(DATASETS.length)
     expect(buyer[0]).toBe('flood')
     expect(resident[0]).toBe('drought')
   })

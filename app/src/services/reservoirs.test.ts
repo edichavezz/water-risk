@@ -15,7 +15,7 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: 'Alcalá de Guadaíra, Sevilla, Spain',
       coordinates: { lat: 37.338, lng: -5.847 },
-      municipality: 'Alcalá de Guadaíra',
+      municipality: 'Alcalá de Guadaíra', countryCode: 'es',
       provinceName: 'Sevilla',
     }
     const result = getReservoirsForLocation(location)
@@ -48,7 +48,7 @@ describe('getReservoirsForLocation', () => {
     const location: SearchResult = {
       displayName: 'Córdoba, Spain',
       coordinates: { lat: 37.8882, lng: -4.7794 },
-      municipality: 'Córdoba',
+      municipality: 'Córdoba', countryCode: 'es',
       provinceName: 'Córdoba',
     }
     const result = getReservoirsForLocation(location)

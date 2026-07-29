@@ -1,9 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { runProfile } from './orchestrator'
 import type { DatasetDef } from '../registry/datasets'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
+import { NON_SAFE_STATUSES, type DatasetStatus } from '../types/workspace'
 
-const loc: SearchResult = {
+const loc: PlaceContext = {
   displayName: 'X', coordinates: { lat: 37, lng: -5 }, municipality: 'X',
 }
 
@@ -12,7 +13,7 @@ function def(id: string, fetch: DatasetDef['fetch']): DatasetDef {
     id: id as DatasetDef['id'], category: 'hazard',
     source: { name: 's' }, mapRole: 'none', aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 1 },
-    defaultOrder: 1, appliesTo: () => true, fetch,
+    defaultOrder: 1, applicability: () => 'covered', fetch,
   }
 }
 
@@ -52,5 +53,48 @@ describe('profile orchestrator', () => {
     await p
     expect(seen).toEqual(['drought', 'flood'])
     vi.useRealTimers()
+  })
+
+  // Correctness, not efficiency. Before the short-circuit, `flood` applied
+  // everywhere: a search in Italy sampled three SNCZI layers, failed all three,
+  // and landed as `error` — a Retry button that could never succeed.
+  it('never fetches a dataset that does not apply here', async () => {
+    const fetched: string[] = []
+    const results: Record<string, string> = {}
+
+    const track = (id: string, applies: DatasetDef['applicability']): DatasetDef => ({
+      ...def(id, async () => {
+        fetched.push(id)
+        return { status: 'available', data: 1 }
+      }),
+      applicability: applies,
+    })
+
+    await runProfile(
+      loc,
+      [
+        track('flood', () => 'unsupported'),
+        track('bathingWater', () => 'not_applicable'),
+        track('drought', () => 'covered'),
+      ],
+      { onResult: (id, r) => { results[id] = r.status } },
+    )
+
+    expect(fetched).toEqual(['drought'])
+    expect(results.flood).toBe('unsupported')
+    expect(results.bathingWater).toBe('not_applicable')
+    expect(results.drought).toBe('available')
+  })
+
+  // "Missing data never looks safe": the status a non-covered dataset lands on
+  // must be one the UI is forbidden from styling as a low-risk finding.
+  it('reports an unsupported dataset as a non-safe status', async () => {
+    const results: Record<string, string> = {}
+    await runProfile(
+      loc,
+      [{ ...def('flood', async () => ({ status: 'available' })), applicability: () => 'unsupported' as const }],
+      { onResult: (id, r) => { results[id] = r.status } },
+    )
+    expect(NON_SAFE_STATUSES).toContain(results.flood as DatasetStatus)
   })
 })

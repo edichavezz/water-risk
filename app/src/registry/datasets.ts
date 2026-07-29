@@ -1,4 +1,4 @@
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 import type { Audience, DatasetId, DatasetResult } from '../types/workspace'
 import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
@@ -8,6 +8,22 @@ import { getCoastalFloodStatus } from '../services/coastalFlood'
 import { isCoastal } from '../services/coastline'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
+
+/**
+ * Whether this dataset can say anything here.
+ *
+ * `unsupported` is the expansion default and the honesty rule lives in the gap
+ * between it and `not_applicable`. `not_applicable` is filtered out of the list
+ * AND out of AI evidence, and is deliberately absent from NON_SAFE_STATUSES —
+ * it means the question does not arise here. `unsupported` stays visible, is a
+ * NON_SAFE status, and reaches the model as an explicit gap.
+ *
+ * Almost every gap outside Andalucía is the second kind: river flood risk is
+ * real in Calabria, we simply have no SNCZI there. Calling that
+ * `not_applicable` would delete the row, hide the gap from the AI, and let
+ * absence read as absence of risk. Guarded by applicability.test.ts.
+ */
+export type Applicability = 'covered' | 'unsupported' | 'not_applicable'
 
 export interface DatasetDef {
   id: DatasetId
@@ -21,8 +37,14 @@ export interface DatasetDef {
   aiAllowed: boolean
   audienceWeight: Record<Audience, number>
   defaultOrder: number
-  appliesTo: (location: SearchResult) => boolean
-  fetch: (location: SearchResult) => Promise<DatasetResult>
+  /**
+   * Renamed from `appliesTo`, and the rename is load-bearing: had the boolean
+   * field kept its name, `DATASETS.filter(d => d.appliesTo(loc))` would still
+   * compile and every 'unsupported' string would be truthy, silently restoring
+   * the old behaviour with the wrong meaning.
+   */
+  applicability: (place: PlaceContext) => Applicability
+  fetch: (place: PlaceContext) => Promise<DatasetResult>
 }
 
 function ok<T>(data: T): DatasetResult<T> {
@@ -41,7 +63,9 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 3, buyer_investor: 1 },
     defaultOrder: 1,
-    appliesTo: () => true,
+    // SNCZI maps Spain. Flood risk is just as real elsewhere, so everywhere
+    // else is 'unsupported' — a visible gap — not 'not_applicable'.
+    applicability: p => (p.countryCode === 'es' ? 'covered' : 'unsupported'),
     fetch: async loc => {
       try { return ok(await getFloodZoneStatus(loc.coordinates)) } catch (e) { return err(e) }
     },
@@ -57,7 +81,10 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 4 },
     defaultOrder: 2,
-    appliesTo: () => true,
+    // Copernicus EDO covers the whole continent, and the pixel sample already
+    // returns 'unknown' -> unavailable outside its footprint. This is the one
+    // dataset that made pan-Mediterranean credible on day one.
+    applicability: () => 'covered',
     fetch: async loc => {
       try {
         const d = await getDroughtStatus(loc.coordinates)
@@ -73,7 +100,10 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 2, buyer_investor: 5 },
     defaultOrder: 3,
-    appliesTo: () => true,
+    // Every inhabited place has a water supply, so this is never
+    // 'not_applicable'. Until the supply graph lands, only Spain has any
+    // reservoir record at all.
+    applicability: p => (p.countryCode === 'es' ? 'covered' : 'unsupported'),
     fetch: async loc => {
       try {
         const rs = getReservoirsForLocation(loc)
@@ -89,7 +119,11 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 4, buyer_investor: 6 },
     defaultOrder: 4,
-    appliesTo: loc => Boolean(loc.municipality),
+    // SINAC is the Spanish register. Without a municipality there is nothing to
+    // look up anywhere — open sea, unmapped ground — which is the one genuinely
+    // not-applicable case.
+    applicability: p =>
+      !p.municipality ? 'not_applicable' : p.countryCode === 'es' ? 'covered' : 'unsupported',
     fetch: async loc => {
       try {
         const q = await getWaterQualityByMunicipality(loc.municipality ?? '')
@@ -108,7 +142,14 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,
-    appliesTo: loc => isCoastal(loc.coordinates),
+    // Inland, the coast genuinely does not arise. On a coast we do not map, it
+    // does — so that stays visible.
+    applicability: p =>
+      !isCoastal(p.coordinates)
+        ? 'not_applicable'
+        : p.countryCode === 'es'
+          ? 'covered'
+          : 'unsupported',
     fetch: async loc => {
       try { return ok(await getCoastalFloodStatus(loc.coordinates)) } catch (e) { return err(e) }
     },
@@ -121,7 +162,8 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 5, buyer_investor: 3 },
     defaultOrder: 6,
-    appliesTo: () => true,
+    // IGME's hydrogeological units are Spanish.
+    applicability: p => (p.countryCode === 'es' ? 'covered' : 'unsupported'),
     fetch: async loc => {
       try { return ok(getGroundwaterStatus(loc.coordinates)) } catch (e) { return err(e) }
     },
@@ -134,7 +176,9 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 7, buyer_investor: 7 },
     defaultOrder: 7,
-    appliesTo: loc => isCoastal(loc.coordinates),
+    // The EEA register is EU-wide, so fixing the coastal test is all this
+    // needed to start working in France and Italy.
+    applicability: p => (isCoastal(p.coordinates) ? 'covered' : 'not_applicable'),
     fetch: async loc => {
       try {
         const s = await getNearestBathingSite(loc.coordinates)
@@ -150,9 +194,13 @@ export function getDataset(id: DatasetId): DatasetDef {
   return d
 }
 
-export function orderedDatasets(location: SearchResult, audience: Audience | null): DatasetDef[] {
-  return DATASETS
-    .filter(d => d.appliesTo(location))
+/**
+ * Registry order for a place. Deliberately unfiltered: the orchestrator needs
+ * every dataset so it can record why each one has no result, and the list needs
+ * those records before it can decide what to hide.
+ */
+export function orderedDatasets(_place: PlaceContext, audience: Audience | null): DatasetDef[] {
+  return [...DATASETS]
     .sort((a, b) =>
       audience
         ? a.audienceWeight[audience] - b.audienceWeight[audience]
