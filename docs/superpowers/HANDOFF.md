@@ -52,7 +52,7 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 
 | Phase | State |
 |---|---|
-| P0 — dismantle the coverage gate | In progress |
+| P0 — dismantle the coverage gate | **Done.** Verified in the browser: Marseille returns live drought + bathing water with the Spain-only sources visibly unsupported; Ronda unchanged. |
 | P1 — visual patch + hazard families | Pending |
 | P2 — fire datasets | Pending |
 | P3 — live news | **Deferred** (tab shell only, in P1) |
@@ -64,3 +64,4 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 - **SINAC detail page** (`informacionAbastecimientoActionDetalleRed.do`) timed out three times at 120s during research. Whether it names source reservoirs decides whether Spain's registry tier carries a reservoir edge or only a system name. Spike before P4's Spain leg.
 - **The MITECO `.mdb` schema** is unverified. Budget a spike before building that pipeline.
 - **River-basin-district boundaries** — EEA WISE assumed, HydroBASINS level 5 is the public-domain fallback. Nothing downstream depends on which wins.
+- **`PlaceContext.basin` is declared but never populated.** The polygon lookup was deliberately deferred out of P0: its only consumer today is one line of the AI prompt, and it becomes load-bearing in P4 for the basin-tier reservoir fallback. Land `lookupBasin` there, with the code that needs it.
