@@ -8,21 +8,49 @@
 @import "maplibre-gl/dist/maplibre-gl.css" layer(maplibre);
 
 @theme {
-  --color-canvas: #FFFFFF;
-  --color-ink: #20312A;
-  --color-muted: #68766F;
-  --color-primary: #285F77;
-  --color-primary-hover: #204E62;
-  --color-primary-soft: #E4EFF3;
+  /* Surfaces. `canvas` stays the card/header surface every `bg-canvas` in the
+     app already means; `page` is the warmer level behind them (map view and
+     the About body), which the redesign introduces as a separate step. */
+  --color-canvas: #FBF8F2;
+  --color-page: #F7F1E7;
+
+  --color-ink: #1E2A38;
+  --color-muted: #5C6B72;
+  --color-primary: #2B6E86;
+  --color-primary-hover: #1F4F63;
+  --color-primary-soft: #DCEAEE;
   --color-focus: #78A9BD;
-  --color-subtle-cool: #F5F8F9;
-  --color-subtle-warm: #F7F7F3;
+  --color-subtle-cool: #DCEAEE;
+  --color-subtle-warm: #F1DDCB;
+
+  /* Terracotta. Deliberately sparing: the AI tab underline, the "AI-assisted"
+     badge, the About mini-nav dot and the header mark's second circle. */
+  --color-accent: #C1663D;
+  --color-accent-soft: #F1DDCB;
+  /* Warm brown for text that sits on the accent wash. */
+  --color-accent-ink: #8A5A34;
+
+  /* Warm hairlines, replacing every `border-gray-200/300`. `hairline` is the
+     structural one (header divider, pills, tab rail); `hairline-soft` divides
+     dataset rows; `field` outlines inputs and chips. */
+  --color-hairline: #E4DAC8;
+  --color-hairline-soft: #E9E1CF;
+  --color-field: #D8CFBC;
+
+  /* Micro-copy (cadence, source lines) and the inactive tab label. */
+  --color-micro: #8A8172;
+  --color-tab-idle: #9C8A6E;
+
   --color-coverage: #7FA38C;
   --color-water: #4B91AD;
   --color-positive: #397353;
   --color-warning: #B87535;
   --color-danger: #AD4942;
+
   --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  /* Rounded display face for the wordmark, panel location name, dataset and
+     section headings. Body/data stay on Atkinson for legibility. */
+  --font-display: "Fredoka", "Atkinson Hyperlegible", system-ui, sans-serif;
 }
 
 :root {
@@ -36,7 +64,7 @@
 
 body {
   margin: 0;
-  @apply font-sans text-ink bg-canvas;
+  @apply font-sans text-ink bg-page;
 }
 
 :focus-visible {
@@ -50,10 +78,25 @@ body {
 }
 
 /* The app header spans the top of the viewport, so MapLibre's top-anchored
-   control groups (the zoom buttons live in top-right) have to start below it. */
+   control groups (the zoom buttons live in top-right) have to start below it.
+   64px of header plus the 3px gradient accent line beneath it. */
 .maplibregl-ctrl-top-right,
 .maplibregl-ctrl-top-left {
-  top: 3.5rem;
+  top: 67px;
+}
+
+/* ── Topographic contour pattern ──────────────────────────────────────────
+   Purely decorative concentric "contour rings", built from stacked
+   radial-gradients. Used for the About page's divider band, which replaces a
+   photo hero. Three clusters, alternating teal and terracotta. */
+.topo-divider {
+  background-image:
+    radial-gradient(circle at 8% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
+    radial-gradient(circle at 8% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px),
+    radial-gradient(circle at 40% 50%, transparent 0 16px, rgb(193 102 61 / .30) 17px 19px, transparent 20px),
+    radial-gradient(circle at 40% 50%, transparent 0 30px, rgb(193 102 61 / .20) 31px 33px, transparent 34px),
+    radial-gradient(circle at 72% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
+    radial-gradient(circle at 72% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px);
 }
 
 /* ── Map location picker ──────────────────────────────────────────────────
