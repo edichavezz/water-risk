@@ -12,10 +12,10 @@ export async function applyRouteToStore(route: RouteState): Promise<void> {
   if (!loc) return
   await submitLocation(loc)
   const after = useAppStore.getState()
-  if (route.ds && after.coverage?.supported) after.selectDataset(route.ds)
+  if (route.ds) after.selectDataset(route.ds)
   // Restores the AI *mode* only — generation still requires an explicit
   // opt-in, so a shared link never auto-generates interpretation (§9.4).
-  if (route.mode === 'ai' && after.coverage?.supported) useAppStore.getState().openAiMode()
+  if (route.mode === 'ai') useAppStore.getState().openAiMode()
 }
 
 export function subscribeStoreToRoute(): () => void {

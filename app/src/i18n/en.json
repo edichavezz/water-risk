@@ -169,7 +169,11 @@
     "pickLoading": "Finding this place…",
     "pickSearchHere": "Search here",
     "pickNoPlace": "No place found here",
-    "pickOutsideCoverage": "Outside coverage — location only"
+    "pickTier": {
+      "detailed": "Detailed data here",
+      "partial": "Some checks available here",
+      "minimal": "Limited data here"
+    }
   },
   "legend": {
     "source": "Source: {{source}}",
@@ -210,7 +214,7 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Detailed results are available for Andalucía. Other regions will be added over time.",
+    "coverageNote": "Works anywhere in the Mediterranean, with the most detail in Andalucía. Everywhere else the app shows which checks it could not run.",
     "keyAvailable": "Detailed data available",
     "keyUnavailable": "Not yet available",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
@@ -265,7 +269,7 @@
       }
     },
     "coverageHeading": "Where it works",
-    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get the nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Other regions will be added over time.",
+    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Elsewhere in Spain you get the national flood and groundwater layers. In France and Italy you get the Europe-wide drought and bathing-water records. Wherever a check has no source, the app says so rather than leaving the row out.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
     "makerHeading": "Who made this, and why",
@@ -288,8 +292,6 @@
     "doesNotShow": "Does not show",
     "geography": "Geography",
     "cadence": "Updated",
-    "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
-    "unsupportedBody": "You can search another place, or explore the coverage map.",
     "home": "New search",
     "mapLayer": "Map layer",
     "summary": {
@@ -324,9 +326,10 @@
     "loading": "Checking source…",
     "unavailable": "No current result available",
     "not_applicable": "Not applicable to this place",
-    "unsupported": "Outside detailed coverage",
+    "unsupported": "No source covers this here yet",
     "error": "Source could not be reached",
-    "retry": "Retry"
+    "retry": "Retry",
+    "unsupportedReason": "No source covers this in {{country}} yet"
   },
   "ai": {
     "assistedLabel": "AI-assisted",
@@ -335,7 +338,6 @@
     "basis": "Based on: {{sources}}",
     "loading": "Generating interpretation…",
     "error": "Interpretation could not be generated.",
-    "unsupported": "Detailed data is not available here, so no interpretation can be made. Check authoritative regional sources instead.",
     "stale": "The language changed. Regenerate the interpretation?",
     "staleAudience": "You changed who this is for. Regenerate the explanation?",
     "regenerate": "Regenerate",
@@ -347,5 +349,13 @@
     "expand": "Expand results",
     "collapse": "Show map",
     "signals": "Key results"
+  },
+  "coverage": {
+    "tier": {
+      "detailed": "Detailed here: {{count}} of {{total}} checks, including which reservoirs supply this municipality.",
+      "partial": "Partial here: {{count}} of {{total}} checks. Local supply and drinking-water records are missing.",
+      "minimal": "Limited here: {{count}} of {{total}} checks. Only the Europe-wide layers are available."
+    },
+    "detailRegionLabel": "More detail here"
   }
 }

@@ -169,7 +169,11 @@
     "pickLoading": "Buscando este lugar…",
     "pickSearchHere": "Buscar aquí",
     "pickNoPlace": "No se encontró ningún lugar aquí",
-    "pickOutsideCoverage": "Fuera de cobertura — solo ubicación"
+    "pickTier": {
+      "detailed": "Datos detallados aquí",
+      "partial": "Algunas comprobaciones disponibles aquí",
+      "minimal": "Datos limitados aquí"
+    }
   },
   "legend": {
     "source": "Fuente: {{source}}",
@@ -210,7 +214,7 @@
     "buyer": "Estoy pensando en comprar o invertir",
     "submit": "Consultar esta zona",
     "exploreHint": "o haz clic en cualquier punto del mapa",
-    "coverageNote": "Hay resultados detallados para Andalucía. Otras regiones se añadirán con el tiempo.",
+    "coverageNote": "Funciona en todo el Mediterráneo, con el mayor detalle en Andalucía. En el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
     "keyAvailable": "Datos detallados disponibles",
     "keyUnavailable": "Aún no disponible",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
@@ -265,7 +269,7 @@
       }
     },
     "coverageHeading": "Dónde funciona",
-    "coverageBody": "Hay resultados detallados para Andalucía. En el resto de España seguirás viendo las capas de ámbito nacional, como las zonas inundables y el estado de sequía, pero pueden faltar los datos locales de abastecimiento y calidad del agua. Se añadirán más regiones con el tiempo.",
+    "coverageBody": "La aplicación responde en todo el Mediterráneo, pero no con la misma profundidad en todas partes. Andalucía es donde hay más: sistemas de abastecimiento investigados a mano y niveles de embalses actualizados a diario. En el resto de España están las capas nacionales de inundación y aguas subterráneas. En Francia e Italia, los registros europeos de sequía y aguas de baño. Cuando una comprobación no tiene fuente, la aplicación lo dice en lugar de omitir la fila.",
     "disclaimerHeading": "No es asesoramiento profesional",
     "disclaimerBody": "Esta es información de contexto, no asesoramiento jurídico, financiero ni pericial. No te bases solo en ella para una compra, una decisión de seguro o una solicitud urbanística. Confirma siempre con la fuente oficial y con un profesional cualificado.",
     "makerHeading": "Quién ha hecho esto, y por qué",
@@ -288,8 +292,6 @@
     "doesNotShow": "No muestra",
     "geography": "Geografía",
     "cadence": "Actualizado",
-    "unsupportedTitle": "Aún no hay datos detallados de riesgo hídrico para esta zona.",
-    "unsupportedBody": "Puedes buscar otro lugar o explorar el mapa de cobertura.",
     "home": "Nueva búsqueda",
     "mapLayer": "Capa del mapa",
     "summary": {
@@ -324,9 +326,10 @@
     "loading": "Consultando la fuente…",
     "unavailable": "No hay resultado actual disponible",
     "not_applicable": "No aplicable a este lugar",
-    "unsupported": "Fuera de la cobertura detallada",
+    "unsupported": "Todavía no hay ninguna fuente que cubra esto aquí",
     "error": "No se pudo acceder a la fuente",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "unsupportedReason": "Todavía no hay ninguna fuente que cubra esto en {{country}}"
   },
   "ai": {
     "assistedLabel": "Asistido por IA",
@@ -335,7 +338,6 @@
     "basis": "Basado en: {{sources}}",
     "loading": "Generando interpretación…",
     "error": "No se pudo generar la interpretación.",
-    "unsupported": "Aquí no hay datos detallados, así que no se puede hacer una interpretación. Consulta fuentes regionales oficiales.",
     "stale": "Ha cambiado el idioma. ¿Regenerar la interpretación?",
     "staleAudience": "Has cambiado para quién es esto. ¿Regenerar la explicación?",
     "regenerate": "Regenerar",
@@ -347,5 +349,13 @@
     "expand": "Ampliar resultados",
     "collapse": "Ver mapa",
     "signals": "Resultados clave"
+  },
+  "coverage": {
+    "tier": {
+      "detailed": "Detallado aquí: {{count}} de {{total}} comprobaciones, incluidos los embalses que abastecen a este municipio.",
+      "partial": "Parcial aquí: {{count}} de {{total}} comprobaciones. Faltan los registros locales de abastecimiento y agua de boca.",
+      "minimal": "Limitado aquí: {{count}} de {{total}} comprobaciones. Solo están disponibles las capas de ámbito europeo."
+    },
+    "detailRegionLabel": "Más detalle aquí"
   }
 }

@@ -16,16 +16,11 @@ function AssistedLabel({ text }: { text: string }) {
 export default function InterpretationView() {
   const { t } = useTranslation()
   const interpretation = useAppStore(s => s.interpretation)
-  const coverage = useAppStore(s => s.coverage)
   const [followUp, setFollowUp] = useState('')
 
   const scope = interpretation.scope ?? { type: 'location' as const }
   const title = scope.type === 'dataset' ? t('ai.titleDataset') : t('ai.titleLocation')
   const regenerate = () => void requestInterpretation(scope)
-
-  if (coverage && !coverage.supported) {
-    return <p className="text-sm text-ink">{t('ai.unsupported')}</p>
-  }
 
   if (interpretation.status === 'idle') return null
 

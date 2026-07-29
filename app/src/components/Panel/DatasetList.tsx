@@ -9,12 +9,11 @@ export default function DatasetList() {
   const { t } = useTranslation()
   const location = useAppStore(s => s.location)
   const audience = useAppStore(s => s.audience)
-  const coverage = useAppStore(s => s.coverage)
   const results = useAppStore(s => s.results)
+  const coverage = useAppStore(s => s.coverage)
   if (!location) return null
 
   const relevant = orderedDatasets(location, audience)
-    .filter(d => !coverage || coverage.datasets.length === 0 || coverage.datasets.includes(d.id))
     // not_applicable datasets are omitted from the default list (spec §9.2)
     .filter(d => results[d.id]?.status !== 'not_applicable')
 
@@ -33,6 +32,19 @@ export default function DatasetList() {
           <DatasetRow def={d} />
         </Fragment>
       ))}
+
+      {/* Says how much of the picture this place gets, in place of the
+          "outside coverage" screen that used to replace the list entirely.
+          Counts come from the registry, so this can never quote a number of
+          checks the app does not run. */}
+      {coverage && (
+        <p className="mt-2 px-1 text-xs leading-relaxed text-muted">
+          {t(`coverage.tier.${coverage.tier}`, {
+            count: coverage.coveredCount,
+            total: coverage.totalCount,
+          })}
+        </p>
+      )}
     </div>
   )
 }

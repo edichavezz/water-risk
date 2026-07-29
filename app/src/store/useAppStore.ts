@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import type { Language, SearchResult } from '../types'
+import type { Language } from '../types'
+import type { PlaceContext } from '../types/place'
 import type {
   Audience, DatasetId, DatasetResult, InterpretationState,
   PanelDepth, PanelMode, WorkspaceView,
 } from '../types/workspace'
-import { lookupCoverage, type CoverageResult } from '../services/coverage'
+import { coverageProfile, type CoverageProfile } from '../services/coverage'
 import { getDataset } from '../registry/datasets'
 
 const MAX_CONTEXT_LAYERS = 2
@@ -22,10 +23,10 @@ interface AppStore {
   language: Language
   page: Page
   view: WorkspaceView
-  location: SearchResult | null
+  location: PlaceContext | null
   searchOrigin: SearchOrigin
   audience: Audience | null
-  coverage: CoverageResult | null
+  coverage: CoverageProfile | null
   panelMode: PanelMode
   panelDepth: PanelDepth
   selectedDataset: DatasetId | null
@@ -41,7 +42,7 @@ interface AppStore {
   setPage: (page: Page) => void
   goToSearch: () => void
   setAudience: (a: Audience | null) => void
-  beginSearch: (location: SearchResult, origin?: SearchOrigin) => void
+  beginSearch: (location: PlaceContext, origin?: SearchOrigin) => void
   goHome: () => void
   setResult: (id: DatasetId, result: DatasetResult) => void
   selectDataset: (id: DatasetId) => void
@@ -112,7 +113,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       view: 'searched',
       location,
       searchOrigin: origin,
-      coverage: lookupCoverage(location.coordinates),
+      coverage: coverageProfile(location),
       panelMode: 'data',
       panelDepth: 'list',
       selectedDataset: null,

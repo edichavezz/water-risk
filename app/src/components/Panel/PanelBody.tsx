@@ -8,26 +8,16 @@ import InterpretationView from './InterpretationView'
 
 /**
  * Mode tabs + depth switching, shared by the desktop panel and the mobile
- * sheet. Outside detailed coverage there are no dataset rows and no AI tab
- * (spec §15.2).
+ * sheet. Every place gets a list now; how much of it carries a result is the
+ * list's business, not this component's.
  */
 export default function PanelBody() {
   const { t } = useTranslation()
-  const coverage = useAppStore(s => s.coverage)
   const panelMode = useAppStore(s => s.panelMode)
   const panelDepth = useAppStore(s => s.panelDepth)
   const openDataMode = useAppStore(s => s.openDataMode)
   const openAiMode = useAppStore(s => s.openAiMode)
   const interpretation = useAppStore(s => s.interpretation)
-
-  if (coverage && !coverage.supported) {
-    return (
-      <div className="rounded-xl bg-subtle-warm p-4">
-        <p className="text-sm font-bold text-ink">{t('panel.unsupportedTitle')}</p>
-        <p className="mt-1 text-sm text-muted">{t('panel.unsupportedBody')}</p>
-      </div>
-    )
-  }
 
   const openAi = () => {
     openAiMode()

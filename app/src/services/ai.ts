@@ -66,12 +66,19 @@ export async function requestInterpretation(
   question?: string,
 ): Promise<void> {
   const s = useAppStore.getState()
-  if (!s.location || !s.coverage?.supported) {
+  if (!s.location) {
     s.setInterpretation({ status: 'error', scope, text: undefined, questions: undefined })
     return
   }
+
+  // Gated on evidence, not on geography. Coverage was never what made an
+  // interpretation safe — evidence was, and buildEvidence already hands the
+  // model an explicit "no usable value" line per gap rather than hiding them.
+  // The old rule refused a place in Extremadura that had a live flood verdict
+  // and a live drought reading, because a polygon said "not Andalucía". This
+  // refuses only the case that was actually dangerous: nothing to interpret.
   const evidence = buildEvidence(s.results, s.language)
-  if (evidence.length === 0) {
+  if (!evidence.some(e => e.status === 'available')) {
     s.setInterpretation({ status: 'error', scope })
     return
   }

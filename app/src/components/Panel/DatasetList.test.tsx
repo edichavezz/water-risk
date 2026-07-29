@@ -62,3 +62,43 @@ describe('dataset list', () => {
     expect(useAppStore.getState().primaryLayer).toBe('flood')
   })
 })
+
+describe('outside the detailed region', () => {
+  const marseille = {
+    displayName: 'Marseille, France',
+    coordinates: { lat: 43.29, lng: 5.37 },
+    municipality: 'Marseille', countryCode: 'fr', provinceName: 'Bouches-du-Rhône',
+  }
+
+  // The behaviour the coverage gate used to make impossible: this search
+  // returned no rows at all and a "not available for this area" screen.
+  it('still renders a list, and says how much of it is covered', () => {
+    useAppStore.setState(useAppStore.getInitialState())
+    useAppStore.getState().beginSearch(marseille)
+    const { coverage } = useAppStore.getState()
+    for (const id of coverage!.unsupported) {
+      useAppStore.getState().setResult(id, { status: 'unsupported' })
+    }
+    useAppStore.getState().setResult('drought', {
+      status: 'available',
+      data: { level: 'watch', label: 'Watch', updatedAt: '2026-07-20', source: 'Copernicus EDO' },
+    })
+
+    render(<DatasetList />)
+
+    // Two of seven today: Copernicus drought and the EEA bathing-water
+    // register. Hub'Eau moves France up a tier when it lands.
+    expect(screen.getByText(/limited here: 2 of 7 checks/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/no source covers this here yet/i).length).toBeGreaterThan(0)
+  })
+
+  // "Missing data never looks safe": an unsupported row must stay on screen,
+  // under the divider, rather than being dropped like a not_applicable one.
+  it('keeps unsupported rows visible below the divider', () => {
+    useAppStore.setState(useAppStore.getInitialState())
+    useAppStore.getState().beginSearch(marseille)
+    useAppStore.getState().setResult('flood', { status: 'unsupported' })
+    render(<DatasetList />)
+    expect(screen.getByText(/no result for this location/i)).toBeInTheDocument()
+  })
+})

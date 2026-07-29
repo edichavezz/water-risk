@@ -4,7 +4,7 @@ import maplibregl from 'maplibre-gl'
 // it here too would re-inject it unlayered and beat every Tailwind utility.
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
-import { addCoverageLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
+import { addDetailRegionLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
   applyReservoirHighlight, fitReservoirsInView,
@@ -59,7 +59,7 @@ export default function MapView() {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
       map.addControl(new maplibregl.ScaleControl(), 'bottom-left')
       map.on('load', () => {
-        addCoverageLayers(map)
+        addDetailRegionLayers(map)
         ensureDataLayers(map)
         bindMapInteractions(map)
         // Results can land before the style finishes loading (reservoirs
