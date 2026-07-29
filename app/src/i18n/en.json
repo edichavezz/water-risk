@@ -314,7 +314,9 @@
       "reservoirs": {
         "headline": "{{name}} · {{percent}}% full",
         "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
-        "noSupplyRecord": "No supply-system record for this municipality yet"
+        "noSupplyRecord": "No supply-system record for this municipality yet",
+      "avg": "{{years}}-yr avg {{mean}}%",
+      "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",
