@@ -48,12 +48,11 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'drought',
     category: 'hazard',
-    source: { name: 'Copernicus EDO', url: 'https://edo.jrc.ec.europa.eu/' },
+    source: {
+      name: 'Copernicus EDO',
+      url: 'https://drought.emergency.copernicus.eu/',
+    },
     mapRole: 'primary',
-    // edo.jrc.ec.europa.eu/geoserver redirects to
-    // drought.emergency.copernicus.eu, which 404s every GeoServer path — no
-    // live replacement for the cdi_current raster has been found.
-    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 4 },
     defaultOrder: 2,
@@ -100,11 +99,11 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'coastalFlood',
     category: 'hazard',
-    source: { name: 'MITERD Coastal DPH' },
+    // The map layer is REDIAM's Andalucía zoning; the point verdict would come
+    // from MITERD DPH, which is down. The legend sits with the map, so it
+    // names what is actually drawn.
+    source: { name: 'REDIAM (Andalucía)' },
     mapRole: 'primary',
-    // Same dead wms.aspx host as the old flood endpoint: every request returns
-    // a NullReferenceException, and the coastal layers have no IDEE equivalent.
-    mapUnavailable: true,
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,

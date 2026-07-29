@@ -6,7 +6,7 @@ import { formatLongDate } from '../i18n/formatDate'
 import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
-import { getCoastalWmsUrl, COASTAL_LAYERS } from '../services/coastalFlood'
+import { getCoastalWmsUrl, COASTAL_MAP_LAYERS } from '../services/coastalFlood'
 import { allReservoirCodEsts, getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
 import groundwaterUnits from '../data/groundwater-units.json'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
@@ -44,8 +44,8 @@ export function ensureDataLayers(map: maplibregl.Map): void {
 
   // ── Coastal DPH WMS rasters ────────────────────────────────────────────
   const coastalDefs = [
-    { id: 'coastal-servidumbre', layer: COASTAL_LAYERS.servidumbre },
-    { id: 'coastal-policia', layer: COASTAL_LAYERS.policia },
+    { id: 'coastal-tramos', layer: COASTAL_MAP_LAYERS.tramos },
+    { id: 'coastal-zsp', layer: COASTAL_MAP_LAYERS.zsp },
   ]
   for (const { id, layer } of coastalDefs) {
     if (map.getSource(`${id}-src`)) continue

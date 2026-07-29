@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LayerTray from './LayerTray'
 import { useAppStore } from '../../store/useAppStore'
+import { DATASETS } from '../../registry/datasets'
 import '../../i18n'
 
 beforeEach(() => useAppStore.setState(useAppStore.getInitialState()))
@@ -31,13 +32,22 @@ describe('layer tray', () => {
 
   it('disables layers whose upstream service is down', async () => {
     const user = userEvent.setup()
-    render(<LayerTray />)
-    await user.click(screen.getByRole('button', { name: /map layers/i }))
-    // Copernicus EDO and the MITERD coastal WMS both return errors for every
-    // request, so offering these as toggles would be a guaranteed no-op.
-    expect(screen.getByRole('radio', { name: /drought status/i })).toBeDisabled()
-    await user.click(screen.getByRole('radio', { name: /drought status/i }))
-    expect(useAppStore.getState().primaryLayer).not.toBe('drought')
+    // Every layer currently has a live source, so this exercises the mechanism
+    // rather than a specific dataset: these upstreams do go down (MITECO's
+    // whole WMS gateway is down as of writing, and Copernicus moved hosts),
+    // and a toggle that cannot paint must not be offered as if it can.
+    const floodDataset = DATASETS.find(d => d.id === 'flood')!
+    floodDataset.mapUnavailable = true
+    try {
+      render(<LayerTray />)
+      await user.click(screen.getByRole('button', { name: /map layers/i }))
+      const flood = screen.getByRole('radio', { name: /river flood zones/i })
+      expect(flood).toBeDisabled()
+      await user.click(flood)
+      expect(useAppStore.getState().primaryLayer).not.toBe('flood')
+    } finally {
+      delete floodDataset.mapUnavailable
+    }
   })
 
   it('context checkboxes toggle overlays', async () => {

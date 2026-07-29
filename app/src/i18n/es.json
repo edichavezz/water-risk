@@ -185,8 +185,8 @@
       "alert": "Emergencia"
     },
     "coastalFlood": {
-      "servidumbre": "Servidumbre de 20 m",
-      "policia": "Zona de 100 m"
+      "perfiles": "Perfiles de la zona de servidumbre",
+      "tramos": "Tramos homogéneos"
     },
     "groundwater": {
       "over": "Unidad declarada sobreexplotada"
