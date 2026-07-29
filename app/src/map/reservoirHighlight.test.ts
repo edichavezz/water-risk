@@ -72,10 +72,14 @@ describe('applyReservoirHighlight', () => {
 
 describe('fitReservoirsInView', () => {
   it('never fits below the zoom where reservoir markers start drawing', () => {
-    const { map, moves } = fakeMap() // cameraForBounds wants zoom 6
+    const { map, moves } = fakeMap({
+      cameraForBounds: () => ({ center: { lng: -3, lat: 37.9 }, zoom: 4 }),
+    })
     fitReservoirsInView(map, [-3, 37.9], [[-2.79, 38.17]], { animate: false, maxZoom: 11 })
     expect(moves).toHaveLength(1)
-    expect(moves[0].zoom).toBe(8)
+    // Markers start drawing at zoom 6, so a wider fit than that would show
+    // nothing at all.
+    expect(moves[0].zoom).toBe(6)
   })
 
   it('never zooms in past the caller ceiling', () => {

@@ -21,9 +21,12 @@ function legendRows(primary: DatasetId, t: (k: string) => string): Row[] {
         { color: '#AD4942', label: t('legend.drought.alert') },
       ]
     case 'coastalFlood':
+      // Swatches match what REDIAM actually draws — yellow profile transects
+      // and pink management stretches — not the 20 m / 100 m strips the dead
+      // MITECO layers used to show.
       return [
-        { color: '#4B91AD', opacity: 0.55, label: t('legend.coastalFlood.servidumbre') },
-        { color: '#4B91AD', opacity: 0.35, label: t('legend.coastalFlood.policia') },
+        { color: '#E8C33C', label: t('legend.coastalFlood.perfiles') },
+        { color: '#D081B4', label: t('legend.coastalFlood.tramos') },
       ]
     case 'groundwater':
       return [{ color: '#B87535', opacity: 0.5, label: t('legend.groundwater.over') }]
@@ -51,7 +54,7 @@ export default function Legend() {
   const rows = primaryLayer ? legendRows(primaryLayer, t) : []
 
   return (
-    <div className="absolute bottom-8 left-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
+    <div className="absolute bottom-8 right-4 z-10 max-w-[240px] rounded-xl bg-canvas/95 p-3 text-xs shadow-md">
       {primaryLayer && def && (
         <>
           <p className="mb-1.5 font-bold text-ink">{t(`registry.${primaryLayer}.name`)}</p>

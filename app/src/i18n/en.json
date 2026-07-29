@@ -1,15 +1,18 @@
 {
   "app": {
     "tagline": "Check water risks for a place in Spain",
-    "about": "About"
+    "navMap": "Map",
+    "navAbout": "About",
+    "nav": "Sections"
   },
   "layers": {
-    "button": "Map layers · {{n}}",
+    "button": "Map layers",
     "primaryHeading": "Primary risk layer",
     "contextHeading": "Context",
     "none": "None",
     "readabilityWarning": "Two overlays can make the map harder to read.",
-    "close": "Close"
+    "close": "Close",
+    "unavailable": "No map layer available"
   },
   "risk": {
     "title": "Risk Profile",
@@ -182,8 +185,8 @@
       "alert": "Alert"
     },
     "coastalFlood": {
-      "servidumbre": "20 m servidumbre",
-      "policia": "100 m zone"
+      "perfiles": "Protection-zone profiles",
+      "tramos": "Management stretches"
     },
     "groundwater": {
       "over": "Declared overexploited unit"
@@ -214,16 +217,63 @@
   },
   "about": {
     "title": "About {{name}}",
-    "close": "Close",
-    "whatHeading": "What this is",
-    "whatBody": "A free tool for looking up what public data says about water where you live, or where you are thinking of buying. Enter a place in Spain and it gathers flood, drought, reservoir, supply and water quality records for that spot, then explains them in plain language.",
+    "introHeading": "Public water data for one address, in one place",
+    "introLead": "Spain publishes a great deal of water data. It is just scattered — flood maps at one ministry, drought bulletins at a European agency, reservoir levels at the river basin authority, drinking-water records at the health ministry. Each one is public, and each one is hard work to read.",
+    "introBodyOne": "Water Risk Explorer pulls those sources together and asks them all about a single point on the map. Type a postcode, a town or an address and you get one page: whether the spot is in a mapped flood zone, whether the area is in drought, which reservoirs supply it and how full they are, what the drinking-water record says, and — near the coast — how close you are to the sea’s protected strip.",
+    "introBodyTwo": "Why bother? Because water is quietly one of the biggest questions about a place in Spain, and it usually only comes up once it is expensive: after a flood, during a hosepipe ban, or halfway through buying a house. This tool exists so you can ask the question early, for free, without knowing any hydrology.",
+    "introCta": "Try it out",
+    "introCtaHint": "Takes you to the map, ready for a postcode or place name.",
+    "aiHeading": "How the AI is used",
+    "aiBodyOne": "Every figure on this site comes from a public dataset, never from a model. The AI has exactly one job, at the very end: when you ask for it, a Claude model is handed the findings already on your screen and writes a short plain-language reading of them, along with a few follow-up questions worth asking.",
+    "aiBodyTwo": "It is instructed to name the source behind each point, to separate what the data actually says from what it is inferring, to leave every caveat intact, to admit when the data cannot answer something, and never to invent an overall risk score. Nothing is generated until you press the button, and the summary never replaces the data — the original numbers and their sources stay on the page so you can check it.",
+    "aiAudienceHeading": "What the \"owner or buyer\" question is for",
+    "aiAudienceBody": "The app asks one optional question: whether you live in or own the place, or you are thinking of buying. It is used for two things, and nothing else. First, it reorders the checks so the ones that usually matter most to you appear first — a buyer tends to want drought and reservoirs up top, an owner tends to want flood and drinking water. Second, it is passed to the model as framing: an owner gets practical next steps and who to contact, a buyer gets the legal and insurance angle, such as the nota simple, the SNCZI flood zone and the Consorcio de Compensación de Seguros.",
+    "aiAudienceNote": "You can skip it or change it at any time. It never changes the underlying data — only the order it is shown in and the tone of the summary. There is no account and no profile kept.",
+    "dataHeading": "What we ask, and what we ask it of",
+    "dataIntro": "No water background needed. Each row is a plain question about a place, what the app checks to answer it, and the public body the answer comes from.",
+    "dataQuestionLabel": "The question",
+    "dataAnswerLabel": "How we answer it",
+    "dataSourceLabel": "Source",
+    "dataItems": {
+      "flood": {
+        "question": "Could a river flood reach this spot?",
+        "answer": "Spain maps the areas a river is expected to flood, by how often: roughly once in 10, 100 or 500 years. We check whether your point falls inside one of those mapped areas, and which. Being outside them is not a guarantee — flooding from drains, ravines and flash storms is often not mapped at all."
+      },
+      "drought": {
+        "question": "Is this area in drought right now?",
+        "answer": "A satellite-based indicator that blends how much rain has fallen, how dry the soil is and how stressed the vegetation looks, updated through the year. It tells you the state of the wider area today, not of one garden."
+      },
+      "reservoirs": {
+        "question": "Where does the tap water come from, and how full is the store?",
+        "answer": "We work out which reservoirs actually supply this area, then show how full each is now next to its long-run average for this time of year. Well below average is the number worth noticing — that is what restrictions get based on."
+      },
+      "waterQuality": {
+        "question": "Is the drinking water safe to drink?",
+        "answer": "The national drinking-water register records whether each municipality’s supply met the legal standards, and whether the water starts out as surface water, groundwater or a mix. We show the most recent record for the municipality."
+      },
+      "coastalFlood": {
+        "question": "Is this too close to the sea?",
+        "answer": "The Spanish coast has legally protected strips — about 20 m of servidumbre and 100 m of policía inland from the shore — where building and works are restricted and the coast is expected to move. We check whether the point falls inside them."
+      },
+      "groundwater": {
+        "question": "Is the water underground being used faster than it refills?",
+        "answer": "Some aquifers are officially declared overexploited: more is pumped out each year than nature puts back. Being in one matters for wells, for irrigation and for how secure long-term supply is. We check whether the point sits inside one."
+      },
+      "bathingWater": {
+        "question": "Is the nearest beach clean enough to swim in?",
+        "answer": "Monitored beaches and bathing sites across Europe get an annual water-quality rating from years of sampling. We show the rating for the closest monitored site and how far away it is."
+      }
+    },
     "coverageHeading": "Where it works",
-    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Other regions will be added over time.",
-    "aiHeading": "About the AI summaries",
-    "aiBody": "The written interpretation is generated by a language model from the data shown on the page. It can be wrong or incomplete, and it is optional — every underlying figure and its source is shown so you can check it yourself.",
+    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get the nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Other regions will be added over time.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
-    "sourcesHeading": "Data sources"
+    "makerHeading": "Who made this, and why",
+    "makerBodyOne": "I am Edita Chávez. I built Water Risk Explorer as my project for the Terra.do studio course, which asks you to take a climate question you actually care about and ship something real against it.",
+    "makerBodyTwo": "Mine was this: living in Spain, water comes up constantly in conversation and almost never with numbers attached. The data to answer it already exists and is already public. It just was not usable by the people it is about. This is my attempt at making it usable — it is a personal project, not a commercial service, and it will keep changing.",
+    "makerSiteLabel": "editachavez.com",
+    "makerSiteSuffix": "has the rest of my work.",
+    "makerCourseLabel": "Terra.do"
   },
   "panel": {
     "noResultGroup": "No result for this location",

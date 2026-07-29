@@ -3,7 +3,7 @@ import type { DatasetId } from '../types/workspace'
 export const DATASET_MAP_LAYERS: Record<DatasetId, string[]> = {
   flood: ['flood-t500', 'flood-t100', 'flood-t10'],
   drought: ['drought-layer'],
-  coastalFlood: ['coastal-servidumbre', 'coastal-policia'],
+  coastalFlood: ['coastal-tramos', 'coastal-zsp'],
   groundwater: ['groundwater-fill', 'groundwater-line'],
   reservoirs: ['reservoirs-halo', 'reservoirs-circle', 'reservoirs-label', 'reservoirs-name'],
   waterQuality: [],

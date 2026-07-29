@@ -13,6 +13,10 @@ export interface DatasetDef {
   category: 'hazard' | 'supply' | 'quality'
   source: { name: string; url?: string }
   mapRole: 'primary' | 'context' | 'none'
+  // Set when the dataset has a map role but its upstream WMS is down, so the
+  // layer cannot paint. The tray shows the control disabled rather than
+  // offering a toggle that silently does nothing.
+  mapUnavailable?: boolean
   aiAllowed: boolean
   audienceWeight: Record<Audience, number>
   defaultOrder: number
@@ -44,7 +48,10 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'drought',
     category: 'hazard',
-    source: { name: 'Copernicus EDO', url: 'https://edo.jrc.ec.europa.eu/' },
+    source: {
+      name: 'Copernicus EDO',
+      url: 'https://drought.emergency.copernicus.eu/',
+    },
     mapRole: 'primary',
     aiAllowed: true,
     audienceWeight: { resident_owner: 1, buyer_investor: 4 },
@@ -92,7 +99,10 @@ export const DATASETS: DatasetDef[] = [
   {
     id: 'coastalFlood',
     category: 'hazard',
-    source: { name: 'MITERD Coastal DPH' },
+    // The map layer is REDIAM's Andalucía zoning; the point verdict would come
+    // from MITERD DPH, which is down. The legend sits with the map, so it
+    // names what is actually drawn.
+    source: { name: 'REDIAM (Andalucía)' },
     mapRole: 'primary',
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },

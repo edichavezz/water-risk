@@ -35,10 +35,38 @@ function interpretDevEndpoint(env: Record<string, string>): Plugin {
   }
 }
 
+// Serves GET /api/wms-proxy in `vite dev`, mirroring api/wms-proxy.ts. Without
+// it the coastal layer would only work on a deployed build.
+function wmsProxyDevEndpoint(): Plugin {
+  return {
+    name: 'wms-proxy-dev-endpoint',
+    configureServer(server) {
+      server.middlewares.use('/api/wms-proxy', async (req, res) => {
+        if (req.method !== 'GET') { res.statusCode = 405; return res.end() }
+        try {
+          const mod = await server.ssrLoadModule('/server/wmsProxyCore.ts')
+          const url = new URL(req.url ?? '', 'http://localhost')
+          const out = await mod.proxyWms(Object.fromEntries(url.searchParams))
+          res.statusCode = out.status
+          res.setHeader('content-type', out.contentType)
+          res.setHeader('access-control-allow-origin', '*')
+          res.end(
+            typeof out.body === 'string' ? out.body : Buffer.from(out.body as ArrayBuffer),
+          )
+        } catch (e) {
+          res.statusCode = 502
+          res.setHeader('content-type', 'application/json')
+          res.end(JSON.stringify({ error: String(e) }))
+        }
+      })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
-    plugins: [react(), tailwindcss(), interpretDevEndpoint(env)],
+    plugins: [react(), tailwindcss(), interpretDevEndpoint(env), wmsProxyDevEndpoint()],
     test: {
       // Default to node so merged data-source tests and the fetch-reservoirs
       // .mjs script test keep working. Component tests opt into jsdom per-file

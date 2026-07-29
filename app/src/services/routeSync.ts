@@ -5,6 +5,7 @@ import { useAppStore } from '../store/useAppStore'
 
 export async function applyRouteToStore(route: RouteState): Promise<void> {
   const store = useAppStore.getState()
+  if (route.page) store.setPage(route.page)
   if (route.aud) store.setAudience(route.aud)
   if (route.lat === undefined || route.lng === undefined) return
   const loc = await reverseGeocode({ lat: route.lat, lng: route.lng }).catch(() => null)
@@ -19,8 +20,12 @@ export async function applyRouteToStore(route: RouteState): Promise<void> {
 
 export function subscribeStoreToRoute(): () => void {
   return useAppStore.subscribe(s => {
+    // The search stays in the URL while About is open, so returning to the map
+    // — or reloading from a shared About link — restores the same place.
+    const page = s.page === 'about' ? ('about' as const) : undefined
     const route: RouteState = s.view === 'searched' && s.location
       ? {
+          page,
           q: s.location.municipio || s.location.displayName,
           lat: s.location.coordinates.lat,
           lng: s.location.coordinates.lng,
@@ -28,7 +33,7 @@ export function subscribeStoreToRoute(): () => void {
           ds: s.selectedDataset ?? undefined,
           mode: s.panelMode,
         }
-      : { aud: s.audience ?? undefined }
+      : { page, aud: s.audience ?? undefined }
     const search = serializeRoute(route)
     if (window.location.search !== search) {
       history.replaceState(null, '', search || window.location.pathname)

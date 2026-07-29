@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import { useLocationSearch } from './useLocationSearch'
@@ -11,7 +11,15 @@ export default function EntryCard() {
   const inputId = useId()
   const audience = useAppStore(s => s.audience)
   const setAudience = useAppStore(s => s.setAudience)
+  const searchFocusNonce = useAppStore(s => s.searchFocusNonce)
+  const input = useRef<HTMLInputElement>(null)
   const { query, setQuery, suggestions, searching, failed, onInput, clear } = useLocationSearch()
+
+  // The About page's call to action asks for the cursor here, so "try it out"
+  // lands the reader on the map ready to type rather than merely looking at it.
+  useEffect(() => {
+    if (searchFocusNonce > 0) input.current?.focus()
+  }, [searchFocusNonce])
 
   const choose = (result: SearchResult) => {
     setQuery(result.municipio || result.displayName.split(',')[0])
@@ -32,6 +40,7 @@ export default function EntryCard() {
         </label>
         <input
           id={inputId}
+          ref={input}
           type="text"
           value={query}
           autoComplete="off"

@@ -14,7 +14,6 @@ export default function LayerTray() {
 
   const primaries = DATASETS.filter(d => d.mapRole === 'primary')
   const contexts = DATASETS.filter(d => d.mapRole === 'context')
-  const n = (primaryLayer ? 1 : 0) + contextLayers.length
 
   return (
     <div className="absolute top-16 right-14 z-10">
@@ -23,7 +22,7 @@ export default function LayerTray() {
         aria-expanded={open}
         className="min-h-11 rounded-lg bg-canvas px-3 py-2 text-sm font-bold text-ink shadow-md hover:bg-subtle-cool"
       >
-        {t('layers.button', { n })}
+        {t('layers.button')}
       </button>
       {open && (
         <div className="mt-2 w-64 rounded-xl bg-canvas p-4 shadow-lg">
@@ -35,10 +34,20 @@ export default function LayerTray() {
               {t('layers.none')}
             </label>
             {primaries.map(d => (
-              <label key={d.id} className="flex min-h-11 items-center gap-2 text-sm">
+              <label
+                key={d.id}
+                title={d.mapUnavailable ? t('layers.unavailable') : undefined}
+                className={`flex min-h-11 items-center gap-2 text-sm ${
+                  d.mapUnavailable ? 'text-muted' : ''
+                }`}
+              >
                 <input type="radio" name="primary" checked={primaryLayer === d.id}
+                  disabled={d.mapUnavailable}
                   onChange={() => setPrimaryLayer(d.id as DatasetId)} />
                 {t(`registry.${d.id}.name`)}
+                {d.mapUnavailable && (
+                  <span className="text-xs">({t('layers.unavailable')})</span>
+                )}
               </label>
             ))}
           </div>
