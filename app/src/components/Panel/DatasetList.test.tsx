@@ -87,10 +87,11 @@ describe('outside the detailed region', () => {
 
     render(<DatasetList />)
 
-    // Five of ten in Marseille: Copernicus drought, the EEA bathing-water
-    // register, both EFFIS fire layers, and the PACA prevention plan. Partial
-    // rather than limited, because those last three are not continental.
-    expect(screen.getByText(/partial here: 5 of 10 checks/i)).toBeInTheDocument()
+    // Six of eleven in Marseille: Copernicus drought, the EEA bathing-water
+    // register, both EFFIS fire layers, the PACA prevention plan, and the
+    // VigiEau restriction level. Partial rather than limited, because those
+    // last three are not continental.
+    expect(screen.getByText(/partial here: 6 of 11 checks/i)).toBeInTheDocument()
 
     // Five empty rows is past the collapse threshold, so the tail is behind a
     // count. It must still state that the checks have no source — a collapsed

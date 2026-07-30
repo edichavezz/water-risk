@@ -89,6 +89,28 @@ export interface GroundwaterResult {
   source: 'IGME'
 }
 
+/** VigiEau's four statutory levels, weakest first. */
+export type RestrictionLevel = 'vigilance' | 'alerte' | 'alerte_renforcee' | 'crise'
+
+export interface RestrictionZone {
+  resource: 'surface' | 'groundwater' | 'drinking_water'
+  level: RestrictionLevel
+  zoneName: string
+}
+
+export interface WaterRestrictionResult {
+  /** The worst level in force across the resources, never an average. */
+  level: RestrictionLevel
+  zoneName: string
+  department?: string
+  zones: RestrictionZone[]
+  /** The prefectural decree itself, so the reader can check the rule. */
+  decreeUrl?: string
+  validFrom?: string
+  validTo?: string
+  source: 'VigiEau'
+}
+
 export type FireDangerClass =
   | 'low'
   | 'moderate'

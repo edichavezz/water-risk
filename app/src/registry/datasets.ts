@@ -11,6 +11,7 @@ import { getNearestBathingSite } from '../services/bathingWater'
 import { getFireDanger } from '../services/fireDanger'
 import { getFireHistory } from '../services/fireHistory'
 import { getPreventionPlan, PREVENTION_REGIONS } from '../data/firePrevention'
+import { getWaterRestrictions } from '../services/waterRestrictions'
 
 /**
  * Whether this dataset can say anything here.
@@ -201,6 +202,27 @@ export const DATASETS: DatasetDef[] = [
       try {
         const s = await getNearestBathingSite(loc.coordinates)
         return s === null ? { status: 'unavailable' } : ok(s)
+      } catch (e) { return err(e) }
+    },
+  },
+  {
+    id: 'waterRestrictions',
+    hazard: 'water',
+    category: 'hazard',
+    source: { name: 'VigiEau — Ministère de la Transition écologique', url: 'https://vigieau.gouv.fr/' },
+    mapRole: 'none',
+    aiAllowed: true,
+    // The one legally binding reading in the app, so it leads for a resident.
+    audienceWeight: { resident_owner: 1, buyer_investor: 3 },
+    defaultOrder: 2,
+    // VigiEau covers France only. Spain publishes restrictions per
+    // confederación with no common feed, and Italy per region — both real
+    // questions we cannot yet answer, so `unsupported` rather than hidden.
+    applicability: p => (p.countryCode === 'fr' ? 'covered' : 'unsupported'),
+    fetch: async p => {
+      try {
+        const r = await getWaterRestrictions(p.coordinates)
+        return r === null ? { status: 'unavailable' } : ok(r)
       } catch (e) { return err(e) }
     },
   },

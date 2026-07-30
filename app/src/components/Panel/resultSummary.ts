@@ -2,7 +2,7 @@ import type { DatasetId, DatasetResult } from '../../types/workspace'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, GroundwaterResult, BathingWaterResult,
-  FireDangerResult, FireHistoryResult, FirePreventionResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
 } from '../../types'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
@@ -90,6 +90,13 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
         km: d.radiusKm,
         largest: worst.areaHa,
         year: d.fires[0].date.slice(0, 4),
+      })
+    }
+    case 'waterRestrictions': {
+      const d = r!.data as WaterRestrictionResult
+      return t('panel.summary.waterRestrictions.level', {
+        level: t(`risk.waterRestrictions.${d.level}`),
+        zone: d.zoneName,
       })
     }
     case 'firePrevention': {

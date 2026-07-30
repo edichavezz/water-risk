@@ -15,6 +15,6 @@ describe('normalized dataset states', () => {
   })
 
   it('registers every dataset in the union', () => {
-    expect(ALL_DATASET_IDS).toHaveLength(10)
+    expect(ALL_DATASET_IDS).toHaveLength(11)
   })
 })

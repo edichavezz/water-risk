@@ -104,6 +104,12 @@
       "extreme": "Previsión de peligro extremo",
       "very_extreme": "Previsión de peligro muy extremo",
       "unknown": "Sin previsión disponible"
+    },
+    "waterRestrictions": {
+      "vigilance": "Vigilancia",
+      "alerte": "Alerta",
+      "alerte_renforcee": "Alerta reforzada",
+      "crise": "Crisis"
     }
   },
   "registry": {
@@ -203,6 +209,16 @@
         "Enlaza al plan publicado; no resume lo que exige",
         "No dice nada sobre el riesgo en esta dirección",
         "Que exista un plan no prueba que esté financiado ni que se aplique"
+      ]
+    },
+    "waterRestrictions": {
+      "name": "Restricciones de agua en vigor",
+      "cadence": "Actualizado a diario a partir de los decretos prefectorales (VigiEau)",
+      "resolution": "Zona de restricción, definida por el departamento",
+      "limitations": [
+        "Solo Francia: España e Italia publican restricciones sin un canal común",
+        "Indica el nivel en vigor, no lo que tú en concreto puedes usar",
+        "El decreto es la fuente con validez legal; esto es un resumen"
       ]
     }
   },
@@ -339,6 +355,10 @@
       "firePrevention": {
         "question": "¿Tiene mi región un plan contra incendios?",
         "answer": "Casi todas las regiones mediterráneas publican uno: INFOCA en Andalucía, PPFCI en el sur de Francia, piani AIB en Italia. Ninguno es legible por máquina, así que esto es una lista de enlaces comprobada a mano, con la fecha de la última revisión."
+      },
+      "waterRestrictions": {
+        "question": "¿Puedo regar el jardín?",
+        "answer": "En Francia, los prefectos dictan decretos que restringen el uso del agua durante la sequía, y son de obligado cumplimiento. Consultamos el nivel en vigor en tu punto —para ríos, aguas subterráneas y red de agua potable por separado— y enlazamos el decreto. España e Italia también restringen el agua, pero lo publican por cuenca o por región, sin un canal común que podamos leer."
       }
     },
     "coverageHeading": "Dónde funciona",
@@ -423,6 +443,9 @@
       },
       "firePrevention": {
         "plan": "{{region}} publica {{plan}}"
+      },
+      "waterRestrictions": {
+        "level": "{{level}} — restricciones en vigor en {{zone}}"
       }
     },
     "newsTab": "Noticias",

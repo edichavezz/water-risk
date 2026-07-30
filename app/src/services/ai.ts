@@ -4,7 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, GroundwaterResult, BathingWaterResult,
-  FireDangerResult, FireHistoryResult, FirePreventionResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -90,6 +90,13 @@ function summarize(id: DatasetId, r: DatasetResult): string {
         .map(f => `${f.date}, ${f.areaHa} ha, ${f.distanceKm} km away${f.commune ? ` near ${f.commune}` : ''}`)
         .join('; ')
       return `${d.fires.length} burnt area(s) recorded within ${d.radiusKm} km since ${d.since}: ${listed} (source Copernicus EFFIS).`
+    }
+    case 'waterRestrictions': {
+      const d = r.data as WaterRestrictionResult
+      const perResource = d.zones.map(z => `${z.resource} ${z.level}`).join(', ')
+      // Keep VigiEau's own severity word. This is a legal restriction, not an
+      // indicator, so softening or upgrading it would misstate the rule.
+      return `Drought restriction in force in "${d.zoneName}": ${d.level} (worst of ${perResource})${d.validTo ? `, decree valid to ${d.validTo}` : ''} (source VigiEau).`
     }
     case 'firePrevention': {
       const d = r.data as FirePreventionResult

@@ -104,6 +104,12 @@
       "extreme": "Extreme fire danger forecast",
       "very_extreme": "Very extreme fire danger forecast",
       "unknown": "No forecast available"
+    },
+    "waterRestrictions": {
+      "vigilance": "Watch",
+      "alerte": "Alert",
+      "alerte_renforcee": "Reinforced alert",
+      "crise": "Crisis"
     }
   },
   "registry": {
@@ -203,6 +209,16 @@
         "Links to the published plan; does not summarise what it requires of you",
         "Says nothing about risk at this address",
         "A plan existing is not evidence it is funded or enforced"
+      ]
+    },
+    "waterRestrictions": {
+      "name": "Water restrictions in force",
+      "cadence": "Updated daily from prefectural decrees (VigiEau)",
+      "resolution": "Restriction zone, set by the département",
+      "limitations": [
+        "France only — Spain and Italy publish restrictions with no common feed",
+        "Shows the level in force, not what you personally may use",
+        "The decree itself is the authority; this is a summary of it"
       ]
     }
   },
@@ -339,6 +355,10 @@
       "firePrevention": {
         "question": "Does my region have a wildfire plan?",
         "answer": "Most Mediterranean regions publish one — INFOCA in Andalucía, PPFCI in southern France, piani AIB in Italy. None of them is machine-readable, so this is a hand-checked list of links with the date we last looked."
+      },
+      "waterRestrictions": {
+        "question": "Am I allowed to water the garden?",
+        "answer": "In France, prefects issue decrees restricting water use during drought, and they are binding. We look up the level in force at your point — for rivers, groundwater and the drinking-water network separately — and link the decree itself. Spain and Italy restrict water too, but publish it per basin or region with no common feed we can read."
       }
     },
     "coverageHeading": "Where it works",
@@ -423,6 +443,9 @@
       },
       "firePrevention": {
         "plan": "{{region}} publishes {{plan}}"
+      },
+      "waterRestrictions": {
+        "level": "{{level}} — restrictions in force in {{zone}}"
       }
     },
     "newsTab": "Live news",

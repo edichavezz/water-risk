@@ -11,6 +11,7 @@ export const DATASET_MAP_LAYERS: Record<DatasetId, string[]> = {
   waterQuality: [],
   bathingWater: [],
   firePrevention: [],
+  waterRestrictions: [],
 }
 
 export function visibleLayerIds(primary: DatasetId | null, context: DatasetId[]): Set<string> {
