@@ -56,7 +56,7 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 | P1 — visual patch + hazard families | **Done.** Rebrand, warm palette, Petrona titles, two-circle mark, hazard field + pills, two-group layers card, family-grouped list with a collapsing empty tail, Live news tab shell. |
 | P2 — fire datasets | **Done.** EFFIS fire danger (point class + overlay), EFFIS burnt-area history (30 km, live), curated prevention plans for 13 regions across ES/FR/IT. Verified in the browser at Ronda: 22 mapped fires, INFOCA plan, danger class. |
 | P3 — live news | **Deferred** (tab shell only, in P1) |
-| P4 — water widening + supply graph | Pending |
+| P4 — water widening + supply graph | **Partly done.** VigiEau restrictions and the Hub'Eau registry tier ship, and supply answers now carry provenance. MITECO's Spain-national reservoir pipeline and the `basin` tier do not. |
 | P5 — About page redo | Pending, **needs real copy from the user** |
 
 ## Notes for whoever picks this up
@@ -76,6 +76,21 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
   serverless proxy since the key is secret), and the WUI/vulnerable-areas layer
   (published datasets exist but only as journal-supplement downloads, so they
   need a one-off simplify-and-ship step). Neither blocks anything.
+
+## What P4 left undone
+
+- **MITECO's Spain-national reservoir pipeline.** Still a weekly 11.3 MB ZIP
+  containing an Access `.mdb`; the schema is unverified and it needs a
+  build-time job modelled on `fetch-reservoirs.mjs`. Until it lands, Spanish
+  reservoir levels are Andalucía-only.
+- **The `basin` tier.** The provenance model has a slot for it and the copy and
+  guardrail tests are written, but nothing returns it: it needs river-basin
+  district polygons, which is also what `PlaceContext.basin` is waiting on.
+  Both should land together.
+- **SINAC.** Spain's equivalent of the Hub'Eau registry tier. The listing
+  endpoint is verified working and keyless, keyed on INE codes; whether its
+  detail page names source reservoirs is still the open question below. It
+  would need an INE gazetteer, since Nominatim gives no INE code.
 
 ## Open unknowns
 
