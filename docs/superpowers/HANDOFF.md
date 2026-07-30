@@ -57,7 +57,7 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 | P2 — fire datasets | **Done.** EFFIS fire danger (point class + overlay), EFFIS burnt-area history (30 km, live), curated prevention plans for 13 regions across ES/FR/IT. Verified in the browser at Ronda: 22 mapped fires, INFOCA plan, danger class. |
 | P3 — live news | **Deferred** (tab shell only, in P1) |
 | P4 — water widening + supply graph | **Partly done.** VigiEau restrictions and the Hub'Eau registry tier ship, and supply answers now carry provenance. MITECO's Spain-national reservoir pipeline and the `basin` tier do not. |
-| P5 — About page redo | Pending, **needs real copy from the user** |
+| P5 — About page redo | **Structure done.** Contour band removed, data grouped by hazard family, copy corrected where it had become false. **The voice is still the user's to set.** |
 
 ## Notes for whoever picks this up
 
@@ -76,6 +76,14 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
   serverless proxy since the key is secret), and the WUI/vulnerable-areas layer
   (published datasets exist but only as journal-supplement downloads, so they
   need a one-off simplify-and-ship step). Neither blocks anything.
+
+## Confirmed with the user
+
+- **"Barriers prone to wildfires" means vulnerable areas** — the wildland-urban
+  interface — which is what P2 was built toward. **Firebreaks** (*cortafuegos*,
+  DFCI tracks) are wanted too, as a later addition: they are largely absent from
+  free pan-European sources, but France's DFCI networks are the most developed
+  and are the place to start looking.
 
 ## What P4 left undone
 
