@@ -32,7 +32,7 @@ export function parseRoute(search: string): RouteState {
   const ds = p.get('ds')
   if (ds && ALL_DATASET_IDS.includes(ds as DatasetId)) out.ds = ds as DatasetId
   const mode = p.get('mode')
-  if (mode === 'data' || mode === 'ai') out.mode = mode
+  if (mode === 'data' || mode === 'ai' || mode === 'news') out.mode = mode
   return out
 }
 

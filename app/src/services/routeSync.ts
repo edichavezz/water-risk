@@ -16,6 +16,7 @@ export async function applyRouteToStore(route: RouteState): Promise<void> {
   // Restores the AI *mode* only — generation still requires an explicit
   // opt-in, so a shared link never auto-generates interpretation (§9.4).
   if (route.mode === 'ai') useAppStore.getState().openAiMode()
+  if (route.mode === 'news') useAppStore.getState().openNewsMode()
 }
 
 export function subscribeStoreToRoute(): () => void {

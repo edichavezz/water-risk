@@ -1,4 +1,3 @@
-import i18n from '../i18n'
 import type { Coordinates } from '../types'
 import type { PlaceContext } from '../types/place'
 
@@ -8,6 +7,12 @@ import type { PlaceContext } from '../types/place'
  * is still findable, because coverage is now a descriptor rather than a filter.
  */
 const MED_COUNTRIES = 'es,pt,fr,it,gr,hr,si,mt,cy'
+
+/**
+ * Overrides the browser's own Accept-Language so names come back local. Any
+ * token that matches no language does this; `local` says what we mean.
+ */
+const LOCAL_NAMES = 'local'
 
 interface NominatimAddress {
   city?: string
@@ -33,6 +38,21 @@ interface NominatimResult {
   address: NominatimAddress
 }
 
+/**
+ * Nominatim is asked for local official names — "Sevilla", not "Seville".
+ *
+ * Deliberate on two counts. It is what the place is actually called, and a
+ * reader in Andalucía shown an English exonym nobody there uses is worse off.
+ * And it is what everything downstream matches on: the curated supply systems
+ * are keyed on Spanish municipality names, so English names silently broke
+ * EMASESA's match for Sevilla.
+ *
+ * Simply omitting the header is not enough — `fetch` sends the browser's own
+ * `Accept-Language`, which is how the English names crept in. The
+ * `accept-language` *query parameter* overrides the header, and a value that
+ * matches no language falls back to the local name, which is exactly what we
+ * want. See LOCAL_NAMES.
+ */
 function toPlaceContext(r: NominatimResult, coords?: Coordinates): PlaceContext {
   const a = r.address
 
@@ -55,12 +75,6 @@ function toPlaceContext(r: NominatimResult, coords?: Coordinates): PlaceContext 
   }
 }
 
-// Nominatim ranks by the reader's own language, so a Spanish speaker searching
-// in Italy still gets names they can read.
-function acceptLanguage(): string {
-  return `${i18n.language || 'en'},en`
-}
-
 export async function geocodeAddress(query: string): Promise<PlaceContext[]> {
   const params = new URLSearchParams({
     q: query,
@@ -68,11 +82,10 @@ export async function geocodeAddress(query: string): Promise<PlaceContext[]> {
     countrycodes: MED_COUNTRIES,
     limit: '5',
     addressdetails: '1',
+    'accept-language': LOCAL_NAMES,
   })
 
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
-    headers: { 'Accept-Language': acceptLanguage() },
-  })
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`)
 
   if (!res.ok) throw new Error('Geocoding failed')
 
@@ -86,11 +99,10 @@ export async function reverseGeocode(coords: Coordinates): Promise<PlaceContext 
     lon: coords.lng.toString(),
     format: 'json',
     addressdetails: '1',
+    'accept-language': LOCAL_NAMES,
   })
 
-  const res = await fetch(`https://nominatim.openstreetmap.org/reverse?${params}`, {
-    headers: { 'Accept-Language': acceptLanguage() },
-  })
+  const res = await fetch(`https://nominatim.openstreetmap.org/reverse?${params}`)
 
   if (!res.ok) return null
 
