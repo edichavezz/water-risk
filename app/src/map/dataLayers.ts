@@ -128,21 +128,33 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     // grow to their full size by the zoom a search lands on. At a flat radius
     // the 72 markers would be white blobs across the whole country on first
     // load, since the reservoirs layer is on by default.
-    const byZoom = (wide: number, close: number): ExpressionSpecification => [
+    // MapLibre allows exactly one zoom-based subexpression per paint property.
+    // Wrapping a `case` around several zoom interpolations broke that rule, so
+    // every one of these layers was rejected at addLayer and the reservoir
+    // markers silently never drew — and because the throw escaped
+    // ensureDataLayers, nothing registered after them either.
+    //
+    // The fix is to invert the nesting: interpolate on zoom once at the top,
+    // and pick the state-dependent value inside each stop.
+    const byState = (
+      selected: number,
+      highlighted: number,
+      base: number,
+    ): ExpressionSpecification => ['case', isSelected, selected, isHighlighted, highlighted, base]
+
+    const zoomStates = (
+      wide: [number, number, number],
+      close: [number, number, number],
+    ): ExpressionSpecification => [
       'interpolate', ['linear'], ['zoom'],
-      RESERVOIR_MINZOOM, wide,
-      RESERVOIR_LABEL_MINZOOM, close,
+      RESERVOIR_MINZOOM, byState(...wide),
+      RESERVOIR_LABEL_MINZOOM, byState(...close),
     ]
 
     map.addLayer({
       id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': [
-          'case',
-          ['boolean', ['feature-state', 'selected'], false], byZoom(6, 14),
-          ['boolean', ['feature-state', 'highlighted'], false], byZoom(6, 14),
-          byZoom(4.5, 11),
-        ],
+        'circle-radius': zoomStates([6, 6, 4.5], [14, 14, 11]),
         'circle-color': '#ffffff',
         'circle-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.35, 0.85],
       },
@@ -151,12 +163,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     map.addLayer({
       id: 'reservoirs-circle', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': [
-          'case',
-          isSelected, byZoom(5, 11),
-          isHighlighted, byZoom(5, 11),
-          byZoom(3.5, 9),
-        ],
+        'circle-radius': zoomStates([5, 5, 3.5], [11, 11, 9]),
         'circle-color': ['get', 'colour'],
         'circle-opacity': [
           'case',
@@ -171,12 +178,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
           isHighlighted, '#204E62',
           '#ffffff',
         ],
-        'circle-stroke-width': [
-          'case',
-          isSelected, byZoom(1.5, 3),
-          isHighlighted, byZoom(1.25, 2.5),
-          byZoom(0.75, 1.5),
-        ],
+        'circle-stroke-width': zoomStates([1.5, 1.25, 0.75], [3, 2.5, 1.5]),
       },
       layout: { visibility: 'none' },
     })
