@@ -42,11 +42,22 @@ The problem is access, and it is severe:
 - Genuinely geographic rather than keyword-guessing, but its finest resolution is **ADM1** (province / région / regione). That is a useful unit for this app, but it is not a radius.
 - `https://api.gdeltproject.org/api/v2/geo/geo` returned **404** on every form tried — with and without parameters, via curl and via browser. Treat the endpoint as unverified until someone gets a 200 out of it.
 
-### EMM NewsBrief (JRC) — the ideal source on paper, closed in practice
+### EMM (JRC) — not blocked, *decommissioned and mid-rebuild*
 
-The European Commission's own media monitor: EU-operated, multilingual, strong on regional European press. Exactly the Europe-centric backbone this feature wants.
+The European Commission's own media monitor: 20,000 news sites, ~500,000 pages a day, 80 languages, EU-operated. Exactly the Europe-centric backbone this feature wants, which is why it was worth a second look.
 
-Its RSS endpoints return **403 Forbidden** to every programmatic request tried — plain, browser user-agent, and with a referer. The HTML alert pages return 200, but scraping them would be fragile and is CORS-blocked from a browser anyway.
+My first pass concluded "403, not usable". The outcome was right and the reason was wrong, and the reason matters:
+
+- **`emm.newsbrief.eu` is switched off.** Its RSS returns 403 because the service was retired, not because it blocks robots. The replacement site says so itself: it "replaces the old EMM Newsbrief and Medisys websites. These are being phased out and will be **permanently switched off on 30/04/2026**" — three months ago.
+- **The replacement is `media-monitor.europa.eu`**, an Angular SPA, version 0.1, last updated 01/03/2026.
+- **It does have a keyless JSON API, and it is CORS-open.** `/api/core/load-filters` and `/api/stories/top-stories` both return 200 with `access-control-allow-origin: *` and no authentication. That is a better position than GDELT, whose 429s carry no CORS header at all.
+- **But the content is explicitly "some highlights"** — the site's own words. `top-stories` returns five pan-European headline clusters (a Japan earthquake, a Polish airspace violation, EU AI gigafactories) with per-country distribution and source languages. There is **no keyword search, no place filter, no date-range query, and no article-level list with URLs**. Nothing to point at a municipality.
+- **MedISys — the hazard-and-health sibling, the one that would actually cover wildfire and flood — is "Page under construction".**
+- The **JRC Data Catalogue's EMM collection contains zero datasets**.
+
+**Do we need an account or a key?** No — and getting one would not help today, because for this purpose there is nothing yet to be granted access *to*. The public API exposes a dashboard's worth of highlights, and the hazard product is unbuilt.
+
+**It is still worth an email.** EMM is the right shape and the new site is a v0.1 with a product mid-migration, so asking what the roadmap holds for MedISys and for programmatic access is a reasonable question with a plausible upside: `jrc-emm-support@ec.europa.eu` (support) or `JRC-EMM-INFO@ec.europa.eu` (research partnerships). If MedISys returns with a query API, it would likely become the primary source and displace the keyed providers below.
 
 ### Keyed providers — less elegant, actually reliable
 
