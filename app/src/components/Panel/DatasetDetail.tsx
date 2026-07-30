@@ -4,8 +4,9 @@ import { getDataset } from '../../registry/datasets'
 import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
 import { formatLongDate } from '../../i18n/formatDate'
-import type { FloodZoneResult, Reservoir } from '../../types'
+import type { FloodZoneResult, Reservoir, CoastalZoning, DroughtStatus } from '../../types'
 import ReservoirLevels from './ReservoirLevels'
+import CoastalZoningDetail from './CoastalZoningDetail'
 
 export default function DatasetDetail() {
   const { t } = useTranslation()
@@ -29,6 +30,16 @@ export default function DatasetDetail() {
   const reservoirs =
     id === 'reservoirs' && result?.status === 'available'
       ? (result.data as Reservoir[])
+      : undefined
+  const coastalZoning =
+    id === 'coastalFlood' && result?.status === 'available'
+      ? (result.data as CoastalZoning)
+      : undefined
+  // Drought carries the date of the slice actually served, the same way
+  // reservoirs carry REDIAM's reading date — and says so when it is old.
+  const drought =
+    id === 'drought' && result?.status === 'available'
+      ? (result.data as DroughtStatus)
       : undefined
   const reservoirAsOf = reservoirs?.[0]?.fillPercentAsOf
   // Names the system the highlighted markers belong to, so the map emphasis is
@@ -66,6 +77,23 @@ export default function DatasetDetail() {
       )}
 
       {reservoirs && <ReservoirLevels reservoirs={reservoirs} />}
+
+      {coastalZoning && <CoastalZoningDetail zoning={coastalZoning} />}
+
+      {drought && (
+        <div className="flex flex-col gap-1">
+          <p className="text-[11px] text-muted">
+            {drought.updatedAt
+              ? t('panel.drought.asOf', { date: formatLongDate(drought.updatedAt) })
+              : t('panel.drought.dateUnknown')}
+          </p>
+          {drought.stale && (
+            <p className="text-[11.5px] font-bold text-accent-ink">
+              {t('panel.drought.stale', { days: drought.ageDays })}
+            </p>
+          )}
+        </div>
+      )}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>

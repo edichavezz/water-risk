@@ -3,7 +3,7 @@ import type { DatasetId, DatasetResult, InterpretationScope } from '../types/wor
 import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
-  CoastalFloodResult, GroundwaterResult, BathingWaterResult,
+  CoastalZoning, GroundwaterResult, BathingWaterResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -45,8 +45,23 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       return `SINAC ${d.year} drinking-water compliance: ${d.compliance}; source type ${d.sourceType}.`
     }
     case 'coastalFlood': {
-      const d = r.data as CoastalFloodResult
-      return `Coastal DPH: ${d.inServidumbre ? 'inside 20 m servidumbre strip' : 'outside 20 m strip'}; ${d.inPolicia ? 'inside 100 m zone' : 'outside 100 m zone'} (source MITERD).`
+      const d = r.data as CoastalZoning
+      // Deliberately never an in/out verdict. This source gives the management
+      // zoning around the point, not the legal deslinde, so the model is told
+      // what is known and explicitly told what is not — otherwise it will
+      // helpfully conclude "outside the strip", which we cannot support.
+      const parts = [
+        d.zoning ? `zoning class "${d.zoning}"` : null,
+        d.sensitivity ? `DPMT sensitivity "${d.sensitivity}"` : null,
+        d.location ? `stretch at ${d.location}` : null,
+        d.profile ? `nearest surveyed profile ${d.profile}` : null,
+      ].filter(Boolean).join('; ')
+      return (
+        `Coastal protection zoning (source REDIAM, Andalucía): ${parts || 'present but undescribed'}. ` +
+        `This is the zoning in force around the point, NOT a determination of whether the property ` +
+        `lies inside the servidumbre or policía strip — the national deslinde service is unavailable, ` +
+        `so that question cannot be answered. Do not state or imply the property is inside or outside a strip.`
+      )
     }
     case 'groundwater': {
       const d = r.data as GroundwaterResult

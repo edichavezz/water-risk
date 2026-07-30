@@ -1,7 +1,7 @@
 import type { DatasetId, DatasetResult } from '../../types/workspace'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
-  CoastalFloodResult, GroundwaterResult, BathingWaterResult,
+  CoastalZoning, GroundwaterResult, BathingWaterResult,
 } from '../../types'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
@@ -18,6 +18,11 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
   // the common one. "No current result available" would misattribute it.
   if (id === 'reservoirs' && status === 'unavailable') {
     return t('panel.summary.reservoirs.noSupplyRecord')
+  }
+  // Likewise for coastal: "unavailable" here means no coastal protection zoning
+  // reaches this point, not that the source failed.
+  if (id === 'coastalFlood' && status === 'unavailable') {
+    return t('panel.summary.coastalFlood.noZoning')
   }
   if (status !== 'available') return t(`states.${status}`)
 
@@ -47,10 +52,12 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       })
     }
     case 'coastalFlood': {
-      const d = r!.data as CoastalFloodResult
-      if (d.inServidumbre) return t('panel.summary.coastalFlood.servidumbre')
-      if (d.inPolicia) return t('panel.summary.coastalFlood.policia')
-      return t('panel.summary.coastalFlood.clear')
+      const d = r!.data as CoastalZoning
+      // Leads with the classification because that is the decision-relevant
+      // fact; never phrased as an in/out verdict, which this source cannot give.
+      if (d.zoning) return t('panel.summary.coastalFlood.zoning', { zoning: d.zoning })
+      if (d.location) return t('panel.summary.coastalFlood.nearZone', { location: d.location })
+      return t('panel.summary.coastalFlood.inZoning')
     }
     case 'groundwater': {
       const d = r!.data as GroundwaterResult

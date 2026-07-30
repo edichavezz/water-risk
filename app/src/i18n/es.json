@@ -136,12 +136,14 @@
       ]
     },
     "coastalFlood": {
-      "name": "Zona costera (DPH)",
-      "cadence": "Actualizado con la cartografía del dominio costero",
-      "resolution": "Franjas costeras de 20 m / 100 m",
+      "name": "Zonificación de protección del litoral",
+      "cadence": "Actualizado con las revisiones de zonificación litoral de REDIAM",
+      "resolution": "Tramos homogéneos y perfiles levantados, solo Andalucía",
       "limitations": [
+        "No confirma si una finca se encuentra dentro de la servidumbre de protección o de la zona de policía",
+        "El deslinde estatal que respondería a eso no está disponible",
         "No muestra proyecciones de marejadas ni subida del nivel del mar",
-        "No confirma la situación legal de una propiedad concreta"
+        "Cubre solo Andalucía"
       ]
     },
     "groundwater": {
@@ -301,6 +303,19 @@
     "doesNotShow": "No muestra",
     "geography": "Geografía",
     "cadence": "Actualizado",
+    "drought": {
+    "asOf": "Lectura del {{date}}",
+    "dateUnknown": "No se ha podido determinar la fecha de esta lectura",
+    "stale": "Esta lectura tiene {{days}} días. Copernicus publica el indicador cada 10 días, por lo que esta fuente parece haber dejado de actualizarse: considere el nivel como histórico, no actual."
+    },
+    "coastal": {
+      "classification": "Zonificación",
+      "sensitivity": "Sensibilidad DPMT",
+      "location": "Ubicación",
+      "profile": "Perfil más próximo",
+      "notAVerdict": "Esta es la zonificación de protección del litoral vigente en el entorno de este punto. No confirma si una finca concreta se encuentra dentro de la servidumbre de protección o de la zona de policía: eso requiere el deslinde estatal, que actualmente no está disponible.",
+      "officialProfile": "Perfil oficial (PDF)"
+    },
     "unsupportedTitle": "Aún no hay datos detallados de riesgo hídrico para esta zona.",
     "unsupportedBody": "Puedes buscar otro lugar o explorar el mapa de cobertura.",
     "home": "Nueva búsqueda",
@@ -321,7 +336,10 @@
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",
         "policia": "Dentro de la zona costera de 100 m",
-        "clear": "Fuera de las zonas costeras cartografiadas"
+        "zoning": "Zonificación de protección del litoral: {{zoning}}",
+        "nearZone": "Dentro de la zonificación de protección del litoral en {{location}}",
+        "inZoning": "Dentro de la zonificación de protección del litoral cartografiada",
+        "noZoning": "Ninguna zonificación de protección del litoral alcanza este punto"
       },
       "groundwater": {
         "over": "Dentro de {{unit}}, declarada sobreexplotada",

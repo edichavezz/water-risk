@@ -4,7 +4,8 @@ import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
 import { getReservoirsForLocation } from '../services/reservoirs'
 import { getWaterQualityByMunicipality } from '../services/waterQuality'
-import { getCoastalFloodStatus, isCoastalProvincia } from '../services/coastalFlood'
+import { isCoastalProvincia } from '../services/coastalFlood'
+import { getCoastalZoning } from '../services/coastalZoning'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
 
@@ -108,8 +109,15 @@ export const DATASETS: DatasetDef[] = [
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,
     appliesTo: loc => isCoastalProvincia(loc.provincia, loc.displayName),
+    // The national deslinde that would answer "is this plot inside the strip"
+    // is down, so the card reports the zoning in force around the point
+    // instead. `null` means no coastal zoning reaches here, which is a real
+    // answer; a thrown error stays an error.
     fetch: async loc => {
-      try { return ok(await getCoastalFloodStatus(loc.coordinates)) } catch (e) { return err(e) }
+      try {
+        const z = await getCoastalZoning(loc.coordinates)
+        return z === null ? { status: 'unavailable' } : ok(z)
+      } catch (e) { return err(e) }
     },
   },
   {
