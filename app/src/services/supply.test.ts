@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { shapeNetworks, hubeauUdiUrl, getSupplyForLocation } from './supply'
+import { shapeNetworks, hubeauUdiUrl, forThisCommune, getSupplyForLocation } from './supply'
 import { resultSummary } from '../components/Panel/resultSummary'
 import type { PlaceContext } from '../types/place'
 import type { SupplyProvenance } from '../types/supply'
@@ -34,6 +34,35 @@ describe('shapeNetworks', () => {
   })
 })
 
+describe('forThisCommune', () => {
+  const rows = [
+    { code_commune: '13055', nom_commune: 'MARSEILLE', code_reseau: 'A', nom_reseau: 'Vallon d’Ol', annee: '2026' },
+    { code_commune: '60381', nom_commune: 'MARSEILLE-EN-BEAUVAISIS', code_reseau: 'B', nom_reseau: 'Beauvaisis', annee: '2026' },
+    { code_commune: '13201', nom_commune: 'Marseille', code_reseau: 'C', nom_reseau: 'Sainte-Marthe', annee: '2026' },
+  ]
+
+  // Hub'Eau matches nom_commune loosely, so "Marseille" also returns
+  // Marseille-en-Beauvaisis, 700 km away in the Oise. This is the filter that
+  // keeps a reader in Provence from being shown a network in Picardy.
+  it('drops communes whose name merely starts the same', () => {
+    expect(forThisCommune(rows, 'Marseille').map(r => r.code_reseau)).toEqual(['A', 'C'])
+  })
+
+  it('matches regardless of case and accents', () => {
+    const accented = [
+      { code_commune: '13100', nom_commune: 'SAINT-RÉMY-DE-PROVENCE', code_reseau: 'D', nom_reseau: 'X', annee: '2026' },
+    ]
+    expect(forThisCommune(accented, 'Saint-Remy-de-Provence')).toHaveLength(1)
+  })
+
+  // FR-13 -> INSEE codes beginning 13. Corsica's FR-2A/FR-2B keep their letter,
+  // which is how INSEE codes them too.
+  it('narrows to the département when the ISO code is known', () => {
+    expect(forThisCommune(rows, 'Marseille', 'FR-13').map(r => r.code_reseau)).toEqual(['A', 'C'])
+    expect(forThisCommune(rows, 'Marseille', 'FR-60')).toEqual([])
+  })
+})
+
 describe('hubeauUdiUrl', () => {
   it('queries by commune name and asks for enough rows to find the latest year', () => {
     const url = hubeauUdiUrl('Saint-Rémy-de-Provence')
@@ -47,7 +76,10 @@ describe('getSupplyForLocation', () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({
       ok: true,
       json: async () => ({
-        data: [{ code_reseau: 'A', nom_reseau: 'MARSEILLE VALLON D’OL', annee: '2026' }],
+        data: [{
+          code_commune: '13055', nom_commune: 'MARSEILLE',
+          code_reseau: 'A', nom_reseau: 'MARSEILLE VALLON D’OL', annee: '2026',
+        }],
       }),
     })))
 

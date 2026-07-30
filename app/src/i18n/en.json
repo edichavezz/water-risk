@@ -419,7 +419,7 @@
         "avg": "{{years}}-yr avg {{mean}}%",
         "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average",
         "registry": "Registered network: {{network}}",
-        "registryMany": "Registered networks: {{network}} and {{count}} more",
+        "registryMany": "{{count}} registered networks supply this commune",
         "basin": "{{count}} reservoirs in the same river-basin district — supply link unknown"
       },
       "coastalFlood": {

@@ -27,6 +27,46 @@ interface RawUdi {
   annee?: string
 }
 
+/** Upper-case, unaccented, punctuation flattened — for comparing place names. */
+function normalise(name: string): string {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, ' ')
+    .trim()
+}
+
+/**
+ * The INSEE département prefix, derived from the ISO 3166-2 code Nominatim
+ * gives us. `FR-13` → `13`, and Corsica's `FR-2A`/`FR-2B` keep their letter,
+ * which is exactly how INSEE codes them too.
+ */
+function departementPrefix(province?: string): string | null {
+  const m = province?.match(/^FR-([0-9]{2,3}|2A|2B)$/)
+  return m ? m[1] : null
+}
+
+/**
+ * Hub'Eau matches `nom_commune` loosely, so a query for "Marseille" also
+ * returns Marseille-en-Beauvaisis, a commune 700 km away in the Oise. Filtering
+ * to an exact name match, and to the département when we know it, is what keeps
+ * a reader in Provence from being shown a network in Picardy.
+ */
+export function forThisCommune(
+  rows: RawUdi[],
+  municipality: string,
+  province?: string,
+): RawUdi[] {
+  const wanted = normalise(municipality)
+  const dept = departementPrefix(province)
+  return rows.filter(r => {
+    if (!r.nom_commune || normalise(r.nom_commune) !== wanted) return false
+    if (dept && r.code_commune && !r.code_commune.startsWith(dept)) return false
+    return true
+  })
+}
+
 /**
  * Latest year only, deduplicated by network code.
  *
@@ -63,7 +103,8 @@ async function frenchRegistrySupply(place: PlaceContext): Promise<SupplyAnswer> 
   if (!res.ok) throw new Error(`Hub'Eau ${res.status}`)
   const body: { data?: RawUdi[] } = await res.json()
 
-  const networks = shapeNetworks(body.data ?? [])
+  const rows = forThisCommune(body.data ?? [], place.municipality, place.province)
+  const networks = shapeNetworks(rows)
   if (networks.length === 0) return NO_SUPPLY
 
   return {

@@ -53,11 +53,12 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
           })
         }
         case 'official-registry':
+          // With several networks, count them rather than naming one: the
+          // register does not say which serves a given address, and a commune
+          // like Marseille lists industrial port supplies beside domestic
+          // ones, so singling one out would read as "yours".
           return supply.networks.length > 1
-            ? t('panel.summary.reservoirs.registryMany', {
-                network: supply.networks[0].name,
-                count: supply.networks.length - 1,
-              })
+            ? t('panel.summary.reservoirs.registryMany', { count: supply.networks.length })
             : t('panel.summary.reservoirs.registry', {
                 network: supply.networks[0]?.name ?? '',
               })

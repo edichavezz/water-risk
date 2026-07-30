@@ -419,7 +419,7 @@
         "avg": "media {{years}} años {{mean}}%",
         "comparisonLabel": "{{gap}} puntos {{direction}} de la media de {{years}} años",
         "registry": "Red registrada: {{network}}",
-        "registryMany": "Redes registradas: {{network}} y {{count}} más",
+        "registryMany": "{{count}} redes registradas abastecen a este municipio",
         "basin": "{{count}} embalses en la misma demarcación hidrográfica — vínculo de abastecimiento desconocido"
       },
       "coastalFlood": {
