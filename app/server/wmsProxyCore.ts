@@ -18,6 +18,13 @@ interface Upstream {
   layers: string[]
   /** Browser cache lifetime for relayed tiles, in seconds. */
   maxAge: number
+  /**
+   * Whether GetFeatureInfo may be relayed as well as GetMap. Opt-in per
+   * upstream: a feature query returns attribute text rather than an image, so
+   * it is a wider surface than a tile relay and is only opened where the app
+   * actually reads attributes.
+   */
+  allowFeatureInfo?: boolean
 }
 
 const DAY = 86400
@@ -32,6 +39,10 @@ export const UPSTREAMS: Record<string, Upstream> = {
     layers: ['ZSP', 'Tramos_homogeneos'],
     // Coastal zoning changes on the order of years.
     maxAge: DAY,
+    // The panel reads the zoning classification and profile attributes off
+    // these layers, since the national deslinde service that would answer the
+    // in-servitude question is down.
+    allowFeatureInfo: true,
   },
 
   // Copernicus sends `Access-Control-Allow-Origin: *` twice on every response.
@@ -54,9 +65,17 @@ export const UPSTREAMS: Record<string, Upstream> = {
 const ALLOWED_PARAMS = new Set([
   'service', 'version', 'request', 'layers', 'styles', 'format',
   'transparent', 'srs', 'crs', 'width', 'height', 'bbox', 'bgcolor',
+  // GetFeatureInfo only. `info_format` is accepted but always overwritten
+  // below; it is listed so a caller-supplied value is not simply appended.
+  'query_layers', 'x', 'y', 'i', 'j', 'info_format', 'feature_count',
 ])
 
 const MAX_DIMENSION = 2048
+const MAX_FEATURE_COUNT = 50
+
+// Pinned rather than passed through: text/plain is the only shape the parser
+// expects, and it keeps HTML out of a response the panel renders.
+const INFO_FORMAT = 'text/plain'
 
 export interface ProxyResult {
   status: number
@@ -96,23 +115,57 @@ export async function proxyWms(
     if (value !== undefined) params.set(key, value)
   }
 
-  // Only GetMap. GetFeatureInfo would widen this into a general query relay,
-  // and nothing in the app needs it here.
-  if ((params.get('REQUEST') ?? params.get('request') ?? '').toLowerCase() !== 'getmap') {
-    return fail(400, 'Only GetMap is proxied')
+  const request = (params.get('REQUEST') ?? params.get('request') ?? '').toLowerCase()
+  const isFeatureInfo = request === 'getfeatureinfo'
+  if (request !== 'getmap' && !isFeatureInfo) {
+    return fail(400, 'Only GetMap and GetFeatureInfo are proxied')
+  }
+  if (isFeatureInfo && !upstream.allowFeatureInfo) {
+    return fail(400, 'Feature queries are not proxied for this upstream')
   }
 
-  const layers = params.get('LAYERS') ?? params.get('layers') ?? ''
-  const requested = layers.split(',').filter(Boolean)
-  if (requested.length === 0 || !requested.every(l => upstream.layers.includes(l))) {
-    return fail(400, 'Unknown layer')
+  // Both layer lists are validated. LAYERS alone would not be enough: on a
+  // GetFeatureInfo it is QUERY_LAYERS that selects what gets read.
+  const layerLists = [params.get('LAYERS') ?? params.get('layers') ?? '']
+  if (isFeatureInfo) {
+    layerLists.push(params.get('QUERY_LAYERS') ?? params.get('query_layers') ?? '')
+  }
+  for (const list of layerLists) {
+    const requested = list.split(',').filter(Boolean)
+    if (requested.length === 0 || !requested.every(l => upstream.layers.includes(l))) {
+      return fail(400, 'Unknown layer')
+    }
   }
 
+  const dims: Record<string, number> = {}
   for (const dim of ['WIDTH', 'HEIGHT']) {
     const n = Number(params.get(dim) ?? params.get(dim.toLowerCase()))
     if (!Number.isFinite(n) || n <= 0 || n > MAX_DIMENSION) {
       return fail(400, `Invalid ${dim}`)
     }
+    dims[dim] = n
+  }
+
+  if (isFeatureInfo) {
+    // The pixel being asked about has to lie inside the raster just described,
+    // or the query is malformed however the upstream chooses to treat it.
+    for (const [axis, limit] of [['X', dims.WIDTH], ['Y', dims.HEIGHT], ['I', dims.WIDTH], ['J', dims.HEIGHT]] as const) {
+      const raw = params.get(axis) ?? params.get(axis.toLowerCase())
+      if (raw === null || raw === undefined) continue
+      const n = Number(raw)
+      if (!Number.isInteger(n) || n < 0 || n >= limit) return fail(400, `Invalid ${axis}`)
+    }
+
+    const rawCount = params.get('FEATURE_COUNT') ?? params.get('feature_count')
+    if (rawCount !== null && rawCount !== undefined) {
+      const n = Number(rawCount)
+      if (!Number.isInteger(n) || n <= 0 || n > MAX_FEATURE_COUNT) {
+        return fail(400, 'Invalid FEATURE_COUNT')
+      }
+    }
+
+    for (const key of ['INFO_FORMAT', 'info_format']) params.delete(key)
+    params.set('INFO_FORMAT', INFO_FORMAT)
   }
 
   let res: Response
@@ -124,14 +177,27 @@ export async function proxyWms(
   if (!res.ok) return fail(502, `Upstream returned ${res.status}`)
 
   const contentType = res.headers.get('content-type') ?? ''
-  // A WMS reports failure as an XML ServiceExceptionReport with a 200, which
-  // must not be passed off to the map as if it were a tile.
+  const cacheControl = `public, max-age=${upstream.maxAge}, s-maxage=${upstream.maxAge * 7}`
+
+  if (isFeatureInfo) {
+    // A WMS reports failure as an XML ServiceExceptionReport with a 200. For a
+    // feature query that arrives as text/xml rather than the text/plain asked
+    // for, so the content type is the tell — and an XML body must never be
+    // handed to the parser as though it were an answer.
+    const body = await res.text()
+    if (!contentType.startsWith('text/plain') || body.includes('ServiceException')) {
+      return fail(502, 'Upstream returned a fault instead of feature text')
+    }
+    return { status: 200, contentType, body, cacheControl }
+  }
+
+  // A tile response must actually be an image, for the same reason.
   if (!contentType.startsWith('image/')) return fail(502, 'Upstream returned a non-image')
 
   return {
     status: 200,
     contentType,
     body: await res.arrayBuffer(),
-    cacheControl: `public, max-age=${upstream.maxAge}, s-maxage=${upstream.maxAge * 7}`,
+    cacheControl,
   }
 }

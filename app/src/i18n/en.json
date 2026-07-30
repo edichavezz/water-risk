@@ -136,12 +136,14 @@
       ]
     },
     "coastalFlood": {
-      "name": "Coastal zone (DPH)",
-      "cadence": "Updated with coastal domain cartography",
-      "resolution": "Mapped 20 m / 100 m coastal strips",
+      "name": "Coastal protection zoning",
+      "cadence": "Updated with REDIAM coastal zoning revisions",
+      "resolution": "Management stretches and surveyed profiles, Andalucía only",
       "limitations": [
+        "Does not confirm whether a property lies inside the servidumbre or policía strip",
+        "The national deslinde service that would answer that is unavailable",
         "Does not show storm-surge or sea-level-rise projections",
-        "Does not confirm legal status of an individual property"
+        "Covers Andalucía only"
       ]
     },
     "groundwater": {
@@ -301,6 +303,14 @@
     "doesNotShow": "Does not show",
     "geography": "Geography",
     "cadence": "Updated",
+    "coastal": {
+      "classification": "Zoning",
+      "sensitivity": "DPMT sensitivity",
+      "location": "Location",
+      "profile": "Nearest profile",
+      "notAVerdict": "This is the coastal protection zoning in force around this point. It does not confirm whether a specific property lies inside the servidumbre or polic\u00eda strip \u2014 that requires the national deslinde, which is currently unavailable.",
+      "officialProfile": "Official profile (PDF)"
+    },
     "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
     "unsupportedBody": "You can search another place, or explore the coverage map.",
     "home": "New search",
@@ -321,7 +331,10 @@
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",
         "policia": "Within the 100 m coastal zone",
-        "clear": "Outside the mapped coastal zones"
+        "zoning": "Coastal protection zoning: {{zoning}}",
+        "nearZone": "Within the coastal protection zoning at {{location}}",
+        "inZoning": "Within the mapped coastal protection zoning",
+        "noZoning": "No coastal protection zoning reaches this point"
       },
       "groundwater": {
         "over": "Inside {{unit}}, declared overexploited",

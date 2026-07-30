@@ -57,9 +57,82 @@ describe('proxyWms', () => {
     expect((await proxyWms({ ...valid, LAYERS: 'ZSP,something_else' })).status).toBe(400)
   })
 
-  it('relays GetMap only', async () => {
-    const out = await proxyWms({ ...valid, REQUEST: 'GetCapabilities' })
-    expect(out.status).toBe(400)
+  it('refuses request types other than GetMap and GetFeatureInfo', async () => {
+    expect((await proxyWms({ ...valid, REQUEST: 'GetCapabilities' })).status).toBe(400)
+    expect((await proxyWms({ ...valid, REQUEST: 'DescribeLayer' })).status).toBe(400)
+  })
+
+  describe('GetFeatureInfo', () => {
+    const query = {
+      ...valid,
+      REQUEST: 'GetFeatureInfo',
+      QUERY_LAYERS: 'Tramos_homogeneos',
+      LAYERS: 'Tramos_homogeneos',
+      X: '50',
+      Y: '50',
+      INFO_FORMAT: 'text/plain',
+      FEATURE_COUNT: '10',
+    }
+
+    function textFetch(body = "Layer 'Tramos_homogeneos'\n  Feature 1:\n    ZSP = 'x'") {
+      return vi.fn(async () =>
+        new Response(body, { status: 200, headers: { 'content-type': 'text/plain' } }),
+      ) as unknown as typeof fetch
+    }
+
+    it('relays a valid feature query and returns the text', async () => {
+      const out = await proxyWms(query, textFetch())
+      expect(out.status).toBe(200)
+      expect(out.contentType).toContain('text/plain')
+      expect(String(out.body)).toContain('Feature 1')
+    })
+
+    it('forwards the coordinate and query-layer parameters', async () => {
+      const f = textFetch()
+      await proxyWms(query, f)
+      const called = (f as unknown as { mock: { calls: string[][] } }).mock.calls[0][0]
+      expect(called).toContain('QUERY_LAYERS=Tramos_homogeneos')
+      expect(called).toContain('X=50')
+    })
+
+    // QUERY_LAYERS is a second layer list, and validating only LAYERS would let
+    // a caller read any layer the upstream hosts.
+    it('validates QUERY_LAYERS against the allowlist too', async () => {
+      expect((await proxyWms({ ...query, QUERY_LAYERS: 'secret_layer' })).status).toBe(400)
+    })
+
+    it('pins INFO_FORMAT to text/plain whatever the caller asks for', async () => {
+      const f = textFetch()
+      await proxyWms({ ...query, INFO_FORMAT: 'text/html' }, f)
+      const called = (f as unknown as { mock: { calls: string[][] } }).mock.calls[0][0]
+      expect(called).toContain('INFO_FORMAT=text%2Fplain')
+      expect(called).not.toContain('text/html')
+    })
+
+    it('rejects pixel coordinates outside the requested raster', async () => {
+      expect((await proxyWms({ ...query, X: '9999' })).status).toBe(400)
+      expect((await proxyWms({ ...query, Y: '-1' })).status).toBe(400)
+    })
+
+    it('caps FEATURE_COUNT', async () => {
+      expect((await proxyWms({ ...query, FEATURE_COUNT: '100000' })).status).toBe(400)
+    })
+
+    it('is refused for an upstream that does not permit feature queries', async () => {
+      const out = await proxyWms({
+        ...query, upstream: 'copernicus-drought', LAYERS: 'cdinx', QUERY_LAYERS: 'cdinx',
+      })
+      expect(out.status).toBe(400)
+    })
+
+    it('does not pass off a ServiceExceptionReport as feature text', async () => {
+      const xml = vi.fn(async () =>
+        new Response('<ServiceExceptionReport/>', {
+          status: 200, headers: { 'content-type': 'text/xml' },
+        }),
+      ) as unknown as typeof fetch
+      expect((await proxyWms(query, xml)).status).toBe(502)
+    })
   })
 
   it('rejects absurd tile dimensions', async () => {

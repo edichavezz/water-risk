@@ -4,8 +4,9 @@ import { getDataset } from '../../registry/datasets'
 import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
 import { formatLongDate } from '../../i18n/formatDate'
-import type { FloodZoneResult, Reservoir } from '../../types'
+import type { FloodZoneResult, Reservoir, CoastalZoning } from '../../types'
 import ReservoirLevels from './ReservoirLevels'
+import CoastalZoningDetail from './CoastalZoningDetail'
 
 export default function DatasetDetail() {
   const { t } = useTranslation()
@@ -29,6 +30,10 @@ export default function DatasetDetail() {
   const reservoirs =
     id === 'reservoirs' && result?.status === 'available'
       ? (result.data as Reservoir[])
+      : undefined
+  const coastalZoning =
+    id === 'coastalFlood' && result?.status === 'available'
+      ? (result.data as CoastalZoning)
       : undefined
   const reservoirAsOf = reservoirs?.[0]?.fillPercentAsOf
   // Names the system the highlighted markers belong to, so the map emphasis is
@@ -66,6 +71,8 @@ export default function DatasetDetail() {
       )}
 
       {reservoirs && <ReservoirLevels reservoirs={reservoirs} />}
+
+      {coastalZoning && <CoastalZoningDetail zoning={coastalZoning} />}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>

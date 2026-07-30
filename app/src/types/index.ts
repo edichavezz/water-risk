@@ -66,6 +66,25 @@ export interface WaterQualityResult {
   source: 'SINAC'
 }
 
+/**
+ * Andalucía coastal protection-zone *zoning*, from REDIAM. Not a verdict on
+ * whether a property lies inside the legal strip — see coastalZoning.ts.
+ */
+export interface CoastalZoning {
+  /** Management classification of the stretch, e.g. "Áreas Urbanas...". */
+  zoning?: string
+  /** DPMT sensitivity of the stretch, e.g. "Sensible". */
+  sensitivity?: string
+  location?: string
+  provincia?: string
+  /** Nearest surveyed profile and its boundary marker. */
+  profile?: string
+  marker?: string
+  /** Link to the official profile PDF, when it validates as a REDIAM https URL. */
+  profileUrl?: string
+  source: 'REDIAM'
+}
+
 export interface CoastalFloodResult {
   inServidumbre: boolean
   inPolicia: boolean
