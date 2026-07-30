@@ -1,5 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { interpret, type InterpretRequest } from '../server/interpretCore'
+// Extension is required: package.json sets "type": "module", and Vercel
+// transpiles these functions to ESM without bundling — Node then rejects
+// extensionless relative specifiers at runtime (ERR_MODULE_NOT_FOUND).
+import { interpret, type InterpretRequest } from '../server/interpretCore.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
