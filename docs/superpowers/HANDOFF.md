@@ -54,10 +54,28 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 |---|---|
 | P0 — dismantle the coverage gate | **Done.** Verified in the browser: Marseille returns live drought + bathing water with the Spain-only sources visibly unsupported; Ronda unchanged. |
 | P1 — visual patch + hazard families | **Done.** Rebrand, warm palette, Petrona titles, two-circle mark, hazard field + pills, two-group layers card, family-grouped list with a collapsing empty tail, Live news tab shell. |
-| P2 — fire datasets | In progress |
+| P2 — fire datasets | **Done.** EFFIS fire danger (point class + overlay), EFFIS burnt-area history (30 km, live), curated prevention plans for 13 regions across ES/FR/IT. Verified in the browser at Ronda: 22 mapped fires, INFOCA plan, danger class. |
 | P3 — live news | **Deferred** (tab shell only, in P1) |
 | P4 — water widening + supply graph | Pending |
 | P5 — About page redo | Pending, **needs real copy from the user** |
+
+## Notes for whoever picks this up
+
+- **EFFIS is fetched directly, not through the WMS proxy.** It sends one
+  well-formed CORS header; only Copernicus EDO needs relaying (it sends ACAO
+  twice). Do not "tidy" EFFIS into the UPSTREAMS table — it would add a hop for
+  nothing.
+- **The FWI layer is `ecmwf007.fwi`.** `ecmwf.fwi.fwi` is advertised in
+  GetCapabilities, answers 200 at every date, and paints nothing.
+- **At "Low" danger the overlay is nearly invisible** over the pale basemap, by
+  design — a hazard layer that shouts when there is no hazard is worse. Zoom out
+  to continental scale to confirm it is working; North Africa shows High/Very
+  high while Europe is green.
+- **Two fire pieces were scoped but not built**: NASA FIRMS active hotspots
+  (needs a free MAP_KEY registered at firms.modaps.eosdis.nasa.gov, and a
+  serverless proxy since the key is secret), and the WUI/vulnerable-areas layer
+  (published datasets exist but only as journal-supplement downloads, so they
+  need a one-off simplify-and-ship step). Neither blocks anything.
 
 ## Open unknowns
 
