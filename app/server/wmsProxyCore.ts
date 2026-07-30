@@ -61,7 +61,11 @@ export const UPSTREAMS: Record<string, Upstream> = {
   // so this one is relayed purely to get a single well-formed CORS header.
   'copernicus-drought': {
     url: 'https://drought.emergency.copernicus.eu/api/wms',
-    layers: ['cdinx'],
+    // cdinx is the abandoned variant of the same product: its time dimension
+    // stops at 2024-01-01 while cdiad — identical indicator, identical version,
+    // byte-identical legend palette — is still published. Both are listed so a
+    // cached client asking for the old one still gets a tile.
+    layers: ['cdiad', 'cdinx'],
     // The CDI is published on a 10-day cycle; refresh daily so a new slice is
     // picked up promptly without re-fetching on every pan.
     maxAge: DAY,
@@ -79,6 +83,8 @@ const ALLOWED_PARAMS = new Set([
   // GetFeatureInfo only. `info_format` is accepted but always overwritten
   // below; it is listed so a caller-supplied value is not simply appended.
   'query_layers', 'x', 'y', 'i', 'j', 'info_format', 'feature_count',
+  // Temporal layers: the app pins the slice it dates the reading from.
+  'time',
 ])
 
 const MAX_DIMENSION = 2048

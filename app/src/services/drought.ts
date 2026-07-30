@@ -1,6 +1,6 @@
 import type { Coordinates, DroughtStatus } from '../types'
 import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
-import { parseLatestSlice, stalenessOf } from './droughtSlice'
+import { parseLatestSlice, stalenessOf, findServedSlice } from './droughtSlice'
 
 // Copernicus EDO/GDO drought products, relayed through this app's WMS proxy.
 //
@@ -15,10 +15,15 @@ import { parseLatestSlice, stalenessOf } from './droughtSlice'
 // exists to reissue a single well-formed header.
 const EDO_WMS = '/api/wms-proxy?upstream=copernicus-drought'
 
-// Combined Drought Indicator v4.1. Passing an explicit TIME is rejected with
-// DATE_OUT_OF_RANGE around the edges of the 10-day publishing cycle, so we let
-// the service pick its own latest slice.
-const CDI_LAYER = 'cdinx'
+/**
+ * Combined Drought Indicator v4.1.
+ *
+ * `cdiad`, not `cdinx`: they are the same indicator at the same version, with a
+ * byte-identical legend palette, but cdinx's time dimension stopped at
+ * 2024-01-01 while cdiad is still published. The app rendered cdinx and stamped
+ * today's date on it, presenting a ~2.6-year-old slice as current.
+ */
+const CDI_LAYER = 'cdiad'
 
 /**
  * The CDI palette, read from the layer's own GetLegendGraphic. It is the
@@ -36,6 +41,12 @@ const CDI_PALETTE: { rgb: [number, number, number]; value: DroughtStatus['level'
   { rgb: [200, 200, 200], value: 'unknown' },           // No data
 ]
 
+/**
+ * Tile URL for the map layer. TIME is left off deliberately: the layer is added
+ * before any slice has been resolved, and the service's own default is its
+ * newest slice — the same one `findServedSlice` settles on — so the raster and
+ * the dated reading agree without threading async state into layer setup.
+ */
 export function getDroughtWmsUrl(): string {
   return (
     `${EDO_WMS}&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
@@ -60,8 +71,36 @@ export function getDroughtWmsUrl(): string {
  */
 let sliceCache: { value: string | null } | null = null
 
+/** Does the service actually serve this slice? */
+async function sliceExists(date: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `${sampleUrl(EDO_WMS, CDI_LAYER, -5.0, 37.0)}&TIME=${encodeURIComponent(date)}`,
+    )
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+/**
+ * The slice the app will render and date the reading from.
+ *
+ * Probed rather than taken from the capabilities document, because the
+ * advertised extent understates: cdiad declares an end of 2026-02-21 while
+ * serving 2026-06-01, and dating a current reading five months stale would be
+ * its own kind of wrong. The advertised end is the fallback when probing finds
+ * nothing, which is what correctly marks a genuinely abandoned feed as ancient.
+ */
 export async function getLatestSlice(): Promise<string | null> {
   if (sliceCache) return sliceCache.value
+
+  const served = await findServedSlice(sliceExists)
+  if (served) {
+    sliceCache = { value: served }
+    return served
+  }
+
   try {
     const res = await fetch(`${EDO_WMS}&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities`)
     if (!res.ok) throw new Error(String(res.status))
@@ -85,7 +124,11 @@ export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStat
   const unknown: DroughtStatus = { level: 'unknown', label: 'unknown', ...base }
 
   try {
-    const px = await samplePixel(sampleUrl(EDO_WMS, CDI_LAYER, coords.lng, coords.lat))
+    // TIME is pinned to the slice just dated, so the number on the card and the
+    // pixel it came from are provably the same slice rather than whatever the
+    // service chose between the two calls.
+    const url = sampleUrl(EDO_WMS, CDI_LAYER, coords.lng, coords.lat)
+    const px = await samplePixel(slice ? `${url}&TIME=${encodeURIComponent(slice)}` : url)
     // Outside the coverage the raster is simply not painted.
     if (px.a === 0) return unknown
     const level = nearestColour(px, CDI_PALETTE)

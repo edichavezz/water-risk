@@ -64,7 +64,7 @@ Root the Vercel project at `app/` — not the repo root. With that set:
 Search any Spanish address → get a risk profile with:
 
 - **Flood zone** — SNCZI T10/T100/T500 riverine flood zone status (MITERD)
-- **Drought** — Copernicus CDI level (alert/warning/watch/none), updated weekly
+- **Drought** — Copernicus Combined Drought Indicator level (alert/warning/watch/none), published every 10 days and dated from the slice actually served
 - **Reservoirs** — The reservoirs supplying this area, with fill % against 5- and 10-year averages for the same date
 - **Drinking water** — SINAC tap water compliance and source type
 - **Coastal zoning** — REDIAM coastal protection zoning for Andalucía: management classification, DPMT sensitivity and the nearest surveyed profile. Not an in/out verdict on the servidumbre or policía strip — the national deslinde service is down
@@ -124,7 +124,7 @@ All map tiles and data services are free and open — no billing account needed 
 | Source | What | Status |
 |--------|------|--------|
 | MITERD SNCZI WMS | Riverine flood zones | ✅ Live |
-| Copernicus EDO WMS | Drought CDI indicator | ✅ Live |
+| Copernicus EDO WMS | Drought CDI indicator (`cdiad`) | ✅ Live — `cdinx` variant is abandoned since 2024, do not use |
 | OpenFreeMap | Map tiles | ✅ Live |
 | Nominatim | Geocoding | ✅ Live |
 | REDIAM | Andalucía reservoir levels | ✅ Live |

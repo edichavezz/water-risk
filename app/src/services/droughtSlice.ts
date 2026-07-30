@@ -47,6 +47,35 @@ export function parseLatestSlice(capabilities: string, layer: string): string | 
   return Number.isNaN(Date.parse(date)) ? null : date
 }
 
+/**
+ * Finds the newest slice the service will actually serve, by asking for slices
+ * back from today until one is accepted.
+ *
+ * Needed because the advertised dimension understates: cdiad publishes
+ * `2012-01-01/2026-02-21/P10D` while happily serving 2026-06-01. Trusting the
+ * metadata would date a current reading five months stale. Off-grid dates are
+ * accepted by this service, so plain 10-day steps are enough.
+ *
+ * Capped so an abandoned feed does not turn into an unbounded scan — cdinx has
+ * been dead since 2024, and 90 probes to discover that is not a trade worth
+ * making. On reaching the cap the caller falls back to the advertised end,
+ * which correctly identifies such a feed as very old.
+ */
+export const PROBE_STEP_DAYS = 10
+export const MAX_PROBES = 12
+
+export async function findServedSlice(
+  probe: (date: string) => Promise<boolean>,
+  now: Date = new Date(),
+): Promise<string | null> {
+  for (let i = 0; i < MAX_PROBES; i++) {
+    const d = new Date(now.getTime() - i * PROBE_STEP_DAYS * 86_400_000)
+    const iso = d.toISOString().slice(0, 10)
+    if (await probe(iso)) return iso
+  }
+  return null
+}
+
 export interface Staleness {
   /** null when the slice date is unknown — distinct from "not stale". */
   stale: boolean | null

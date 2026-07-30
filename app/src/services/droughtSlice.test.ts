@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { parseLatestSlice, stalenessOf, STALE_AFTER_DAYS } from './droughtSlice'
+import { describe, it, expect, vi } from 'vitest'
+import {
+  parseLatestSlice, stalenessOf, STALE_AFTER_DAYS,
+  findServedSlice, MAX_PROBES,
+} from './droughtSlice'
 
 // The real cdinx dimension as served on 2026-07-29.
 const CAPS = `<WMS_Capabilities>
@@ -40,6 +43,26 @@ describe('parseLatestSlice', () => {
   it('returns null for junk', () => {
     expect(parseLatestSlice('', 'cdinx')).toBeNull()
     expect(parseLatestSlice('<ServiceExceptionReport/>', 'cdinx')).toBeNull()
+  })
+})
+
+describe('findServedSlice', () => {
+  const now = new Date('2026-07-30T00:00:00Z')
+
+  it('returns today when the newest slice is already available', async () => {
+    expect(await findServedSlice(async () => true, now)).toBe('2026-07-30')
+  })
+
+  it('steps back until the service accepts a slice', async () => {
+    // Accept only 2026-06-30, i.e. three 10-day steps back.
+    const probe = async (d: string) => d === '2026-06-30'
+    expect(await findServedSlice(probe, now)).toBe('2026-06-30')
+  })
+
+  it('gives up rather than scanning an abandoned feed forever', async () => {
+    const probe = vi.fn(async () => false)
+    expect(await findServedSlice(probe, now)).toBeNull()
+    expect(probe).toHaveBeenCalledTimes(MAX_PROBES)
   })
 })
 
