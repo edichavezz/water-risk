@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { proxyWms } from '../server/wmsProxyCore'
+// Extension is required — see the note in api/interpret.ts.
+import { proxyWms } from '../server/wmsProxyCore.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })
@@ -12,5 +13,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Caching is what keeps a proxied layer from costing a request per pan.
   if (result.cacheControl) res.setHeader('Cache-Control', result.cacheControl)
-  res.status(200).send(Buffer.from(result.body as ArrayBuffer))
+  // GetFeatureInfo relays come back as text; tiles as bytes.
+  res.status(200).send(
+    typeof result.body === 'string' ? result.body : Buffer.from(result.body as ArrayBuffer),
+  )
 }

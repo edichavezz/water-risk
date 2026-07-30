@@ -83,6 +83,20 @@ export const useAppStore = create<AppStore>((set, get) => ({
           : state.interpretation,
     })),
 
+  // Page is orthogonal to `view`: switching to About paints over the map but
+  // leaves the camera, the layers and any active search exactly as they were.
+  setPage: page => set({ page }),
+
+  // The About page's call to action. It returns to the map and — only when no
+  // search is already open — asks the entry field for the cursor, so "try it
+  // out" lands the reader ready to type instead of clearing their work.
+  goToSearch: () =>
+    set(state => ({
+      page: 'map',
+      searchFocusNonce:
+        state.view === 'entry' ? state.searchFocusNonce + 1 : state.searchFocusNonce,
+    })),
+
   // Audience changes the framing of an interpretation, not the data behind it.
   // Nothing refetches; a ready text goes stale so the reader is never shown
   // buyer-framed prose under a resident selection (same rule as language).
@@ -93,20 +107,6 @@ export const useAppStore = create<AppStore>((set, get) => ({
         state.interpretation.status === 'ready'
           ? { ...state.interpretation, status: 'stale', staleReason: 'audience' }
           : state.interpretation,
-    })),
-
-  setPage: page => set({ page }),
-
-  // "Try it out" on the About page. Returns to the map without touching the
-  // search state — a reader who already has results open should find them
-  // still there. The focus nonce is only bumped from the entry view, where
-  // there is a search field waiting; bumping it over open results would yank
-  // focus out of what the reader was reading.
-  goToSearch: () =>
-    set(state => ({
-      page: 'map',
-      searchFocusNonce:
-        state.view === 'entry' ? state.searchFocusNonce + 1 : state.searchFocusNonce,
     })),
 
   beginSearch: (location, origin = 'query') =>

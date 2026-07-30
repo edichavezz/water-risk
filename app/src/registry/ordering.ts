@@ -29,6 +29,42 @@ export function hasResult(result: DatasetResult | undefined): boolean {
 }
 
 /**
+ * Whether the panel should list this dataset at all.
+ *
+ * Only `not_applicable` rules a row out — the question does not arise here, so
+ * there is nothing to say. `unsupported` deliberately stays listed: the
+ * question is real and we have no source, and hiding that would let absence
+ * read as absence of risk.
+ */
+export function isListedHere(
+  id: DatasetId,
+  results: Partial<Record<DatasetId, DatasetResult>>,
+): boolean {
+  return results[id]?.status !== 'not_applicable'
+}
+
+/**
+ * Whether the layer tray should offer this dataset's map layer.
+ *
+ * Stricter than `isListedHere`, and the gap between them is the point: an
+ * `unsupported` dataset still earns a visible row saying we have no source,
+ * but there is nothing to paint, so the toggle is disabled rather than
+ * offering a layer that would draw nothing.
+ *
+ * Deliberately looser than `hasResult`, though: `unavailable` and `error` mean
+ * this *point* has no reading, not that the layer paints nothing. The flood and
+ * drought rasters still show the zones around a location that sits outside one,
+ * which is often the reason to turn them on.
+ */
+export function isDrawableHere(
+  id: DatasetId,
+  results: Partial<Record<DatasetId, DatasetResult>>,
+): boolean {
+  const status = results[id]?.status
+  return status !== 'not_applicable' && status !== 'unsupported'
+}
+
+/**
  * Relevance order, re-sorted so rows that carry a value come first. Sorting is
  * stable, so the incoming relevance order survives inside each rank.
  *

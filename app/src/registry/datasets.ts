@@ -4,8 +4,8 @@ import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
 import { getReservoirsForLocation } from '../services/reservoirs'
 import { getWaterQualityByMunicipality } from '../services/waterQuality'
-import { getCoastalFloodStatus } from '../services/coastalFlood'
 import { isCoastal } from '../services/coastline'
+import { getCoastalZoning } from '../services/coastalZoning'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
 import { getFireDanger } from '../services/fireDanger'
@@ -151,16 +151,23 @@ export const DATASETS: DatasetDef[] = [
     aiAllowed: true,
     audienceWeight: { resident_owner: 6, buyer_investor: 2 },
     defaultOrder: 5,
-    // Inland, the coast genuinely does not arise. On a coast we do not map, it
-    // does — so that stays visible.
+    // Inland, the coast genuinely does not arise. On a coast we do not map,
+    // it does — so that stays visible rather than vanishing.
     applicability: p =>
       !isCoastal(p.coordinates)
         ? 'not_applicable'
         : p.countryCode === 'es'
           ? 'covered'
           : 'unsupported',
+    // The national deslinde that would answer "is this plot inside the strip"
+    // is down, so the card reports the zoning in force around the point
+    // instead. `null` means no coastal zoning reaches here, which is a real
+    // answer; a thrown error stays an error.
     fetch: async loc => {
-      try { return ok(await getCoastalFloodStatus(loc.coordinates)) } catch (e) { return err(e) }
+      try {
+        const z = await getCoastalZoning(loc.coordinates)
+        return z === null ? { status: 'unavailable' } : ok(z)
+      } catch (e) { return err(e) }
     },
   },
   {

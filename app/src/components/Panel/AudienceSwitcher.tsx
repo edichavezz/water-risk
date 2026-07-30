@@ -20,8 +20,8 @@ export default function AudienceSwitcher() {
 
   return (
     <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <span className="text-xs text-muted">{t('panel.audienceLabel')}</span>
-      <div className="flex gap-1">
+      <span className="text-[11px] text-muted">{t('panel.audienceLabel')}</span>
+      <div className="flex flex-wrap gap-1.5">
         {OPTIONS.map(o => (
           <button
             key={o.id}
@@ -29,10 +29,12 @@ export default function AudienceSwitcher() {
             aria-pressed={audience === o.id}
             // Pressing the active option clears it, matching the entry card.
             onClick={() => setAudience(audience === o.id ? null : o.id)}
-            className={`rounded-lg border px-2 py-1 text-xs font-bold ${
+            /* Terracotta marks the audience selection — the one "this is you"
+               state in the panel, kept distinct from the teal of map layers. */
+            className={`rounded-[20px] border px-2.5 py-1 text-[11px] font-bold ${
               audience === o.id
-                ? 'border-primary bg-primary-soft text-primary'
-                : 'border-border text-muted hover:bg-subtle-cool'
+                ? 'border-accent bg-accent-soft text-accent-ink'
+                : 'border-field text-muted hover:bg-subtle-cool'
             }`}
           >
             {t(o.key)}

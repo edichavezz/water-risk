@@ -19,7 +19,15 @@ export interface FloodZoneResult {
 export interface DroughtStatus {
   level: 'none' | 'watch' | 'warning' | 'alert' | 'partial_recovery' | 'recovery' | 'unknown'
   label: string
-  updatedAt: string
+  /**
+   * The date of the slice actually being served, read from the layer's own time
+   * dimension. Null when that cannot be determined — never today's date, which
+   * would assert a currency the reading may not have.
+   */
+  updatedAt: string | null
+  /** True when the served slice is far older than the publishing cycle. */
+  stale: boolean | null
+  ageDays: number | null
   source: 'Copernicus EDO'
 }
 
@@ -28,7 +36,11 @@ export interface Reservoir {
   name: string
   fillPercent: number
   fillPercentAsOf: string
-  historicalMeanPercent?: number
+  // Mean fill % on this same calendar date across the last 5 / 10 years.
+  // Null where the station has fewer than 3 reporting years — a thin average
+  // would read as authoritative "normal" when it is two wet years.
+  mean5yr: number | null
+  mean10yr: number | null
   distanceKm: number
   basin: string
   systemName?: string
@@ -43,6 +55,25 @@ export interface WaterQualityResult {
   turbidity_ntu?: number
   ecoli?: string
   source: 'SINAC'
+}
+
+/**
+ * Andalucía coastal protection-zone *zoning*, from REDIAM. Not a verdict on
+ * whether a property lies inside the legal strip — see coastalZoning.ts.
+ */
+export interface CoastalZoning {
+  /** Management classification of the stretch, e.g. "Áreas Urbanas...". */
+  zoning?: string
+  /** DPMT sensitivity of the stretch, e.g. "Sensible". */
+  sensitivity?: string
+  location?: string
+  provincia?: string
+  /** Nearest surveyed profile and its boundary marker. */
+  profile?: string
+  marker?: string
+  /** Link to the official profile PDF, when it validates as a REDIAM https URL. */
+  profileUrl?: string
+  source: 'REDIAM'
 }
 
 export interface CoastalFloodResult {

@@ -128,33 +128,29 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     // grow to their full size by the zoom a search lands on. At a flat radius
     // the 72 markers would be white blobs across the whole country on first
     // load, since the reservoirs layer is on by default.
-    // MapLibre allows exactly one zoom-based subexpression per paint property.
-    // Wrapping a `case` around several zoom interpolations broke that rule, so
-    // every one of these layers was rejected at addLayer and the reservoir
-    // markers silently never drew — and because the throw escaped
-    // ensureDataLayers, nothing registered after them either.
     //
-    // The fix is to invert the nesting: interpolate on zoom once at the top,
-    // and pick the state-dependent value inside each stop.
-    const byState = (
-      selected: number,
-      highlighted: number,
-      base: number,
-    ): ExpressionSpecification => ['case', isSelected, selected, isHighlighted, highlighted, base]
-
-    const zoomStates = (
-      wide: [number, number, number],
-      close: [number, number, number],
+    // The style spec allows only ONE zoom-based `interpolate` per property, so
+    // zoom has to be the outer expression and the feature-state `case` goes
+    // inside each stop. Written the other way round — a `case` choosing between
+    // three interpolates — MapLibre rejects the layer and drops it from the map
+    // without throwing, which is how these markers went missing entirely.
+    // `dataLayerSpec.test.ts` runs every layer through that same validator.
+    const byZoom = (
+      selected: [number, number],
+      highlighted: [number, number],
+      normal: [number, number],
     ): ExpressionSpecification => [
       'interpolate', ['linear'], ['zoom'],
-      RESERVOIR_MINZOOM, byState(...wide),
-      RESERVOIR_LABEL_MINZOOM, byState(...close),
+      RESERVOIR_MINZOOM,
+      ['case', isSelected, selected[0], isHighlighted, highlighted[0], normal[0]],
+      RESERVOIR_LABEL_MINZOOM,
+      ['case', isSelected, selected[1], isHighlighted, highlighted[1], normal[1]],
     ]
 
     map.addLayer({
       id: 'reservoirs-halo', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': zoomStates([6, 6, 4.5], [14, 14, 11]),
+        'circle-radius': byZoom([6, 14], [6, 14], [4.5, 11]),
         'circle-color': '#ffffff',
         'circle-opacity': ['case', ['boolean', ['feature-state', 'dimmed'], false], 0.35, 0.85],
       },
@@ -163,7 +159,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     map.addLayer({
       id: 'reservoirs-circle', type: 'circle', source: 'reservoirs-src', minzoom: RESERVOIR_MINZOOM,
       paint: {
-        'circle-radius': zoomStates([5, 5, 3.5], [11, 11, 9]),
+        'circle-radius': byZoom([5, 11], [5, 11], [3.5, 9]),
         'circle-color': ['get', 'colour'],
         'circle-opacity': [
           'case',
@@ -178,7 +174,7 @@ export function ensureDataLayers(map: maplibregl.Map): void {
           isHighlighted, '#204E62',
           '#ffffff',
         ],
-        'circle-stroke-width': zoomStates([1.5, 1.25, 0.75], [3, 2.5, 1.5]),
+        'circle-stroke-width': byZoom([1.5, 3], [1.25, 2.5], [0.75, 1.5]),
       },
       layout: { visibility: 'none' },
     })
@@ -266,6 +262,8 @@ export interface ReservoirProps {
   fillPercent: number
   storedHm3: number | null
   capacityHm3: number | null
+  mean5yr: number | null
+  mean10yr: number | null
   basin: string
   river: string
   province: string
@@ -295,6 +293,21 @@ export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
       capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
     }))
   }
+  // Today's level only means something next to a normal year. Rendered as a
+  // signed gap because "34% full" reads fine until you learn late July usually
+  // sits at 61%. Absent averages are omitted, never shown as zero.
+  for (const [key, years] of [['mean5yr', 5], ['mean10yr', 10]] as const) {
+    const mean = props[key]
+    if (mean == null) continue
+    const gap = Math.round(props.fillPercent - mean)
+    lines.push(i18n.t('map.reservoir.vsAverage', {
+      years,
+      mean,
+      direction: i18n.t(gap < 0 ? 'map.reservoir.below' : 'map.reservoir.above'),
+      gap: Math.abs(gap),
+    }))
+  }
+
   if (props.river) lines.push(titleCase(props.river))
   if (props.basin) {
     lines.push(i18n.t('map.reservoir.basin', { basin: titleCase(props.basin) }))

@@ -30,6 +30,30 @@ describe('buildEvidence', () => {
     expect(drought.status).toBe('error')
     expect(drought.summary).not.toMatch(/low|none|safe/i)
   })
+
+  // Regression: the coastal evidence line used to read the old
+  // inServidumbre/inPolicia booleans. Against the zoning shape those are
+  // undefined, so it told the model "outside 20 m strip" — a clean bill of
+  // health invented from absent fields.
+  it('never asserts a coastal in/out verdict the source cannot support', () => {
+    const ev = buildEvidence({
+      coastalFlood: {
+        status: 'available',
+        data: {
+          zoning: 'Áreas Urbanas e Industriales Consolidadas',
+          sensitivity: 'Sensible',
+          location: 'Núcleo urbano de Cádiz',
+          source: 'REDIAM',
+        },
+      },
+    }, 'en')
+    const coastal = ev.find(e => e.id === 'coastalFlood')!
+    expect(coastal.summary).toContain('Áreas Urbanas e Industriales Consolidadas')
+    expect(coastal.summary).not.toMatch(/outside (the )?(20|100)\s?m/i)
+    expect(coastal.summary).not.toMatch(/inside (the )?(20|100)\s?m/i)
+    // and it must tell the model the verdict is unavailable
+    expect(coastal.summary).toMatch(/not a determination|cannot be answered/i)
+  })
 })
 
 describe('requestInterpretation gating', () => {

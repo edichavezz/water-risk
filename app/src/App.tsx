@@ -1,6 +1,5 @@
 import MapView from './components/Map/MapView'
 import LayerTray from './components/Map/LayerTray'
-import Legend from './components/Map/Legend'
 import EntryCard from './components/Entry/EntryCard'
 import CoverageKey from './components/Entry/CoverageKey'
 import WorkspacePanel from './components/Panel/WorkspacePanel'
@@ -26,11 +25,8 @@ export default function App() {
 
       {onMap && view === 'entry' && (
         <>
-          {/* Entry wash — a faint water-toned veil over the canvas (spec §12.0) */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-subtle-cool/60 to-transparent"
-          />
+          {/* The entry wash is gone: the basemap itself now carries the warm
+              water-toned palette, so a veil on top only muddied it. */}
           <EntryCard />
           <CoverageKey />
         </>
@@ -38,11 +34,12 @@ export default function App() {
 
       {onMap && view === 'searched' && (
         <>
-          {/* Desktop panel (md+) and mobile bottom sheet (<md) share PanelBody */}
+          {/* Desktop panel (md+) and mobile bottom sheet (<md) share PanelBody.
+              The legend is no longer separate — it lives inside LayerTray,
+              since both describe what is currently drawn on the map. */}
           <WorkspacePanel />
           <MobileSheet />
           <LayerTray />
-          <Legend />
         </>
       )}
 

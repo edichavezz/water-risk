@@ -15,6 +15,8 @@ interface GeneratedReservoir {
   fillPercent: number
   storedHm3: number
   capacityHm3: number
+  mean5yr: number | null
+  mean10yr: number | null
 }
 
 const RESERVOIRS = generated.reservoirs as GeneratedReservoir[]
@@ -54,6 +56,8 @@ function toReservoir(r: GeneratedReservoir, coords: Coordinates, systemName?: st
     name: titleCase(r.name),
     fillPercent: r.fillPercent,
     fillPercentAsOf: FETCHED_AT,
+    mean5yr: r.mean5yr,
+    mean10yr: r.mean10yr,
     basin: r.basin,
     distanceKm: Math.round(haversineKm(coords, r)),
     systemName,
@@ -98,7 +102,8 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
         fillPercent: r.fillPercent,
         storedHm3: r.storedHm3,
         capacityHm3: r.capacityHm3,
-        historicalMeanPercent: null, // REDIAM's feed has no historical-mean field; kept for MapView.tsx's existing property shape
+        mean5yr: r.mean5yr,
+        mean10yr: r.mean10yr,
         basin: r.basin,
         river: r.river,
         province: r.province,

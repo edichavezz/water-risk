@@ -1,9 +1,9 @@
 {
   "app": {
     "tagline": "Water and fire risk across the Mediterranean",
-    "navMap": "Map",
     "navAbout": "About",
-    "nav": "Sections"
+    "nav": "Sections",
+    "backToMap": "Back to map"
   },
   "layers": {
     "button": "Map layers",
@@ -13,6 +13,10 @@
     "readabilityWarning": "Two overlays can make the map harder to read.",
     "close": "Close",
     "unavailable": "No map layer available",
+    "collapse": "Collapse map layers",
+    "expand": "Expand map layers",
+    "legendHeading": "Legend",
+    "noData": "Nothing to show here",
     "primaryNote": "One at a time, across both.",
     "mixedFamilyWarning": "A fire layer and a water layer at once can be hard to read."
   },
@@ -143,12 +147,14 @@
       ]
     },
     "coastalFlood": {
-      "name": "Coastal zone (DPH)",
-      "cadence": "Updated with coastal domain cartography",
-      "resolution": "Mapped 20 m / 100 m coastal strips",
+      "name": "Coastal protection zoning",
+      "cadence": "Updated with REDIAM coastal zoning revisions",
+      "resolution": "Management stretches and surveyed profiles, Andalucía only",
       "limitations": [
+        "Does not confirm whether a property lies inside the servidumbre or policía strip",
+        "The national deslinde service that would answer that is unavailable",
         "Does not show storm-surge or sea-level-rise projections",
-        "Does not confirm legal status of an individual property"
+        "Covers Andalucía only"
       ]
     },
     "groundwater": {
@@ -205,6 +211,9 @@
     "reservoir": {
       "storage": "{{stored}} of {{capacity}} hm³ stored",
       "basin": "Basin: {{basin}}",
+      "vsAverage": "{{years}}-yr avg {{mean}}% — {{gap}} pts {{direction}}",
+      "above": "above",
+      "below": "below",
       "asOf": "Level as of {{date}}"
     },
     "pickLoading": "Finding this place…",
@@ -341,7 +350,13 @@
     "makerBodyTwo": "Mine was this: living in Spain, water comes up constantly in conversation and almost never with numbers attached. The data to answer it already exists and is already public. It just was not usable by the people it is about. This is my attempt at making it usable — it is a personal project, not a commercial service, and it will keep changing.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "has the rest of my work.",
-    "makerCourseLabel": "Terra.do"
+    "makerCourseLabel": "Terra.do",
+    "navHeading": "On this page",
+    "secTool": "The tool",
+    "secData": "The data",
+    "secAi": "The AI",
+    "secMe": "Me",
+    "subhead": "What it is, where the data comes from, how the AI works, and who built it."
   },
   "panel": {
     "noResultGroup": "No result for this location",
@@ -356,6 +371,19 @@
     "doesNotShow": "Does not show",
     "geography": "Geography",
     "cadence": "Updated",
+    "drought": {
+      "asOf": "Reading from {{date}}",
+      "dateUnknown": "Date of this reading could not be determined",
+      "stale": "This reading is {{days}} days old. Copernicus publishes the indicator every 10 days, so this feed appears to have stopped updating — treat the level as historical, not current."
+    },
+    "coastal": {
+      "classification": "Zoning",
+      "sensitivity": "DPMT sensitivity",
+      "location": "Location",
+      "profile": "Nearest profile",
+      "notAVerdict": "This is the coastal protection zoning in force around this point. It does not confirm whether a specific property lies inside the servidumbre or policía strip — that requires the national deslinde, which is currently unavailable.",
+      "officialProfile": "Official profile (PDF)"
+    },
     "home": "New search",
     "mapLayer": "Map layer",
     "summary": {
@@ -367,12 +395,17 @@
       "reservoirs": {
         "headline": "{{name}} · {{percent}}% full",
         "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
-        "noSupplyRecord": "No supply-system record for this municipality yet"
+        "noSupplyRecord": "No supply-system record for this municipality yet",
+        "avg": "{{years}}-yr avg {{mean}}%",
+        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",
         "policia": "Within the 100 m coastal zone",
-        "clear": "Outside the mapped coastal zones"
+        "zoning": "Coastal protection zoning: {{zoning}}",
+        "nearZone": "Within the coastal protection zoning at {{location}}",
+        "inZoning": "Within the mapped coastal protection zoning",
+        "noZoning": "No coastal protection zoning reaches this point"
       },
       "groundwater": {
         "over": "Inside {{unit}}, declared overexploited",
@@ -392,8 +425,8 @@
         "plan": "{{region}} publishes {{plan}}"
       }
     },
-    "noResultCount": "{{count}} checks have no source here — show them",
     "newsTab": "Live news",
+    "noResultCount": "{{count}} checks have no source here — show them",
     "preventionCheckedAt": "Link last checked {{date}}"
   },
   "states": {
@@ -408,7 +441,7 @@
   "ai": {
     "assistedLabel": "AI-assisted",
     "titleLocation": "What this location's data may mean",
-    "titleDataset": "What this result may mean",
+    "titleDataset": "What “{{dataset}}” may mean",
     "basis": "Based on: {{sources}}",
     "loading": "Generating interpretation…",
     "error": "Interpretation could not be generated.",
@@ -424,6 +457,10 @@
     "collapse": "Show map",
     "signals": "Key results"
   },
+  "hazard": {
+    "water": "Water",
+    "fire": "Fire"
+  },
   "coverage": {
     "tier": {
       "detailed": "Detailed here: {{count}} of {{total}} checks. This is where the app holds the most local records.",
@@ -431,10 +468,6 @@
       "minimal": "Limited here: {{count}} of {{total}} checks. Only the Europe-wide layers are available."
     },
     "detailRegionLabel": "More detail here"
-  },
-  "hazard": {
-    "water": "Water",
-    "fire": "Fire"
   },
   "news": {
     "pendingTitle": "Not connected yet",

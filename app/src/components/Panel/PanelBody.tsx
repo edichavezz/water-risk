@@ -30,23 +30,23 @@ export default function PanelBody() {
     }
   }
 
-  // The AI tab underlines in terracotta, the data tabs in teal — the same
-  // two-colour logic the rest of the app uses, applied to interpretation vs
-  // evidence rather than to a hazard family.
+  /* Underline tabs sitting on a shared hairline, not filled pills. The active
+     underline runs teal for public data and terracotta for the AI tab — the
+     one place the accent is used as a state signal, flagging "this side is
+     AI-assisted" before anything is generated. The -mb-px pulls the 2px
+     underline over the rail's own 1px line so they read as one edge. */
   const tabClass = (active: boolean, accent = false) =>
-    `min-h-11 flex-1 rounded-lg px-2 py-2 font-title text-[13px] font-bold leading-tight ${
+    `-mb-px min-h-11 border-b-2 pb-2.5 font-display text-[13px] font-bold ${
       active
-        ? accent
-          ? 'bg-accent-soft text-accent'
-          : 'bg-primary-soft text-primary'
-        : 'text-muted hover:bg-subtle-cool'
+        ? `text-ink ${accent ? 'border-accent' : 'border-primary'}`
+        : 'border-transparent text-tab-idle hover:text-ink'
     }`
 
   return (
     <>
       <AudienceSwitcher />
 
-      <div role="tablist" className="mb-3 flex gap-1 rounded-xl bg-subtle-warm p-1">
+      <div role="tablist" className="mb-3.5 flex gap-[22px] border-b border-hairline">
         <button
           role="tab"
           aria-selected={panelMode === 'data'}

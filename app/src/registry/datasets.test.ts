@@ -35,6 +35,20 @@ describe('dataset registry', () => {
     expect(getDataset('flood').applicability(cordoba)).toBe('covered')
   })
 
+  it('coastal datasets apply when only displayName names the province', () => {
+    // Nominatim gives Marbella a comarca ("Costa del Sol Occidental") in place
+    // of its province, so no province-name list could ever answer this. The
+    // geometric test does not care what Nominatim called the county.
+    const marbella: PlaceContext = {
+      displayName: 'Marbella, Costa del Sol Occidental, Málaga, Andalucía, España',
+      coordinates: { lat: 36.51, lng: -4.88 },
+      municipality: 'Marbella', countryCode: 'es',
+      provinceName: 'Costa del Sol Occidental',
+    }
+    expect(getDataset('coastalFlood').applicability(marbella)).toBe('covered')
+    expect(getDataset('bathingWater').applicability(marbella)).toBe('covered')
+  })
+
   it('audience reorders emphasis without changing membership', () => {
     const neutral = orderedDatasets(sevilla, null).map(d => d.id)
     const buyer = orderedDatasets(sevilla, 'buyer_investor').map(d => d.id)

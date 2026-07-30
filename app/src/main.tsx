@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource/atkinson-hyperlegible/400.css'
 import '@fontsource/atkinson-hyperlegible/700.css'
+// Fredoka carries the display voice — wordmark, panel and section headings.
 import '@fontsource/petrona/400.css'
 import '@fontsource/petrona/600.css'
 import '@fontsource/petrona/700.css'

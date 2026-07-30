@@ -1,9 +1,9 @@
 {
   "app": {
     "tagline": "Riesgos de agua e incendio en el Mediterráneo",
-    "navMap": "Mapa",
     "navAbout": "Acerca de",
-    "nav": "Secciones"
+    "nav": "Secciones",
+    "backToMap": "Volver al mapa"
   },
   "layers": {
     "button": "Capas del mapa",
@@ -13,6 +13,10 @@
     "readabilityWarning": "Dos capas superpuestas pueden dificultar la lectura del mapa.",
     "close": "Cerrar",
     "unavailable": "Sin capa disponible",
+    "collapse": "Contraer capas del mapa",
+    "expand": "Desplegar capas del mapa",
+    "legendHeading": "Leyenda",
+    "noData": "Nada que mostrar aquí",
     "primaryNote": "Solo una, entre ambas.",
     "mixedFamilyWarning": "Una capa de incendio y otra de agua a la vez pueden ser difíciles de leer."
   },
@@ -143,12 +147,14 @@
       ]
     },
     "coastalFlood": {
-      "name": "Zona costera (DPH)",
-      "cadence": "Actualizado con la cartografía del dominio costero",
-      "resolution": "Franjas costeras de 20 m / 100 m",
+      "name": "Zonificación de protección del litoral",
+      "cadence": "Actualizado con las revisiones de zonificación litoral de REDIAM",
+      "resolution": "Tramos homogéneos y perfiles levantados, solo Andalucía",
       "limitations": [
+        "No confirma si una finca se encuentra dentro de la servidumbre de protección o de la zona de policía",
+        "El deslinde estatal que respondería a eso no está disponible",
         "No muestra proyecciones de marejadas ni subida del nivel del mar",
-        "No confirma la situación legal de una propiedad concreta"
+        "Cubre solo Andalucía"
       ]
     },
     "groundwater": {
@@ -205,6 +211,9 @@
     "reservoir": {
       "storage": "{{stored}} de {{capacity}} hm³ embalsados",
       "basin": "Cuenca: {{basin}}",
+      "vsAverage": "media {{years}} años {{mean}}% — {{gap}} pts {{direction}}",
+      "above": "por encima",
+      "below": "por debajo",
       "asOf": "Nivel a fecha de {{date}}"
     },
     "pickLoading": "Buscando este lugar…",
@@ -341,7 +350,13 @@
     "makerBodyTwo": "La mía era esta: viviendo en España, el agua sale constantemente en las conversaciones y casi nunca con cifras al lado. Los datos para responder ya existen y ya son públicos. Simplemente no eran utilizables por las personas de las que hablan. Este es mi intento de hacerlos utilizables: es un proyecto personal, no un servicio comercial, y seguirá cambiando.",
     "makerSiteLabel": "editachavez.com",
     "makerSiteSuffix": "reúne el resto de mi trabajo.",
-    "makerCourseLabel": "Terra.do"
+    "makerCourseLabel": "Terra.do",
+    "navHeading": "En esta página",
+    "secTool": "La herramienta",
+    "secData": "Los datos",
+    "secAi": "La IA",
+    "secMe": "Yo",
+    "subhead": "Qué es, de dónde vienen los datos, cómo funciona la IA y quién la creó."
   },
   "panel": {
     "noResultGroup": "Sin resultado para esta ubicación",
@@ -356,6 +371,19 @@
     "doesNotShow": "No muestra",
     "geography": "Geografía",
     "cadence": "Actualizado",
+    "drought": {
+      "asOf": "Lectura del {{date}}",
+      "dateUnknown": "No se ha podido determinar la fecha de esta lectura",
+      "stale": "Esta lectura tiene {{days}} días. Copernicus publica el indicador cada 10 días, por lo que esta fuente parece haber dejado de actualizarse: considere el nivel como histórico, no actual."
+    },
+    "coastal": {
+      "classification": "Zonificación",
+      "sensitivity": "Sensibilidad DPMT",
+      "location": "Ubicación",
+      "profile": "Perfil más próximo",
+      "notAVerdict": "Esta es la zonificación de protección del litoral vigente en el entorno de este punto. No confirma si una finca concreta se encuentra dentro de la servidumbre de protección o de la zona de policía: eso requiere el deslinde estatal, que actualmente no está disponible.",
+      "officialProfile": "Perfil oficial (PDF)"
+    },
     "home": "Nueva búsqueda",
     "mapLayer": "Capa del mapa",
     "summary": {
@@ -367,12 +395,17 @@
       "reservoirs": {
         "headline": "{{name}} · {{percent}}% de llenado",
         "supplyScope": "Resaltados en el mapa: los embalses de {{system}}, que abastece esta zona.",
-        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio"
+        "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio",
+        "avg": "media {{years}} años {{mean}}%",
+        "comparisonLabel": "{{gap}} puntos {{direction}} de la media de {{years}} años"
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",
         "policia": "Dentro de la zona costera de 100 m",
-        "clear": "Fuera de las zonas costeras cartografiadas"
+        "zoning": "Zonificación de protección del litoral: {{zoning}}",
+        "nearZone": "Dentro de la zonificación de protección del litoral en {{location}}",
+        "inZoning": "Dentro de la zonificación de protección del litoral cartografiada",
+        "noZoning": "Ninguna zonificación de protección del litoral alcanza este punto"
       },
       "groundwater": {
         "over": "Dentro de {{unit}}, declarada sobreexplotada",
@@ -392,8 +425,8 @@
         "plan": "{{region}} publica {{plan}}"
       }
     },
-    "noResultCount": "{{count}} comprobaciones sin fuente aquí — mostrarlas",
     "newsTab": "Noticias",
+    "noResultCount": "{{count}} comprobaciones sin fuente aquí — mostrarlas",
     "preventionCheckedAt": "Enlace comprobado el {{date}}"
   },
   "states": {
@@ -408,7 +441,7 @@
   "ai": {
     "assistedLabel": "Asistido por IA",
     "titleLocation": "Qué pueden significar los datos de esta ubicación",
-    "titleDataset": "Qué puede significar este resultado",
+    "titleDataset": "Qué puede significar «{{dataset}}»",
     "basis": "Basado en: {{sources}}",
     "loading": "Generando interpretación…",
     "error": "No se pudo generar la interpretación.",
@@ -424,6 +457,10 @@
     "collapse": "Ver mapa",
     "signals": "Resultados clave"
   },
+  "hazard": {
+    "water": "Agua",
+    "fire": "Incendio"
+  },
   "coverage": {
     "tier": {
       "detailed": "Detallado aquí: {{count}} de {{total}} comprobaciones. Es donde la aplicación tiene más registros locales.",
@@ -431,10 +468,6 @@
       "minimal": "Limitado aquí: {{count}} de {{total}} comprobaciones. Solo están disponibles las capas de ámbito europeo."
     },
     "detailRegionLabel": "Más detalle aquí"
-  },
-  "hazard": {
-    "water": "Agua",
-    "fire": "Incendio"
   },
   "news": {
     "pendingTitle": "Todavía sin conectar",
