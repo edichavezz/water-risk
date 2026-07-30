@@ -89,20 +89,6 @@ body {
   top: 67px;
 }
 
-/* ── Topographic contour pattern ──────────────────────────────────────────
-   Purely decorative concentric "contour rings", built from stacked
-   radial-gradients. Used for the About page's divider band, which replaces a
-   photo hero. Three clusters, alternating teal and terracotta. */
-.topo-divider {
-  background-image:
-    radial-gradient(circle at 8% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 8% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px),
-    radial-gradient(circle at 40% 50%, transparent 0 16px, rgb(193 102 61 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 40% 50%, transparent 0 30px, rgb(193 102 61 / .20) 31px 33px, transparent 34px),
-    radial-gradient(circle at 72% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 72% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px);
-}
-
 /* ── Map location picker ──────────────────────────────────────────────────
    A provisional pin: hollow and dashed, so it never reads as the filled
    teardrop a confirmed search result gets. */

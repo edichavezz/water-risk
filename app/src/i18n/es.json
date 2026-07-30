@@ -298,10 +298,10 @@
   },
   "about": {
     "title": "Acerca de {{name}}",
-    "introHeading": "Los datos públicos del agua de una dirección, en un solo sitio",
-    "introLead": "España publica muchísimos datos sobre el agua. El problema es que están dispersos: los mapas de inundación en un ministerio, los boletines de sequía en una agencia europea, el nivel de los embalses en las confederaciones hidrográficas, los registros de agua de boca en Sanidad. Todos son públicos y todos cuestan trabajo de leer.",
-    "introBodyOne": "Water Risk Explorer reúne esas fuentes y les hace la misma pregunta sobre un único punto del mapa. Escribe un código postal, un municipio o una dirección y obtienes una sola página: si el punto está en una zona inundable cartografiada, si la zona está en sequía, qué embalses la abastecen y cómo están de llenos, qué dice el registro del agua de boca y, en la costa, a qué distancia estás de la franja protegida del litoral.",
-    "introBodyTwo": "¿Por qué? Porque el agua es una de las grandes preguntas silenciosas sobre un lugar en España, y normalmente solo aparece cuando ya sale cara: después de una riada, durante una restricción de agua o a mitad de la compra de una casa. Esta herramienta existe para que puedas hacerte esa pregunta pronto, gratis y sin saber nada de hidrología.",
+    "introHeading": "Agua y fuego, para un lugar, en una página",
+    "introLead": "Los países mediterráneos publican mucha información sobre agua e incendios. Está dispersa: los mapas de inundación en un ministerio, los indicadores de sequía y de incendio en una agencia europea, los niveles de embalse en la confederación hidrográfica, los decretos de restricción en la prefectura. Todo es público y todo cuesta leerlo.",
+    "introBodyOne": "Fire and Rain se lo pregunta todo a un único punto del mapa. Escribe un código postal, un municipio o una dirección y obtienes una sola página: si el punto está en zona inundable cartografiada, si la zona está en sequía, qué previsión de peligro de incendio hay y si ha ardido antes, qué embalses o redes abastecen el grifo y qué restricciones están en vigor.",
+    "introBodyTwo": "¿Por qué? Porque el agua y el fuego son dos de las grandes preguntas sobre un lugar aquí, y suelen aparecer cuando ya salen caras: tras una inundación, durante una restricción, en un mal verano de incendios o a mitad de comprar una casa. Esta herramienta existe para poder preguntarlo antes, gratis y sin saber de hidrología.",
     "introCta": "Pruébalo",
     "introCtaHint": "Te lleva al mapa, listo para un código postal o un lugar.",
     "aiHeading": "Cómo se usa la IA",
@@ -311,7 +311,7 @@
     "aiAudienceBody": "La aplicación hace una única pregunta opcional: si vives aquí o eres propietario/a, o si estás pensando en comprar. Se usa para dos cosas y nada más. Primero, reordena las consultas para que aparezcan antes las que suelen importarte más: a quien compra suele interesarle la sequía y los embalses, y a quien vive allí las inundaciones y el agua de boca. Segundo, se le pasa al modelo como enfoque: a quien es propietario/a se le dan pasos prácticos y a quién dirigirse; a quien compra, el ángulo legal y de seguros, como la nota simple, la zona inundable del SNCZI o el Consorcio de Compensación de Seguros.",
     "aiAudienceNote": "Puedes saltártela o cambiarla cuando quieras. Nunca modifica los datos de origen: solo el orden en que se muestran y el tono del resumen. No hay cuenta de usuario ni se guarda ningún perfil.",
     "dataHeading": "Qué preguntamos y a quién se lo preguntamos",
-    "dataIntro": "No hace falta saber de agua. Cada bloque es una pregunta sencilla sobre un lugar, lo que la aplicación consulta para responderla y el organismo público del que sale la respuesta.",
+    "dataIntro": "No hace falta tener conocimientos previos. Cada fila es una pregunta clara sobre un lugar, lo que la aplicación comprueba para responderla y el organismo público del que sale la respuesta. Primero el agua, después el fuego.",
     "dataQuestionLabel": "La pregunta",
     "dataAnswerLabel": "Cómo la respondemos",
     "dataSourceLabel": "Fuente",
@@ -376,7 +376,7 @@
     "secData": "Los datos",
     "secAi": "La IA",
     "secMe": "Yo",
-    "subhead": "Qué es, de dónde vienen los datos, cómo funciona la IA y quién la creó."
+    "subhead": "Qué es, de dónde salen los datos, cómo se usa la IA y quién lo ha hecho."
   },
   "panel": {
     "noResultGroup": "Sin resultado para esta ubicación",

@@ -21,7 +21,7 @@ describe('AboutPage', () => {
   it('leads with what the project is and why it exists', () => {
     render(<AboutPage />)
     expect(
-      screen.getByRole('heading', { name: /public water data for one address/i }),
+      screen.getByRole('heading', { name: /water and fire, for one place/i }),
     ).toBeInTheDocument()
     expect(screen.getByText(/scattered/i)).toBeInTheDocument()
   })
@@ -96,5 +96,29 @@ describe('AboutPage', () => {
     render(<AboutPage />)
     expect(screen.getByRole('heading', { name: 'Cómo se usa la IA' })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: 'Pruébalo' }).length).toBeGreaterThan(0)
+  })
+})
+
+describe('AboutPage data section', () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en')
+  })
+
+  // The same two families, in the same order, as the dataset list and the
+  // layers card — so the structure reads as one idea wherever it appears.
+  it('groups the questions by hazard family', () => {
+    render(<AboutPage />)
+    const water = screen.getByRole('heading', { name: 'Water', level: 3 })
+    const fire = screen.getByRole('heading', { name: 'Fire', level: 3 })
+    expect(water.compareDocumentPosition(fire) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('asks a question for every registered dataset, on the right side', () => {
+    render(<AboutPage />)
+    for (const d of DATASETS) {
+      expect(
+        screen.getByRole('heading', { name: i18n.t(`about.dataItems.${d.id}.question`) }),
+      ).toBeInTheDocument()
+    }
   })
 })
