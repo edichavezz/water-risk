@@ -64,9 +64,13 @@ describe('coverageProfile', () => {
   it('reports Spain-only sources as unsupported abroad rather than dropping them', () => {
     const profile = coverageProfile(marseille)
     expect(profile.unsupported).toContain('flood')
-    expect(profile.unsupported).toContain('reservoirs')
     expect(profile.covered).toContain('drought')
     expect(profile.covered).toContain('bathingWater')
+    // France answers the supply question from its national drinking-water
+    // register, so this is covered here even though Spain's curated systems
+    // do not reach it.
+    expect(profile.covered).toContain('reservoirs')
+    expect(profile.covered).toContain('waterRestrictions')
   })
 })
 

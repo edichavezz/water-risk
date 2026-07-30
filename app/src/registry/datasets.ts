@@ -2,7 +2,7 @@ import type { PlaceContext } from '../types/place'
 import type { Audience, DatasetId, DatasetResult, HazardFamily } from '../types/workspace'
 import { getFloodZoneStatus } from '../services/floodZone'
 import { getDroughtStatus } from '../services/drought'
-import { getReservoirsForLocation } from '../services/reservoirs'
+import { getSupplyForLocation } from '../services/supply'
 import { getWaterQualityByMunicipality } from '../services/waterQuality'
 import { isCoastal } from '../services/coastline'
 import { getCoastalZoning } from '../services/coastalZoning'
@@ -109,13 +109,15 @@ export const DATASETS: DatasetDef[] = [
     audienceWeight: { resident_owner: 2, buyer_investor: 5 },
     defaultOrder: 3,
     // Every inhabited place has a water supply, so this is never
-    // 'not_applicable'. Until the supply graph lands, only Spain has any
-    // reservoir record at all.
-    applicability: p => (p.countryCode === 'es' ? 'covered' : 'unsupported'),
+    // 'not_applicable'. Spain answers from curated supply systems, France from
+    // the national drinking-water register; elsewhere the question is real and
+    // unanswered, which is `unsupported`.
+    applicability: p =>
+      p.countryCode === 'es' || p.countryCode === 'fr' ? 'covered' : 'unsupported',
     fetch: async loc => {
       try {
-        const rs = getReservoirsForLocation(loc)
-        return rs.length === 0 ? { status: 'unavailable' } : ok(rs)
+        const supply = await getSupplyForLocation(loc)
+        return supply.provenance === 'none' ? { status: 'unavailable' } : ok(supply)
       } catch (e) { return err(e) }
     },
   },

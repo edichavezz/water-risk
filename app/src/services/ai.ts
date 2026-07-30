@@ -1,4 +1,5 @@
 import type { Language } from '../types'
+import type { SupplyAnswer } from '../types/supply'
 import type { DatasetId, DatasetResult, InterpretationScope } from '../types/workspace'
 import { useAppStore } from '../store/useAppStore'
 import type {
@@ -26,7 +27,14 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       return `Combined Drought Indicator level: ${d.level} (source Copernicus EDO, ${d.updatedAt}).`
     }
     case 'reservoirs': {
-      const rs = r.data as Reservoir[]
+      const supply = r.data as SupplyAnswer
+      if (supply.provenance === 'official-registry') {
+        return `Registered drinking-water network(s) for this commune: ${supply.networks.map(n => n.name).join('; ')}. The register does not record which reservoirs feed them, so no reservoir levels are available here (source Hub'Eau).`
+      }
+      if (supply.provenance === 'basin') {
+        return `Basin-level context only — no confirmed supply relationship. Largest reservoirs in the same river-basin district: ${supply.reservoirs.map(x => `${x.name} ${x.fillPercent}% full`).join('; ')}.`
+      }
+      const rs = supply.reservoirs
       const asOf = rs[0]?.fillPercentAsOf
       const system = rs[0]?.systemName
       const scope = system ? `Reservoirs supplying this area via ${system}` : 'Supply reservoirs'

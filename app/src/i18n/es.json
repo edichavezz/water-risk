@@ -417,7 +417,10 @@
         "supplyScope": "Resaltados en el mapa: los embalses de {{system}}, que abastece esta zona.",
         "noSupplyRecord": "Todavía no consta el sistema de abastecimiento de este municipio",
         "avg": "media {{years}} años {{mean}}%",
-        "comparisonLabel": "{{gap}} puntos {{direction}} de la media de {{years}} años"
+        "comparisonLabel": "{{gap}} puntos {{direction}} de la media de {{years}} años",
+        "registry": "Red registrada: {{network}}",
+        "registryMany": "Redes registradas: {{network}} y {{count}} más",
+        "basin": "{{count}} embalses en la misma demarcación hidrográfica — vínculo de abastecimiento desconocido"
       },
       "coastalFlood": {
         "servidumbre": "Dentro de la servidumbre de protección de 20 m",
@@ -496,5 +499,12 @@
     "pendingTitle": "Todavía sin conectar",
     "pendingBody": "Esta pestaña mostrará titulares recientes que mencionen esta zona, etiquetados según si hablan de agua o de incendios.",
     "disclaimer": "Cuando esté activa, los titulares se recogerán automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados."
+  },
+  "supply": {
+    "curated": "Abastecido por {{system}}. Estos embalses se han investigado a mano a partir de las publicaciones del propio operador.",
+    "officialRegistry": "El registro nacional de agua de consumo indica qué red abastece a este municipio. No indica qué embalses la alimentan, así que no se muestran niveles.",
+    "basin": "No consta un vínculo de abastecimiento para este lugar. Estos son los mayores embalses de la misma demarcación hidrográfica: puede que abastezcan tu grifo o puede que no.",
+    "none": "No sabemos qué embalses abastecen a este lugar.",
+    "networksLabel": "Redes de distribución"
   }
 }

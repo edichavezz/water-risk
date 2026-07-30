@@ -13,10 +13,13 @@ import { mapRef } from '../../map/mapRef'
 import { reservoirLngLat } from '../../services/reservoirs'
 import type { Reservoir } from '../../types'
 import type { DatasetResult } from '../../types/workspace'
+import type { SupplyAnswer } from '../../types/supply'
 
 function resultCodEsts(result: DatasetResult | undefined): string[] {
   if (result?.status !== 'available') return []
-  return (result.data as Reservoir[]).map(r => r.codEst)
+  // A registry-tier answer names a distribution network and no reservoirs, so
+  // there is nothing on the map to emphasise.
+  return (result.data as SupplyAnswer).reservoirs.map(r => r.codEst)
 }
 
 const prefersReducedMotion = () =>

@@ -4,6 +4,7 @@ import type {
   CoastalZoning, GroundwaterResult, BathingWaterResult,
   FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
 } from '../../types'
+import type { SupplyAnswer } from '../../types/supply'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
 
@@ -39,12 +40,32 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       return t(`risk.drought.${d.level}`)
     }
     case 'reservoirs': {
-      const rs = r!.data as Reservoir[]
-      if (rs.length === 0) return t('panel.summary.reservoirs.noSupplyRecord')
-      const closest = rs[0]
-      return t('panel.summary.reservoirs.headline', {
-        name: closest.name, percent: closest.fillPercent,
-      })
+      const supply = r!.data as SupplyAnswer
+      // One line per provenance tier and no shared fallback: a registry answer
+      // must never borrow a curated answer's phrasing, because the registry
+      // does not record which reservoirs feed the network.
+      switch (supply.provenance) {
+        case 'curated': {
+          const closest = supply.reservoirs[0]
+          if (!closest) return t('panel.summary.reservoirs.noSupplyRecord')
+          return t('panel.summary.reservoirs.headline', {
+            name: closest.name, percent: closest.fillPercent,
+          })
+        }
+        case 'official-registry':
+          return supply.networks.length > 1
+            ? t('panel.summary.reservoirs.registryMany', {
+                network: supply.networks[0].name,
+                count: supply.networks.length - 1,
+              })
+            : t('panel.summary.reservoirs.registry', {
+                network: supply.networks[0]?.name ?? '',
+              })
+        case 'basin':
+          return t('panel.summary.reservoirs.basin', { count: supply.reservoirs.length })
+        default:
+          return t('panel.summary.reservoirs.noSupplyRecord')
+      }
     }
     case 'waterQuality': {
       const d = r!.data as WaterQualityResult

@@ -5,6 +5,7 @@ import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
 import { formatLongDate } from '../../i18n/formatDate'
 import type { FloodZoneResult, Reservoir, CoastalZoning, DroughtStatus } from '../../types'
+import type { SupplyAnswer } from '../../types/supply'
 import ReservoirLevels from './ReservoirLevels'
 import CoastalZoningDetail from './CoastalZoningDetail'
 
@@ -27,10 +28,11 @@ export default function DatasetDetail() {
 
   // Reservoirs carry REDIAM's own reading date, so the levels are dated rather
   // than left to read as "current" (spec §9.2).
-  const reservoirs =
+  const supply =
     id === 'reservoirs' && result?.status === 'available'
-      ? (result.data as Reservoir[])
+      ? (result.data as SupplyAnswer)
       : undefined
+  const reservoirs = supply?.reservoirs.length ? supply.reservoirs : undefined
   const coastalZoning =
     id === 'coastalFlood' && result?.status === 'available'
       ? (result.data as CoastalZoning)
@@ -75,6 +77,31 @@ export default function DatasetDetail() {
           {t('map.reservoir.asOf', { date: formatLongDate(reservoirAsOf) })}
         </p>
       )}
+
+      {/* One line per provenance tier, stating exactly what its source knows.
+          A registry answer must never borrow a curated answer's phrasing. */}
+      {supply && supply.provenance !== 'none' && (
+        <p className="text-[11.5px] leading-relaxed text-muted">
+          {supply.provenance === 'curated'
+            ? t('supply.curated', { system: supply.systemName ?? '' })
+            : supply.provenance === 'official-registry'
+              ? t('supply.officialRegistry')
+              : t('supply.basin')}
+        </p>
+      )}
+
+      {supply?.networks.length ? (
+        <div className="flex flex-col gap-1">
+          <p className="text-[10px] font-bold uppercase tracking-[.04em] text-muted">
+            {t('supply.networksLabel')}
+          </p>
+          <ul className="flex flex-col gap-0.5">
+            {supply.networks.map(n => (
+              <li key={n.code} className="text-[12px] text-ink">{n.name}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       {reservoirs && <ReservoirLevels reservoirs={reservoirs} />}
 

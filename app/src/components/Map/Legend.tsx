@@ -3,6 +3,11 @@ import { useAppStore } from '../../store/useAppStore'
 import { getDataset } from '../../registry/datasets'
 import type { DatasetId } from '../../types/workspace'
 import type { Reservoir } from '../../types'
+import type { SupplyAnswer } from '../../types/supply'
+import { FIRE_DANGER_PALETTE } from '../../services/fireDanger'
+
+/* Burn-scar outline colour, kept in step with dataLayers' FIRE_SCAR. */
+const FIRE_SCAR = '#8A3E1E'
 
 interface Row { color: string; opacity?: number; label: string }
 
@@ -30,6 +35,14 @@ function legendRows(primary: DatasetId, t: (k: string) => string): Row[] {
       ]
     case 'groundwater':
       return [{ color: '#B87535', opacity: 0.5, label: t('legend.groundwater.over') }]
+    case 'fireDanger':
+      // Driven off the palette the service classifies against, which was read
+      // from the layer's own GetLegendGraphic — so unlike the hardcoded rows
+      // above, this cannot drift from what the raster actually paints.
+      return FIRE_DANGER_PALETTE.map(({ rgb, value }) => ({
+        color: `rgb(${rgb.join(',')})`,
+        label: t(`legend.fireDanger.${value}`),
+      }))
     default:
       return []
   }
@@ -51,7 +64,7 @@ export default function Legend() {
   // emphasis means.
   const highlighted =
     contextLayers.includes('reservoirs') && reservoirResult?.status === 'available'
-      ? (reservoirResult.data as Reservoir[])
+      ? (reservoirResult.data as SupplyAnswer).reservoirs
       : []
 
   if (!primaryLayer && highlighted.length === 0) return null
@@ -83,6 +96,19 @@ export default function Legend() {
           </p>
           <p className="text-[10px] text-muted">{t(`registry.${primaryLayer}.cadence`)}</p>
         </>
+      )}
+
+      {contextLayers.includes('fireHistory') && (
+        <div className={primaryLayer ? 'mt-3 border-t border-hairline pt-2' : ''}>
+          <p className="mb-1.5 font-bold text-ink">{t('registry.fireHistory.name')}</p>
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block h-3 w-3 shrink-0 rounded-sm border"
+              style={{ background: FIRE_SCAR, opacity: 0.25, borderColor: FIRE_SCAR }}
+            />
+            <span className="text-ink">{t('legend.fireHistory.burnt')}</span>
+          </div>
+        </div>
       )}
 
       {highlighted.length > 0 && (

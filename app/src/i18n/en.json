@@ -417,7 +417,10 @@
         "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
         "noSupplyRecord": "No supply-system record for this municipality yet",
         "avg": "{{years}}-yr avg {{mean}}%",
-        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
+        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average",
+        "registry": "Registered network: {{network}}",
+        "registryMany": "Registered networks: {{network}} and {{count}} more",
+        "basin": "{{count}} reservoirs in the same river-basin district — supply link unknown"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",
@@ -496,5 +499,12 @@
     "pendingTitle": "Not connected yet",
     "pendingBody": "This tab will show recent headlines mentioning this area, tagged by whether they are about water or fire.",
     "disclaimer": "When it is live, headlines will be pulled automatically from public news sources — matched by place name, not verified."
+  },
+  "supply": {
+    "curated": "Supplied by {{system}}. These reservoirs were researched by hand from the operator’s own publications.",
+    "officialRegistry": "The national drinking-water register records which network supplies this commune. It does not record which reservoirs feed that network, so no levels are shown.",
+    "basin": "No confirmed supply link for this place. These are the largest reservoirs in the same river-basin district — they may or may not supply your tap.",
+    "none": "We don’t know which reservoirs supply this place.",
+    "networksLabel": "Distribution networks"
   }
 }
