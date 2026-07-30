@@ -9,8 +9,10 @@
  *
  * This is a proxy, so it is an SSRF risk if it forwards whatever it is given.
  * It does not: the caller names an upstream from a fixed table rather than
- * passing a URL, the layer must be one this app actually draws, and only
- * GetMap is relayed.
+ * passing a URL, every layer named must be one this app actually draws, and the
+ * request type must be one of GetMap, GetFeatureInfo or GetCapabilities — the
+ * latter two only for upstreams that opt in. Response types are checked too, so
+ * a WMS fault (served with a 200) is never passed off as a tile or as data.
  */
 
 interface Upstream {
@@ -25,6 +27,12 @@ interface Upstream {
    * actually reads attributes.
    */
   allowFeatureInfo?: boolean
+  /**
+   * Whether GetCapabilities may be relayed. Opt-in for the same reason: it is
+   * how the app learns which time slice a temporal layer is actually serving,
+   * and it returns XML rather than an image.
+   */
+  allowCapabilities?: boolean
 }
 
 const DAY = 86400
@@ -57,6 +65,9 @@ export const UPSTREAMS: Record<string, Upstream> = {
     // The CDI is published on a 10-day cycle; refresh daily so a new slice is
     // picked up promptly without re-fetching on every pan.
     maxAge: DAY,
+    // The panel dates the reading from the layer's own TIME dimension rather
+    // than stamping "today" on whatever slice the service happens to serve.
+    allowCapabilities: true,
   },
 }
 
@@ -117,11 +128,35 @@ export async function proxyWms(
 
   const request = (params.get('REQUEST') ?? params.get('request') ?? '').toLowerCase()
   const isFeatureInfo = request === 'getfeatureinfo'
-  if (request !== 'getmap' && !isFeatureInfo) {
-    return fail(400, 'Only GetMap and GetFeatureInfo are proxied')
+  const isCapabilities = request === 'getcapabilities'
+  if (request !== 'getmap' && !isFeatureInfo && !isCapabilities) {
+    return fail(400, 'Only GetMap, GetFeatureInfo and GetCapabilities are proxied')
   }
   if (isFeatureInfo && !upstream.allowFeatureInfo) {
     return fail(400, 'Feature queries are not proxied for this upstream')
+  }
+  if (isCapabilities && !upstream.allowCapabilities) {
+    return fail(400, 'Capabilities are not proxied for this upstream')
+  }
+
+  // A capabilities document names no layer and has no raster, so the layer and
+  // dimension checks below do not apply to it.
+  if (isCapabilities) {
+    let capRes: Response
+    try {
+      capRes = await fetchImpl(`${upstream.url}?${params}`)
+    } catch {
+      return fail(502, 'Upstream unreachable')
+    }
+    if (!capRes.ok) return fail(502, `Upstream returned ${capRes.status}`)
+    const capType = capRes.headers.get('content-type') ?? ''
+    if (!/xml/i.test(capType)) return fail(502, 'Upstream returned a non-XML capabilities document')
+    return {
+      status: 200,
+      contentType: capType,
+      body: await capRes.text(),
+      cacheControl: `public, max-age=${upstream.maxAge}, s-maxage=${upstream.maxAge * 7}`,
+    }
   }
 
   // Both layer lists are validated. LAYERS alone would not be enough: on a

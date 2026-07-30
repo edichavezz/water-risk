@@ -303,6 +303,11 @@
     "doesNotShow": "Does not show",
     "geography": "Geography",
     "cadence": "Updated",
+    "drought": {
+      "asOf": "Reading from {{date}}",
+      "dateUnknown": "Date of this reading could not be determined",
+      "stale": "This reading is {{days}} days old. Copernicus publishes the indicator every 10 days, so this feed appears to have stopped updating — treat the level as historical, not current."
+    },
     "coastal": {
       "classification": "Zoning",
       "sensitivity": "DPMT sensitivity",

@@ -1,5 +1,6 @@
 import type { Coordinates, DroughtStatus } from '../types'
 import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
+import { parseLatestSlice, stalenessOf } from './droughtSlice'
 
 // Copernicus EDO/GDO drought products, relayed through this app's WMS proxy.
 //
@@ -51,14 +52,37 @@ export function getDroughtWmsUrl(): string {
  * with "Invalid request type" — so we classify the rendered pixel against the
  * published legend instead.
  */
-export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStatus> {
-  const today = new Date().toISOString().split('T')[0]
-  const unknown: DroughtStatus = {
-    level: 'unknown',
-    label: 'unknown',
-    updatedAt: today,
-    source: 'Copernicus EDO',
+/**
+ * The slice date the service is serving, cached for the session.
+ *
+ * Read from the layer's own time dimension rather than assumed. Cached because
+ * it is one document per session and every card would otherwise refetch it.
+ */
+let sliceCache: { value: string | null } | null = null
+
+export async function getLatestSlice(): Promise<string | null> {
+  if (sliceCache) return sliceCache.value
+  try {
+    const res = await fetch(`${EDO_WMS}&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities`)
+    if (!res.ok) throw new Error(String(res.status))
+    sliceCache = { value: parseLatestSlice(await res.text(), CDI_LAYER) }
+  } catch {
+    // Unknown, not today: a failure here must not manufacture a fresh date.
+    sliceCache = { value: null }
   }
+  return sliceCache.value
+}
+
+/** Test seam — the cache would otherwise leak between cases. */
+export function resetSliceCache(): void {
+  sliceCache = null
+}
+
+export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStatus> {
+  const slice = await getLatestSlice()
+  const { stale, ageDays } = stalenessOf(slice)
+  const base = { updatedAt: slice, stale, ageDays, source: 'Copernicus EDO' } as const
+  const unknown: DroughtStatus = { level: 'unknown', label: 'unknown', ...base }
 
   try {
     const px = await samplePixel(sampleUrl(EDO_WMS, CDI_LAYER, coords.lng, coords.lat))
@@ -66,7 +90,7 @@ export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStat
     if (px.a === 0) return unknown
     const level = nearestColour(px, CDI_PALETTE)
     if (!level || level === 'unknown') return unknown
-    return { level, label: level, updatedAt: today, source: 'Copernicus EDO' }
+    return { level, label: level, ...base }
   } catch {
     return unknown
   }

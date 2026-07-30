@@ -57,9 +57,47 @@ describe('proxyWms', () => {
     expect((await proxyWms({ ...valid, LAYERS: 'ZSP,something_else' })).status).toBe(400)
   })
 
-  it('refuses request types other than GetMap and GetFeatureInfo', async () => {
-    expect((await proxyWms({ ...valid, REQUEST: 'GetCapabilities' })).status).toBe(400)
+  it('refuses request types it does not relay', async () => {
     expect((await proxyWms({ ...valid, REQUEST: 'DescribeLayer' })).status).toBe(400)
+    expect((await proxyWms({ ...valid, REQUEST: 'GetLegendGraphic' })).status).toBe(400)
+  })
+
+  describe('GetCapabilities', () => {
+    const capsQuery = {
+      upstream: 'copernicus-drought',
+      SERVICE: 'WMS',
+      VERSION: '1.3.0',
+      REQUEST: 'GetCapabilities',
+    }
+
+    function xmlFetch(body = '<WMS_Capabilities/>', type = 'text/xml') {
+      return vi.fn(async () =>
+        new Response(body, { status: 200, headers: { 'content-type': type } }),
+      ) as unknown as typeof fetch
+    }
+
+    it('relays capabilities for an upstream that opts in', async () => {
+      const out = await proxyWms(capsQuery, xmlFetch())
+      expect(out.status).toBe(200)
+      expect(String(out.body)).toContain('WMS_Capabilities')
+    })
+
+    // No LAYERS, WIDTH or HEIGHT on a capabilities request; the tile checks
+    // must not reject it.
+    it('does not demand tile parameters', async () => {
+      const out = await proxyWms(capsQuery, xmlFetch())
+      expect(out.status).toBe(200)
+    })
+
+    it('is refused for an upstream that does not opt in', async () => {
+      const out = await proxyWms({ ...capsQuery, upstream: 'rediam-coastal' }, xmlFetch())
+      expect(out.status).toBe(400)
+    })
+
+    it('refuses a non-XML capabilities response', async () => {
+      const out = await proxyWms(capsQuery, xmlFetch('not xml', 'text/html'))
+      expect(out.status).toBe(502)
+    })
   })
 
   describe('GetFeatureInfo', () => {

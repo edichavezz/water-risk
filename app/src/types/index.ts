@@ -36,7 +36,15 @@ export interface FloodZoneResult {
 export interface DroughtStatus {
   level: 'none' | 'watch' | 'warning' | 'alert' | 'partial_recovery' | 'recovery' | 'unknown'
   label: string
-  updatedAt: string
+  /**
+   * The date of the slice actually being served, read from the layer's own time
+   * dimension. Null when that cannot be determined — never today's date, which
+   * would assert a currency the reading may not have.
+   */
+  updatedAt: string | null
+  /** True when the served slice is far older than the publishing cycle. */
+  stale: boolean | null
+  ageDays: number | null
   source: 'Copernicus EDO'
 }
 

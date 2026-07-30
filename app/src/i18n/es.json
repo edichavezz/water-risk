@@ -303,6 +303,11 @@
     "doesNotShow": "No muestra",
     "geography": "Geografía",
     "cadence": "Actualizado",
+    "drought": {
+    "asOf": "Lectura del {{date}}",
+    "dateUnknown": "No se ha podido determinar la fecha de esta lectura",
+    "stale": "Esta lectura tiene {{days}} días. Copernicus publica el indicador cada 10 días, por lo que esta fuente parece haber dejado de actualizarse: considere el nivel como histórico, no actual."
+    },
     "coastal": {
       "classification": "Zonificación",
       "sensitivity": "Sensibilidad DPMT",
