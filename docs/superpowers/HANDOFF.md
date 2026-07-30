@@ -55,7 +55,7 @@ One fix was needed before any work could start: `setPage` and `goToSearch` were 
 | P0 — dismantle the coverage gate | **Done.** Verified in the browser: Marseille returns live drought + bathing water with the Spain-only sources visibly unsupported; Ronda unchanged. |
 | P1 — visual patch + hazard families | **Done.** Rebrand, warm palette, Petrona titles, two-circle mark, hazard field + pills, two-group layers card, family-grouped list with a collapsing empty tail, Live news tab shell. |
 | P2 — fire datasets | **Done.** EFFIS fire danger (point class + overlay), EFFIS burnt-area history (30 km, live), curated prevention plans for 13 regions across ES/FR/IT. Verified in the browser at Ronda: 22 mapped fires, INFOCA plan, danger class. |
-| P3 — live news | **Deferred** (tab shell only, in P1) |
+| P3 — live news | **Deferred**, tab shell only. Research done: `specs/2026-07-30-live-news-research.md`. Last-week + most-recent-first + Europe-only are all easy; a radius is not, and quota is the real constraint. |
 | P4 — water widening + supply graph | **Partly done.** VigiEau restrictions and the Hub'Eau registry tier ship, and supply answers now carry provenance. MITECO's Spain-national reservoir pipeline and the `basin` tier do not. |
 | P5 — About page redo | **Structure done.** Contour band removed, data grouped by hazard family, copy corrected where it had become false. **The voice is still the user's to set.** |
 
