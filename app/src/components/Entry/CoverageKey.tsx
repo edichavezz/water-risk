@@ -8,13 +8,6 @@ export default function CoverageKey() {
         <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: '#7FA38C', opacity: 0.7 }} />
         <span className="text-ink">{t('entry.keyAvailable')}</span>
       </div>
-      {/* The weaker wash, matching `national-coverage-fill` on the map. Its own
-          row rather than a shade of the one above, because "national registers
-          reach here" is a different claim from "we hold local records here". */}
-      <div className="mt-1.5 flex items-center gap-2">
-        <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: '#7FA38C', opacity: 0.28 }} />
-        <span className="text-ink">{t('entry.keyNational')}</span>
-      </div>
       <div className="mt-1.5 flex items-center gap-2">
         <span className="inline-block h-2.5 w-2.5 rounded-sm bg-hairline" />
         <span className="text-ink">{t('entry.keyUnavailable')}</span>

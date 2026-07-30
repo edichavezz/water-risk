@@ -291,9 +291,8 @@
     "buyer": "Estoy pensando en comprar o invertir",
     "submit": "Consultar esta zona",
     "exploreHint": "o haz clic en cualquier punto del mapa",
-    "coverageNote": "Funciona en todo el Mediterráneo. Los países sombreados son aquellos con registros nacionales detrás de las respuestas; en el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
-    "keyAvailable": "Mayor detalle aquí",
-    "keyNational": "Registros nacionales aquí",
+    "coverageNote": "Funciona en todo el Mediterráneo. Los países sombreados son aquellos con registros nacionales detrás de las respuestas, con el mayor detalle en Andalucía; en el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
+    "keyAvailable": "Registros nacionales aquí",
     "keyUnavailable": "Menos registros locales",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
   },

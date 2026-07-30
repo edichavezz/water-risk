@@ -291,9 +291,8 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Works anywhere in the Mediterranean. The shaded countries are the ones with national registers behind the answers; everywhere else the app shows which checks it could not run.",
-    "keyAvailable": "Most detail here",
-    "keyNational": "National registers here",
+    "coverageNote": "Works anywhere in the Mediterranean. The shaded countries are the ones with national registers behind the answers, with the most detail in Andalucía; everywhere else the app shows which checks it could not run.",
+    "keyAvailable": "National records here",
     "keyUnavailable": "Fewer local records",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
   },
