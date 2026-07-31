@@ -219,7 +219,7 @@
     "buyer": "Estoy pensando en comprar o invertir",
     "submit": "Consultar esta zona",
     "exploreHint": "o haz clic en cualquier punto del mapa",
-    "coverageNote": "Hay resultados detallados para Andalucía. Otras regiones se añadirán con el tiempo.",
+    "coverageNote": "Hay resultados detallados para Andalucía. Las zonas inundables y la sequía cubren toda la región; los datos de abastecimiento y de agua de consumo se investigan municipio a municipio, así que en algunos lugares aún faltan.",
     "keyAvailable": "Datos detallados disponibles",
     "keyUnavailable": "Aún no disponible",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
@@ -274,7 +274,7 @@
       }
     },
     "coverageHeading": "Dónde funciona",
-    "coverageBody": "Hay resultados detallados para Andalucía. En el resto de España seguirás viendo las capas de ámbito nacional, como las zonas inundables y el estado de sequía, pero pueden faltar los datos locales de abastecimiento y calidad del agua. Se añadirán más regiones con el tiempo.",
+    "coverageBody": "Hay resultados detallados para Andalucía. En el resto de España seguirás viendo las capas de ámbito nacional, como las zonas inundables y el estado de sequía, pero pueden faltar los datos locales de abastecimiento y calidad del agua. Dentro de Andalucía la cobertura también es desigual, y a propósito: las zonas inundables, la sequía y la ordenación del litoral proceden de servicios de ámbito regional, mientras que los sistemas de abastecimiento (132 de unos 785 municipios) y los registros de agua de consumo (una muestra de 13 municipios) se recopilan a mano y crecen según se investigan. Una ficha vacía significa que aún no hemos documentado ese municipio, no que el agua allí no esté registrada. Se añadirán más regiones con el tiempo.",
     "disclaimerHeading": "No es asesoramiento profesional",
     "disclaimerBody": "Esta es información de contexto, no asesoramiento jurídico, financiero ni pericial. No te bases solo en ella para una compra, una decisión de seguro o una solicitud urbanística. Confirma siempre con la fuente oficial y con un profesional cualificado.",
     "makerHeading": "Quién ha hecho esto, y por qué",
@@ -304,9 +304,9 @@
     "geography": "Geografía",
     "cadence": "Actualizado",
     "drought": {
-    "asOf": "Lectura del {{date}}",
-    "dateUnknown": "No se ha podido determinar la fecha de esta lectura",
-    "stale": "Esta lectura tiene {{days}} días. Copernicus publica el indicador cada 10 días, por lo que esta fuente parece haber dejado de actualizarse: considere el nivel como histórico, no actual."
+      "asOf": "Lectura del {{date}}",
+      "dateUnknown": "No se ha podido determinar la fecha de esta lectura",
+      "stale": "Esta lectura tiene {{days}} días. Copernicus publica el indicador cada 10 días, por lo que esta fuente parece haber dejado de actualizarse: considere el nivel como histórico, no actual."
     },
     "coastal": {
       "classification": "Zonificación",

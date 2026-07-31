@@ -219,7 +219,7 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Detailed results are available for Andalucía. Other regions will be added over time.",
+    "coverageNote": "Detailed results are available for Andalucía. Flood and drought cover the whole region; the supply and drinking-water records are researched municipality by municipality, so some places are still blank.",
     "keyAvailable": "Detailed data available",
     "keyUnavailable": "Not yet available",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
@@ -274,7 +274,7 @@
       }
     },
     "coverageHeading": "Where it works",
-    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get the nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Other regions will be added over time.",
+    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get the nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Within Andalucía the cover is uneven too, and deliberately so: flood zones, drought and the coastal zoning come from region-wide services, while the reservoir supply systems (132 of roughly 785 municipalities) and the drinking-water records (a 13-municipality sample) are compiled by hand and grow as they are researched. A blank card means we have not sourced that municipality yet, not that the water there is unrecorded. Other regions will be added over time.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
     "makerHeading": "Who made this, and why",
@@ -313,7 +313,7 @@
       "sensitivity": "DPMT sensitivity",
       "location": "Location",
       "profile": "Nearest profile",
-      "notAVerdict": "This is the coastal protection zoning in force around this point. It does not confirm whether a specific property lies inside the servidumbre or polic\u00eda strip \u2014 that requires the national deslinde, which is currently unavailable.",
+      "notAVerdict": "This is the coastal protection zoning in force around this point. It does not confirm whether a specific property lies inside the servidumbre or policía strip — that requires the national deslinde, which is currently unavailable.",
       "officialProfile": "Official profile (PDF)"
     },
     "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
@@ -330,8 +330,8 @@
         "headline": "{{name}} · {{percent}}% full",
         "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
         "noSupplyRecord": "No supply-system record for this municipality yet",
-      "avg": "{{years}}-yr avg {{mean}}%",
-      "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
+        "avg": "{{years}}-yr avg {{mean}}%",
+        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",

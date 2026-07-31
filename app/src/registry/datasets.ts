@@ -111,12 +111,19 @@ export const DATASETS: DatasetDef[] = [
     appliesTo: loc => isCoastalProvincia(loc.provincia, loc.displayName),
     // The national deslinde that would answer "is this plot inside the strip"
     // is down, so the card reports the zoning in force around the point
-    // instead. `null` means no coastal zoning reaches here, which is a real
-    // answer; a thrown error stays an error.
+    // instead. A thrown error stays an error.
+    //
+    // A `null` — no zoning within ~3 km — is `not_applicable`, not
+    // `unavailable`. `appliesTo` can only test the province name, which matches
+    // whole inland comarcas: Aracena, Guadix and Órgiva are all tens of
+    // kilometres from the sea and all used to draw a coastal card that then
+    // reported "no data", while `ai.ts` told the model "No usable value". The
+    // query result is the real coastal test, so a miss retires the card
+    // instead — `isApplicableHere` drops the row and `buildEvidence` skips it.
     fetch: async loc => {
       try {
         const z = await getCoastalZoning(loc.coordinates)
-        return z === null ? { status: 'unavailable' } : ok(z)
+        return z === null ? { status: 'not_applicable' } : ok(z)
       } catch (e) { return err(e) }
     },
   },
@@ -124,13 +131,18 @@ export const DATASETS: DatasetDef[] = [
     id: 'groundwater',
     category: 'hazard',
     source: { name: 'IGME' },
-    mapRole: 'primary',
+    // No map layer left to draw: the geometry behind it was fabricated and has
+    // been removed, and MITECO's service that publishes the real units is down.
+    mapRole: 'none',
     aiAllowed: true,
     audienceWeight: { resident_owner: 5, buyer_investor: 3 },
     defaultOrder: 6,
     appliesTo: () => true,
     fetch: async loc => {
-      try { return ok(getGroundwaterStatus(loc.coordinates)) } catch (e) { return err(e) }
+      try {
+        const g = getGroundwaterStatus(loc.coordinates)
+        return g === null ? { status: 'unavailable' } : ok(g)
+      } catch (e) { return err(e) }
     },
   },
   {
@@ -142,10 +154,14 @@ export const DATASETS: DatasetDef[] = [
     audienceWeight: { resident_owner: 7, buyer_investor: 7 },
     defaultOrder: 7,
     appliesTo: loc => isCoastalProvincia(loc.provincia, loc.displayName),
+    // No site within 5 km is the same shape of answer as the coastal zoning
+    // miss above: the province test let inland towns through, and the distance
+    // check is the honest one. Retire the card rather than report "no data"
+    // about beaches to somebody in the Sierra de Huelva.
     fetch: async loc => {
       try {
         const s = await getNearestBathingSite(loc.coordinates)
-        return s === null ? { status: 'unavailable' } : ok(s)
+        return s === null ? { status: 'not_applicable' } : ok(s)
       } catch (e) { return err(e) }
     },
   },
