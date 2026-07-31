@@ -58,11 +58,14 @@ describe('dataset registry', () => {
     expect(resident[0]).toBe('drought')
   })
 
-  it('map roles: four primaries, reservoirs is context, waterQuality and bathingWater are panel-only', () => {
+  it('map roles: three primaries, reservoirs is context, the rest are panel-only', () => {
     expect(DATASETS.filter(d => d.mapRole === 'primary').map(d => d.id).sort())
-      .toEqual(['coastalFlood', 'drought', 'flood', 'groundwater'])
+      .toEqual(['coastalFlood', 'drought', 'flood'])
     expect(getDataset('reservoirs').mapRole).toBe('context')
     expect(getDataset('waterQuality').mapRole).toBe('none')
     expect(getDataset('bathingWater').mapRole).toBe('none')
+    // Not a primary any more: the polygons it painted were fabricated and the
+    // service that publishes the real ones is down.
+    expect(getDataset('groundwater').mapRole).toBe('none')
   })
 })

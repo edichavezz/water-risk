@@ -18,10 +18,32 @@ const COASTAL_PROXY = '/api/wms-proxy?upstream=rediam-coastal'
  */
 
 // The zoning geometries are lines and transects, so a pixel-exact query almost
-// always misses. This box is about 300 m across — wide enough to catch the
-// stretch a point sits on, narrow enough that an inland point finds nothing
-// (verified against Córdoba, 200 km inland, which returns no features).
-const QUERY_DELTA = 0.003
+// always misses. MapServer scales its search tolerance with the query box, so
+// widening the box widens the reach. The tolerance is a server-side constant we
+// cannot read, so this value is tuned empirically against real answers rather
+// than derived from a distance: what follows is what the live service returned,
+// not a radius we measured.
+//
+// NOTE (verified 2026-07-30 against the live REDIAM service): at 0.003 every
+// coastal town probed missed on both layers — Tarifa, Marbella, Lepe, Nerja,
+// Roquetas all got "Search returned no results" from a healthy service, so the
+// card reported no coastal zoning at unambiguously coastal addresses. Widening
+// recovers them one at a time: 0.03 reaches Tarifa (ZSP Tarifa_10, "Tarifa
+// Urbano") and Nerja (both layers); 0.05 additionally reaches Marbella
+// (Marbella_14, "Urbanización Pino Mar") and Roquetas de Mar (Roquetas de
+// Mar_09). Attribution was checked, not just hit/miss: every feature returned
+// at 0.05 carries the MUNICIPIO of the town queried, so the wider box is not
+// picking up a neighbour's transect — which matters because `parseFeatureInfo`
+// takes the first feature and the service does not order by distance.
+//
+// The guard against a false positive is inland towns in coastal provinces:
+// Aracena, Guadix, Órgiva, Ronda, Jerez and Córdoba all return nothing at both
+// 0.03 and 0.05. `coastalZoning.test.ts` pins the box width at both ends.
+//
+// Known limitation: Lepe misses at every width tested. Its geocoded centroid is
+// ~5 km inland of its own coastline (La Antilla), so this is centroid-based
+// querying reaching its limit, not a service failure.
+const QUERY_DELTA = 0.05
 const GRID = 101
 
 function featureInfoUrl(coords: Coordinates, layer: string): string {

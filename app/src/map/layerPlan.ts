@@ -4,7 +4,8 @@ export const DATASET_MAP_LAYERS: Record<DatasetId, string[]> = {
   flood: ['flood-t500', 'flood-t100', 'flood-t10'],
   drought: ['drought-layer'],
   coastalFlood: ['coastal-tramos', 'coastal-zsp'],
-  groundwater: ['groundwater-fill', 'groundwater-line'],
+  // No map layer — the source data was fabricated and has been removed.
+  groundwater: [],
   reservoirs: ['reservoirs-halo', 'reservoirs-circle', 'reservoirs-label', 'reservoirs-name'],
   waterQuality: [],
   bathingWater: [],

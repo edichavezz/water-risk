@@ -8,12 +8,10 @@ import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
 import { getCoastalWmsUrl, COASTAL_MAP_LAYERS } from '../services/coastalFlood'
 import { allReservoirCodEsts, getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
-import groundwaterUnits from '../data/groundwater-units.json'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
 import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
 
-const WARNING = '#B87535'
 // Markers appear at the entry view's zoom (6.3) so toggling the reservoirs
 // layer there visibly does something; the per-marker text only joins once
 // there is room for it, otherwise 72 labels collide at national scale.
@@ -53,12 +51,10 @@ export function ensureDataLayers(map: maplibregl.Map): void {
     map.addLayer({ id, type: 'raster', source: `${id}-src`, paint: { 'raster-opacity': 0.40 }, layout: { visibility: 'none' } })
   }
 
-  // ── Groundwater overexploited units (vector) ───────────────────────────
-  if (!map.getSource('groundwater-src')) {
-    map.addSource('groundwater-src', { type: 'geojson', data: groundwaterUnits as GeoJSON.FeatureCollection })
-    map.addLayer({ id: 'groundwater-fill', type: 'fill', source: 'groundwater-src', paint: { 'fill-color': WARNING, 'fill-opacity': 0.25 }, layout: { visibility: 'none' } })
-    map.addLayer({ id: 'groundwater-line', type: 'line', source: 'groundwater-src', paint: { 'line-color': WARNING, 'line-width': 1.5 }, layout: { visibility: 'none' } })
-  }
+  // ── Groundwater overexploited units ────────────────────────────────────
+  // No layer: the geometry this drew was four hand-drawn rectangles standing
+  // in for IGME units, three of them outside Andalucía. Painting them made the
+  // map assert boundaries that do not exist. See services/groundwater.ts.
 
   // ── Reservoir points (context) — clustered by zoom ─────────────────────
   if (!map.getSource('reservoirs-src')) {

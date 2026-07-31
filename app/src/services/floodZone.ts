@@ -59,7 +59,7 @@ export async function getFloodZoneStatus(coords: Coordinates): Promise<FloodZone
     { layer: SNCZI_LAYERS.T500, period: '500' as const },
   ]
 
-  let sampled = false
+  let answered = 0
   let lastError: unknown
 
   for (const { layer, period } of layers) {
@@ -67,17 +67,21 @@ export async function getFloodZoneStatus(coords: Coordinates): Promise<FloodZone
       if (await pointIsPainted(getSNCZISampleUrl(layer, coords))) {
         return { inZone: true, returnPeriod: period, source: 'SNCZI' }
       }
-      sampled = true
+      answered++
     } catch (e) {
-      // One failed layer is survivable — the others still answer.
       lastError = e
     }
   }
 
-  // Nothing answered. Reporting "not in a flood zone" here would repeat the
-  // failure this endpoint move fixed: a dead service reading as safety. Throw
-  // so the dataset surfaces as an error instead.
-  if (!sampled) throw lastError ?? new Error('SNCZI flood zones could not be sampled')
+  // "Not in a flood zone" is only sayable when every period was actually
+  // checked. A partial outage is the dangerous case: T10 answering "not
+  // painted" while T100 and T500 error would otherwise return inZone: false —
+  // a clean all-clear derived from one third of the evidence, and the widest
+  // zones are exactly the ones that went unread. Same failure as a fully dead
+  // service reading as safety, so it surfaces as an error too.
+  if (answered < layers.length) {
+    throw lastError ?? new Error('SNCZI flood zones could not be sampled')
+  }
 
   return { inZone: false, source: 'SNCZI' }
 }

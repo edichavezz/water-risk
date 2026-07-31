@@ -3,7 +3,7 @@ import type { DatasetId, DatasetResult, InterpretationScope } from '../types/wor
 import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
-  CoastalZoning, GroundwaterResult, BathingWaterResult,
+  CoastalZoning, BathingWaterResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -22,7 +22,14 @@ function summarize(id: DatasetId, r: DatasetResult): string {
     }
     case 'drought': {
       const d = r.data as DroughtStatus
-      return `Combined Drought Indicator level: ${d.level} (source Copernicus EDO, ${d.updatedAt}).`
+      const asOf = `source Copernicus EDO, ${d.updatedAt}`
+      // The indicator paints only Watch, Warning and Alert, so `none` is a
+      // read of an unpainted pixel on a layer confirmed to be rendering. Said
+      // plainly, or the model reads the bare word "none" as missing data and
+      // hedges about an answer we actually have.
+      return d.level === 'none'
+        ? `Combined Drought Indicator: no drought class in force here — below the Watch threshold (${asOf}).`
+        : `Combined Drought Indicator level: ${d.level} (${asOf}).`
     }
     case 'reservoirs': {
       const rs = r.data as Reservoir[]
@@ -64,10 +71,13 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       )
     }
     case 'groundwater': {
-      const d = r.data as GroundwaterResult
-      return d.inOverexploitedUnit
-        ? `Inside overexploited hydrogeological unit ${d.unitName ?? ''} (source IGME).`
-        : 'Not inside a declared overexploited hydrogeological unit (source IGME).'
+      // Unreachable: the source data was fabricated and removed, so this
+      // dataset never reports `available` (see `groundwater.ts`). The branch
+      // it replaced said "Not inside a declared overexploited hydrogeological
+      // unit (source IGME)" for every point in Spain — a sourced-looking
+      // negative derived from four hand-drawn rectangles. If a real source is
+      // ever wired up, write this line from that source, not from this one.
+      return 'No usable value (no groundwater source is connected).'
     }
     case 'bathingWater': {
       const d = r.data as BathingWaterResult
