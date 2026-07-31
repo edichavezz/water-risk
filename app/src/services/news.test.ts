@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import {
   newsQueryUrl, toponymsFor, parseSeenDate, shapeArticles,
-  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable,
+  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle,
 } from './news'
 import { classifyTitle } from '../data/newsKeywords'
 import type { PlaceContext } from '../types/place'
@@ -97,6 +97,20 @@ describe('parseSeenDate', () => {
   it('returns null rather than a wrong date', () => {
     expect(parseSeenDate(undefined)).toBeNull()
     expect(parseSeenDate('sometime last week')).toBeNull()
+  })
+})
+
+describe('tidyTitle', () => {
+  it('repairs the spacing GDELT’s normalisation leaves behind', () => {
+    expect(tidyTitle('Cest de la folie  : des voitures abîmées , et une ruée'))
+      .toBe('Cest de la folie : des voitures abîmées, et une ruée')
+  })
+
+  // GDELT also drops apostrophes — `C'est` arrives as `Cest`. Putting them
+  // back means guessing, and a headline is the one thing here quoted verbatim
+  // from someone else.
+  it('does not invent the apostrophes GDELT dropped', () => {
+    expect(tidyTitle('Cest de la folie')).toBe('Cest de la folie')
   })
 })
 

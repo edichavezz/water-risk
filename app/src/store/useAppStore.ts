@@ -182,13 +182,10 @@ export const useAppStore = create<AppStore>((set, get) => ({
   // Depth is left alone: news is a mode, and coming back to Public data should
   // land on whatever the reader had open.
   //
-  // The fetch hangs off opening the tab rather than off the search. That is a
-  // quota requirement, not an optimisation: firing a GDELT call on every place
-  // change would trip the rate limit within seconds of ordinary browsing.
-  openNewsMode: () => {
-    set({ panelMode: 'news' })
-    void get().loadNews()
-  },
+  // No fetch here: `NewsFeed` asks for it when it mounts. Firing from this
+  // action would miss the reader who arrives on a shared `?mode=news` link,
+  // where the mode is restored from the route and this never runs.
+  openNewsMode: () => set({ panelMode: 'news' }),
 
   loadNews: async (force = false) => {
     const { location, news } = get()

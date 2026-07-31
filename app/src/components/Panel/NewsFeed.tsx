@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../store/useAppStore'
 import type { NewsItem } from '../../types/news'
@@ -64,6 +65,14 @@ export default function NewsFeed() {
   const { t } = useTranslation()
   const news = useAppStore(s => s.news)
   const loadNews = useAppStore(s => s.loadNews)
+  const location = useAppStore(s => s.location)
+
+  // Mounting *is* the "reader opened the news tab" signal, and it is the only
+  // one that also covers arriving on a shared `?mode=news` link. Hanging the
+  // fetch off the search instead would spend a GDELT call on every place
+  // change, which trips the rate limit within seconds of ordinary browsing.
+  // `loadNews` no-ops on a cached or in-flight place, so re-mounting is free.
+  useEffect(() => { void loadNews() }, [loadNews, location])
 
   if (news.status === 'idle' || news.status === 'loading') {
     return <p className="py-6 text-sm text-muted">{t('news.loading')}</p>

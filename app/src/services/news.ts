@@ -108,6 +108,23 @@ export function parseSeenDate(raw: string | undefined): number | null {
   return Number.isNaN(iso) ? null : iso
 }
 
+/**
+ * GDELT normalises headlines before storing them, which leaves punctuation
+ * floating: `Sud - Ouest`, `folie  : à Marseille`, `voitures abîmées , et`.
+ *
+ * Only the spacing is repaired. The same normalisation also drops apostrophes
+ * outright — `C'est` arrives as `Cest`, `l'odeur` as `lodeur` — and those are
+ * deliberately left alone: restoring them means guessing where an apostrophe
+ * belonged, and a headline is the one thing here quoted verbatim from someone
+ * else. French spacing before `:` `;` `?` `!` is correct and stays.
+ */
+export function tidyTitle(title: string): string {
+  return title
+    .replace(/\s+([,.])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 export function shapeArticles(raw: RawArticle[], place: PlaceContext): NewsItem[] {
   const municipality = place.municipality ? fold(place.municipality) : null
   const items: NewsItem[] = []
@@ -116,7 +133,7 @@ export function shapeArticles(raw: RawArticle[], place: PlaceContext): NewsItem[
     const seenAt = parseSeenDate(a.seendate)
     if (!a.url || !a.title || seenAt === null) continue
     items.push({
-      title: a.title,
+      title: tidyTitle(a.title),
       url: a.url,
       domain: a.domain ?? '',
       seenAt,
