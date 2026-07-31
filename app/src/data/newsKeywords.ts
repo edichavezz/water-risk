@@ -18,25 +18,25 @@ export interface KeywordSet {
 }
 
 const EN: KeywordSet = {
-  fire: ['wildfire', '"forest fire"'],
+  fire: ['wildfire', '"forest fire"', 'firefighters'],
   water: ['drought', 'reservoir', 'flood'],
 }
 
 const BY_LANGUAGE: Record<string, KeywordSet> = {
   es: {
-    fire: ['incendio', '"incendio forestal"', 'fuego'],
+    fire: ['incendio', '"incendio forestal"', 'fuego', 'bomberos'],
     water: ['sequía', 'embalse', 'pantano', 'inundación', '"restricciones de agua"'],
   },
   fr: {
-    fire: ['incendie', '"feu de forêt"'],
+    fire: ['incendie', '"feu de forêt"', 'pompiers'],
     water: ['sécheresse', 'barrage', 'inondation', '"restrictions d\'eau"'],
   },
   it: {
-    fire: ['incendio', '"incendio boschivo"', 'rogo'],
+    fire: ['incendio', '"incendio boschivo"', 'rogo', 'pompieri'],
     water: ['siccità', 'invaso', 'diga', 'alluvione'],
   },
   pt: {
-    fire: ['incêndio', '"incêndio florestal"'],
+    fire: ['incêndio', '"incêndio florestal"', 'bombeiros'],
     water: ['seca', 'albufeira', 'barragem', 'cheia'],
   },
   el: {

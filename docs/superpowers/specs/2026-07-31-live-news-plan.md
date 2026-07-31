@@ -117,6 +117,14 @@ No routing work: `?mode=news` already parses and syncs.
 - The throttle body — plain text in, status `unreachable` out, and specifically **not** an empty result set.
 - Copy guardrail, in the style of `supply.test.ts`: no `news.*` string may contain `/\d+\s*km/` or `/near(by)?/i`. The radius must not creep back in through wording.
 
+## Built — what changed against the plan
+
+Implemented 2026-07-31 and verified live in the browser against Marseille and Ronda. Three things the plan did not anticipate:
+
+- **`seendate` is confirmed** as the compact `YYYYMMDDTHHMMSSZ` form. No longer an assumption — the live Marseille render dated items "3 days ago" / "today" correctly.
+- **A hazard keyword in the title is required, not just the toponym.** The plan expected untagged items to render without a pill. In practice Ronda's feed filled with Málaga's municipal budget, the 2026 feria and a Tom Jones listings agenda — each naming the place and matching a hazard word deep in the body. Both tests are now required, so every rendered item carries a pill and the feed is emptier and true.
+- **Titles need a spacing repair.** GDELT normalises headlines, leaving `Sud - Ouest` and `folie  : à`. Spacing is fixed; the apostrophes it also strips (`C'est` → `Cest`) are left alone rather than guessed at.
+
 ## First implementation step
 
 Capture one live `ArtList` response (patiently, respecting the 5-second spacing) and commit it as the test fixture. Everything downstream is written against that file rather than against an assumed shape.

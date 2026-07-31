@@ -150,22 +150,26 @@ export function shapeArticles(raw: RawArticle[], place: PlaceContext): NewsItem[
 }
 
 /**
- * Keep only the headlines that actually name the place.
+ * Keep only headlines that name the place *and* say what they are about.
  *
- * GDELT matches the article *body*, and the difference is not academic: a
- * search for Ronda returned a piece on the 2027 solar eclipse, a Cerro del
- * Villar dig and firefighters from Córdoba working a blaze in Ávila, 500 km
- * away. Every one contained the word somewhere and a hazard keyword somewhere
- * else.
+ * GDELT matches the article *body*, and both halves of that failed visibly in
+ * testing. Ronda's feed arrived carrying the 2027 solar eclipse, a Cerro del
+ * Villar dig and Cordoban firefighters working a blaze in Ávila 500 km away —
+ * each held the word "Ronda" somewhere and a hazard word somewhere else.
+ * Filtering to titles that name the place fixed the geography and left the
+ * topic: Málaga's municipal budget, the 2026 feria, and a Tom Jones listings
+ * agenda, all matching a hazard keyword four paragraphs down.
  *
- * Ranking those below the local items is not enough — they still sit under the
- * place's name, beside hazard data, borrowing its authority. The reader asked
- * what is happening *here*, and a title that never names the place is not an
- * answer to that question. The honest cost is a feed that is often empty, and
- * `news.empty` says so plainly.
+ * Ranking that below the real stories is not enough — it still sits under the
+ * place's name, beside hazard data, borrowing its authority. So both tests are
+ * required, and the honest cost is a feed that is often empty. `news.empty`
+ * says so plainly rather than filling the space.
+ *
+ * The side effect is worth naming: every rendered item now carries a Fire or
+ * Water pill, because an item with no hazard in its title no longer survives.
  */
-export function namesThePlace(items: NewsItem[]): NewsItem[] {
-  return items.filter(i => i.namesMunicipality || i.namesProvince)
+export function relevantHere(items: NewsItem[]): NewsItem[] {
+  return items.filter(i => (i.namesMunicipality || i.namesProvince) && i.hazard !== null)
 }
 
 /**
@@ -233,14 +237,14 @@ async function fetchRing(place: PlaceContext, ring: NewsRing): Promise<NewsItem[
   } catch {
     throw new NewsUnreachable('unparseable')
   }
-  return namesThePlace(shapeArticles(parsed.articles ?? [], place))
+  return relevantHere(shapeArticles(parsed.articles ?? [], place))
 }
 
 /**
  * One request, widened at most once.
  *
  * The second call happens when the tight ring kept nothing — measured *after*
- * `namesThePlace`, not before, since a ring that returns five body-only
+ * `relevantHere`, not before, since a ring that returns five body-only
  * matches has found nothing local and should still widen. If that second call
  * is itself throttled the result is `unreachable`, not "no coverage", because
  * we never learned the answer.

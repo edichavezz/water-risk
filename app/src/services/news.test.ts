@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import {
   newsQueryUrl, toponymsFor, parseSeenDate, shapeArticles,
-  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle, namesThePlace,
+  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle, relevantHere,
 } from './news'
 import { classifyTitle } from '../data/newsKeywords'
 import type { PlaceContext } from '../types/place'
@@ -148,7 +148,7 @@ describe('shapeArticles', () => {
   })
 })
 
-describe('namesThePlace', () => {
+describe('relevantHere', () => {
   // The bug this exists for, found by looking at the screen: a search for
   // Ronda returned the 2027 solar eclipse, a Cerro del Villar dig and Córdoba
   // firefighters working a blaze in Ávila. All matched in the article body.
@@ -161,8 +161,26 @@ describe('namesThePlace', () => {
       ],
       ronda,
     )
-    expect(namesThePlace(items).map(i => i.title)).toEqual([
+    expect(relevantHere(items).map(i => i.title)).toEqual([
       'Incendio forestal en la Serranía de Ronda',
+    ])
+  })
+
+  // The second half of the same bug: filtering to titles that named the place
+  // fixed the geography and left the topic — Málaga's municipal budget, the
+  // 2026 feria and a Tom Jones listings agenda all named Málaga and matched a
+  // hazard keyword four paragraphs down.
+  it('drops headlines that name the place but are not about either hazard', () => {
+    const items = shapeArticles(
+      [
+        { url: 'https://a.es/1', title: 'Agenda de ocio : Planes en Málaga, de Tom Jones a Hombres G', seendate: '20260731T080000Z' },
+        { url: 'https://a.es/2', title: 'El Pleno de Málaga aprueba la modificación del Presupuesto', seendate: '20260731T080000Z' },
+        { url: 'https://a.es/3', title: 'Two latest Malaga province wildfires extinguished', seendate: '20260731T080000Z' },
+      ],
+      ronda,
+    )
+    expect(relevantHere(items).map(i => i.title)).toEqual([
+      'Two latest Malaga province wildfires extinguished',
     ])
   })
 
@@ -171,7 +189,7 @@ describe('namesThePlace', () => {
       [{ url: 'https://a.es/1', title: 'Sequía histórica en Málaga', seendate: '20260730T080000Z' }],
       ronda,
     )
-    expect(namesThePlace(items)).toHaveLength(1)
+    expect(relevantHere(items)).toHaveLength(1)
     expect(items[0].namesMunicipality).toBe(false)
     expect(items[0].namesProvince).toBe(true)
   })
