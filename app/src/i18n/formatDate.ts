@@ -13,3 +13,16 @@ export function formatLongDate(iso: string, lang = i18n.language): string {
     day: 'numeric', month: 'long', year: 'numeric',
   })
 }
+
+/**
+ * "2 days ago" for a news timestamp, localised by the browser.
+ *
+ * News is the one place in the app where relative time is the clearer form:
+ * the reader is judging freshness, not recording a reading date. Rounded down
+ * to whole days, so a headline is never described as newer than it is.
+ */
+export function relativeDay(epochMs: number, lang = i18n.language, now = Date.now()): string {
+  const days = Math.floor((now - epochMs) / 86_400_000)
+  const rtf = new Intl.RelativeTimeFormat(LOCALES[lang] ?? lang, { numeric: 'auto' })
+  return rtf.format(-days, 'day')
+}

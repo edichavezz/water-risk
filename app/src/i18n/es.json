@@ -496,9 +496,15 @@
     "detailRegionLabel": "Más detalle aquí"
   },
   "news": {
-    "pendingTitle": "Todavía sin conectar",
-    "pendingBody": "Esta pestaña mostrará titulares recientes que mencionen esta zona, etiquetados según si hablan de agua o de incendios.",
-    "disclaimer": "Cuando esté activa, los titulares se recogerán automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados."
+    "loading": "Buscando noticias recientes…",
+    "windowWeek": "Titulares de la última semana que mencionan esta zona.",
+    "windowMonth": "Nada en la última semana: se muestra el último mes.",
+    "ringWidened": "Ninguna noticia nombraba el municipio, así que esta es la zona más amplia.",
+    "empty": "No se han encontrado noticias de esta zona en el último mes. Eso no significa que no haya pasado nada: los municipios pequeños apenas aparecen en las fuentes que podemos consultar.",
+    "unreachableTitle": "No se ha podido acceder a la fuente de noticias",
+    "unreachableBody": "El servicio de noticias limita las peticiones y ha rechazado la nuestra. Esto no dice nada sobre la zona: inténtalo de nuevo en un momento.",
+    "disclaimer": "Los titulares se recogen automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados.",
+    "sourceNote": "Fuente: GDELT. Estas noticias mencionan este lugar por su nombre: la búsqueda es por nombre, no por distancia."
   },
   "supply": {
     "curated": "Abastecido por {{system}}. Estos embalses se han investigado a mano a partir de las publicaciones del propio operador.",

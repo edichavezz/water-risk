@@ -496,9 +496,15 @@
     "detailRegionLabel": "More detail here"
   },
   "news": {
-    "pendingTitle": "Not connected yet",
-    "pendingBody": "This tab will show recent headlines mentioning this area, tagged by whether they are about water or fire.",
-    "disclaimer": "When it is live, headlines will be pulled automatically from public news sources — matched by place name, not verified."
+    "loading": "Looking for recent coverage…",
+    "windowWeek": "Headlines from the last week that mention this area.",
+    "windowMonth": "Nothing in the last week — showing the last month.",
+    "ringWidened": "No coverage named the municipality, so this is the wider area.",
+    "empty": "No coverage found for this area in the last month. That is not the same as nothing having happened — small towns are thinly covered by the news sources we can search.",
+    "unreachableTitle": "Couldn’t reach the news source",
+    "unreachableBody": "The news service is rate-limited and turned us away. This says nothing about the area — try again in a moment.",
+    "disclaimer": "Headlines are pulled automatically from public news sources — matched by place name, not verified.",
+    "sourceNote": "Source: GDELT. These articles mention this place by name — the search is by name, not by distance."
   },
   "supply": {
     "curated": "Supplied by {{system}}. These reservoirs were researched by hand from the operator’s own publications.",

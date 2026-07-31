@@ -7,6 +7,8 @@ import type {
 } from '../types/workspace'
 import { coverageProfile, type CoverageProfile } from '../services/coverage'
 import { getDataset } from '../registry/datasets'
+import type { NewsAnswer, NewsState } from '../types/news'
+import { getNewsForLocation } from '../services/news'
 
 const MAX_CONTEXT_LAYERS = 2
 
@@ -34,6 +36,7 @@ interface AppStore {
   contextLayers: DatasetId[]
   results: Partial<Record<DatasetId, DatasetResult>>
   interpretation: InterpretationState
+  news: NewsState
   /* Bumped when something asks the entry field for focus (the About CTA).
      A counter rather than a boolean, so repeat requests still fire. */
   searchFocusNonce: number
@@ -50,12 +53,27 @@ interface AppStore {
   openDataMode: () => void
   openAiMode: () => void
   openNewsMode: () => void
+  loadNews: (force?: boolean) => Promise<void>
   setPrimaryLayer: (id: DatasetId | null) => void
   toggleContextLayer: (id: DatasetId) => void
   setInterpretation: (partial: Partial<InterpretationState>) => void
 }
 
 const idleInterpretation: InterpretationState = { status: 'idle', scope: null }
+
+/**
+ * Answers already fetched this session, keyed by place.
+ *
+ * Outside the store on purpose: it must survive `beginSearch` clearing the
+ * state, so that going back to a place already looked at costs no request.
+ * GDELT allows one every five seconds and throttles well inside that in
+ * practice, so a reader flipping between the three tabs must never spend a
+ * call they have already spent.
+ */
+const newsCache = new Map<string, NewsAnswer>()
+
+const newsKey = (place: PlaceContext) =>
+  `${place.countryCode ?? ''}|${place.municipality ?? place.displayName}`
 
 export const useAppStore = create<AppStore>((set, get) => ({
   language: 'en',
@@ -72,6 +90,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   contextLayers: ['reservoirs'],
   results: {},
   interpretation: idleInterpretation,
+  news: { status: 'idle' },
   searchFocusNonce: 0,
 
   setLanguage: language =>
@@ -120,6 +139,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       selectedDataset: null,
       results: {},
       interpretation: idleInterpretation,
+      news: { status: 'idle' },
     }),
 
   goHome: () =>
@@ -134,6 +154,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       primaryLayer: null,
       results: {},
       interpretation: idleInterpretation,
+      news: { status: 'idle' },
     }),
 
   setResult: (id, result) =>
@@ -160,7 +181,45 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   // Depth is left alone: news is a mode, and coming back to Public data should
   // land on whatever the reader had open.
-  openNewsMode: () => set({ panelMode: 'news' }),
+  //
+  // The fetch hangs off opening the tab rather than off the search. That is a
+  // quota requirement, not an optimisation: firing a GDELT call on every place
+  // change would trip the rate limit within seconds of ordinary browsing.
+  openNewsMode: () => {
+    set({ panelMode: 'news' })
+    void get().loadNews()
+  },
+
+  loadNews: async (force = false) => {
+    const { location, news } = get()
+    if (!location) return
+    if (news.status === 'loading') return
+    if (!force && news.status === 'ready') return
+
+    const key = newsKey(location)
+    const cached = !force && newsCache.get(key)
+    if (cached) {
+      set({ news: { status: 'ready', answer: cached } })
+      return
+    }
+
+    set({ news: { status: 'loading' } })
+    try {
+      const answer = await getNewsForLocation(location)
+      newsCache.set(key, answer)
+      // The reader may have moved on while the request was in flight; writing
+      // a stale place's headlines under a new one would be a real error.
+      if (get().location && newsKey(get().location!) === key) {
+        set({ news: { status: 'ready', answer } })
+      }
+    } catch {
+      // Throttled, offline, or unparseable — all the same to the reader, and
+      // all of them mean "we don't know", never "there is no news".
+      if (get().location && newsKey(get().location!) === key) {
+        set({ news: { status: 'unreachable' } })
+      }
+    }
+  },
 
   setPrimaryLayer: id => {
     if (id !== null && getDataset(id).mapRole !== 'primary') return
