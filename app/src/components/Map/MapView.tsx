@@ -134,9 +134,18 @@ export default function MapView() {
 
   // ── Coverage shading is entry-only ───────────────────────────────────────
   // It is explained by CoverageKey, which App only renders on the entry view.
+  //
+  // No isStyleLoaded() guard, unlike the effect above: it goes false whenever a
+  // source is fetching, and a search starts the WMS fetches at the same moment
+  // it flips `view` — so the guard reads false exactly when this effect matters.
+  // A missed highlight is superseded by the next result; a missed coverage
+  // toggle is permanent, and leaves an unlabelled wash over two countries.
+  // setLayoutProperty is safe while the style is loading, and setCoverageVisible
+  // no-ops until the layers exist — at which point the load handler above has
+  // already applied visibility from live store state.
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) return
+    if (!map) return
     setCoverageVisible(map, view === 'entry')
   }, [view])
 
