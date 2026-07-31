@@ -502,7 +502,7 @@
     "windowMonth": "Nothing in the last week — showing the last month.",
     "empty": "No coverage found for this area in the last month. That is not the same as nothing having happened — small towns are thinly covered by the news sources we can search.",
     "unreachableTitle": "Couldn’t reach the news source",
-    "unreachableBody": "The news service is rate-limited and turned us away. This says nothing about the area — try again in a moment.",
+    "unreachableBody": "We couldn’t reach the news service just now — it may be busy, or the connection may have dropped. This says nothing about the area — try again in a moment.",
     "disclaimer": "Headlines are pulled automatically from public news sources — matched by place name, not verified.",
     "sourceNote": "Source: GDELT. These articles mention this place by name — the search is by name, not by distance."
   },

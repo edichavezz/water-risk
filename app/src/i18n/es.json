@@ -502,7 +502,7 @@
     "windowMonth": "Nada en la última semana: se muestra el último mes.",
     "empty": "No se han encontrado noticias de esta zona en el último mes. Eso no significa que no haya pasado nada: los municipios pequeños apenas aparecen en las fuentes que podemos consultar.",
     "unreachableTitle": "No se ha podido acceder a la fuente de noticias",
-    "unreachableBody": "El servicio de noticias limita las peticiones y ha rechazado la nuestra. Esto no dice nada sobre la zona: inténtalo de nuevo en un momento.",
+    "unreachableBody": "No hemos podido conectar con el servicio de noticias: puede estar saturado o puede haberse cortado la conexión. Esto no dice nada sobre la zona: inténtalo de nuevo en un momento.",
     "disclaimer": "Los titulares se recogen automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados.",
     "sourceNote": "Fuente: GDELT. Estas noticias mencionan este lugar por su nombre: la búsqueda es por nombre, no por distancia."
   },

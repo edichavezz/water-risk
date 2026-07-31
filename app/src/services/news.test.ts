@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import {
   newsQueryUrl, toponymsFor, parseSeenDate, shapeArticles,
   rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle, relevantHere,
+  reserveNewsSlot, resetNewsRateGate,
 } from './news'
 import { classifyTitle } from '../data/newsKeywords'
 import type { PlaceContext } from '../types/place'
@@ -320,6 +321,44 @@ describe('getNewsForLocation', () => {
 })
 
 /**
+ * The rate gate.
+ *
+ * Written after a live incident rather than in anticipation of one: an hour of
+ * development testing put a residential IP into GDELT's penalty box, and the
+ * block outlasted the bursts by a long way. A reader panning between places
+ * with the news tab open generates the same shape of traffic, so the spacing
+ * has to hold across callers, not just within one.
+ */
+describe('reserveNewsSlot', () => {
+  beforeEach(resetNewsRateGate)
+
+  it('lets the first request go immediately', () => {
+    expect(reserveNewsSlot(1_000)).toBe(0)
+  })
+
+  it('makes a second request at the same instant wait out the interval', () => {
+    reserveNewsSlot(1_000)
+    expect(reserveNewsSlot(1_000)).toBe(6_000)
+  })
+
+  it('queues a burst rather than collapsing it', () => {
+    // Five places panned through in one second — the shape that earns a block.
+    const waits = [0, 200, 400, 600, 800].map(offset => reserveNewsSlot(1_000 + offset))
+    expect(waits).toEqual([0, 5_800, 11_600, 17_400, 23_200])
+    // Every send lands at least the interval after the one before it.
+    const sends = waits.map((w, i) => 1_000 + i * 200 + w)
+    for (let i = 1; i < sends.length; i++) {
+      expect(sends[i] - sends[i - 1]).toBeGreaterThanOrEqual(6_000)
+    }
+  })
+
+  it('charges nothing to a reader who waited', () => {
+    reserveNewsSlot(1_000)
+    expect(reserveNewsSlot(60_000)).toBe(0)
+  })
+})
+
+/**
  * The radius guardrail.
  *
  * The design handoff promised "news within 20 km" and no free source can
@@ -344,5 +383,20 @@ describe('news copy never claims a radius', () => {
   it('tells the reader an empty result is not an all-clear', () => {
     expect(en.news.empty).toMatch(/not the same as/i)
     expect(en.news.unreachableBody).toMatch(/says nothing about/i)
+  })
+
+  /**
+   * A 429 from GDELT carries no CORS header, so the browser reports it as a
+   * plain network error — identical to being offline, or to GDELT being down.
+   * The copy once said "the news service is rate-limited and turned us away",
+   * which asserts a fact about a third party we cannot actually observe.
+   */
+  it('does not claim to know why the source was unreachable', () => {
+    const FORBIDDEN = [/rate.?limit/i, /throttl/i, /turned us away/i, /limita las peticiones/i, /ha rechazado/i]
+    for (const [lang, body] of Object.entries({ en: en.news.unreachableBody, es: es.news.unreachableBody })) {
+      for (const pattern of FORBIDDEN) {
+        expect(body, `${lang} must not diagnose the failure`).not.toMatch(pattern)
+      }
+    }
   })
 })
