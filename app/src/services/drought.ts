@@ -1,5 +1,5 @@
 import type { Coordinates, DroughtStatus } from '../types'
-import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
+import { samplePixel, sampleUrl, nearestColour, anyPixelPainted } from './wmsSample'
 import { parseLatestSlice, stalenessOf, findServedSlice } from './droughtSlice'
 
 // Copernicus EDO/GDO drought products, relayed through this app's WMS proxy.
@@ -26,20 +26,63 @@ const EDO_WMS = '/api/wms-proxy?upstream=copernicus-drought'
 const CDI_LAYER = 'cdiad'
 
 /**
- * The CDI palette, read from the layer's own GetLegendGraphic. It is the
- * Okabe-Ito colourblind-safe set, so the classes are far apart in RGB and a
- * nearest-colour match is unambiguous.
+ * The CDI palette, read from the layer's own GetLegendGraphic.
+ *
+ * NOTE (verified 2026-07): the legend for `cdiad` lists exactly three swatches
+ * — Watch, Warning, Alert. It carries no "normal", no recovery classes and no
+ * "no data" grey, and none of those colours appear anywhere in the raster: a
+ * 256 px tile over the whole of Spain, and another over central Europe, decode
+ * to these three colours plus fully transparent and nothing else.
+ *
+ * So the layer paints drought and leaves everything else unpainted, and an
+ * unpainted land pixel means "no drought class in force" rather than "no data".
+ * `getDroughtStatus` depends on that, which is why the palette must not list
+ * classes the service never renders — a stray entry here would let a
+ * nearest-colour match invent a class that cannot occur.
+ *
+ * It is the Okabe-Ito colourblind-safe set, so the three are far apart in RGB
+ * and the match is unambiguous.
  */
 const CDI_PALETTE: { rgb: [number, number, number]; value: DroughtStatus['level'] }[] = [
-  { rgb: [255, 255, 255], value: 'none' },              // Normal, no drought
-  { rgb: [240, 228, 66], value: 'watch' },              // Watch
-  { rgb: [230, 159, 0], value: 'warning' },             // Warning
-  { rgb: [220, 5, 12], value: 'alert' },                // Alert
-  { rgb: [0, 114, 178], value: 'recovery' },            // Full recovery
-  { rgb: [204, 121, 167], value: 'partial_recovery' },  // Temporary soil moisture recovery
-  { rgb: [0, 158, 115], value: 'partial_recovery' },    // Temporary fAPAR recovery
-  { rgb: [200, 200, 200], value: 'unknown' },           // No data
+  { rgb: [240, 228, 66], value: 'watch' },
+  { rgb: [230, 159, 0], value: 'warning' },
+  { rgb: [220, 5, 12], value: 'alert' },
 ]
+
+/**
+ * A wide tile over Iberia, used once per session to prove the layer is
+ * actually rendering before an unpainted point is read as "no drought".
+ *
+ * Without this, any blank response — a proxy fault that still returns a valid
+ * PNG, a renamed layer, a TIME slice that draws nothing — would become a
+ * confident "conditions are normal", which is the dead-service-reads-as-safety
+ * failure this codebase already fixed for the flood layers. At this extent the
+ * CDI has never been uniformly clear, so "some pixel is painted" is a fair
+ * liveness test; being wrong about it costs a reading of `unknown`, which is
+ * the honest fallback anyway.
+ */
+const SENTINEL_BBOX = '-10,36,4,44'
+
+let sentinelCache: Promise<boolean> | null = null
+
+async function layerIsRendering(): Promise<boolean> {
+  if (!sentinelCache) {
+    sentinelCache = (async () => {
+      try {
+        const slice = await getLatestSlice()
+        const url =
+          `${EDO_WMS}&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
+          `&LAYERS=${CDI_LAYER}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
+          `&SRS=EPSG:4326&WIDTH=64&HEIGHT=64&BBOX=${SENTINEL_BBOX}` +
+          (slice ? `&TIME=${encodeURIComponent(slice)}` : '')
+        return await anyPixelPainted(url)
+      } catch {
+        return false
+      }
+    })()
+  }
+  return sentinelCache
+}
 
 /**
  * Tile URL for the map layer. TIME is left off deliberately: the layer is added
@@ -115,6 +158,7 @@ export async function getLatestSlice(): Promise<string | null> {
 /** Test seam — the cache would otherwise leak between cases. */
 export function resetSliceCache(): void {
   sliceCache = null
+  sentinelCache = null
 }
 
 export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStatus> {
@@ -129,10 +173,19 @@ export async function getDroughtStatus(coords: Coordinates): Promise<DroughtStat
     // service chose between the two calls.
     const url = sampleUrl(EDO_WMS, CDI_LAYER, coords.lng, coords.lat)
     const px = await samplePixel(slice ? `${url}&TIME=${encodeURIComponent(slice)}` : url)
-    // Outside the coverage the raster is simply not painted.
-    if (px.a === 0) return unknown
+
+    // An unpainted pixel is "no drought class in force" — the layer draws only
+    // Watch, Warning and Alert (see CDI_PALETTE). Reporting that as unknown is
+    // what made most of Andalucía show "no data" on a working feed while the
+    // real answer was that conditions are normal.
+    //
+    // It is only reported as `none` once the layer is known to be rendering,
+    // though: an empty raster from a broken service looks identical at one
+    // pixel, and "no drought" is the reading a user would most want to trust.
+    if (px.a === 0) return (await layerIsRendering()) ? { level: 'none', label: 'none', ...base } : unknown
+
     const level = nearestColour(px, CDI_PALETTE)
-    if (!level || level === 'unknown') return unknown
+    if (!level) return unknown
     return { level, label: level, ...base }
   } catch {
     return unknown

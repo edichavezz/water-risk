@@ -25,6 +25,8 @@ const place = (
 const sevilla = place('Sevilla, España', 37.38, -5.99, 'es')
 const malaga = place('Málaga, España', 36.72, -4.42, 'es')
 const badajoz = place('Badajoz, España', 38.88, -6.97, 'es')
+const tarifa = place('Tarifa, España', 36.0143, -5.6035, 'es')
+const granada = place('Granada, España', 37.18, -3.60, 'es')
 const marseille = place('Marseille, France', 43.29, 5.37, 'fr')
 const palermo = place('Palermo, Italia', 38.11, 13.36, 'it')
 const milano = place('Milano, Italia', 45.46, 9.19, 'it')
@@ -35,6 +37,24 @@ describe('coverageProfile', () => {
       const profile = coverageProfile(p)
       expect(profile.tier).toBe('detailed')
       expect(profile.regionId).toBe('andalucia')
+    }
+  })
+
+  it('calls Tarifa detailed, the southernmost town on the mainland', () => {
+    // Regression: the 24-point hand-drawn boundary this replaced ran north of
+    // Tarifa, so a Cádiz town was told it sat outside the detailed region.
+    expect(coverageProfile(tarifa).tier).toBe('detailed')
+  })
+
+  it('calls Granada detailed', () => {
+    expect(coverageProfile(granada).tier).toBe('detailed')
+  })
+
+  it('does not claim groundwater anywhere', () => {
+    // Its source data was fabricated and removed, and no live service
+    // publishes a replacement — so the coverage box must not promise it.
+    for (const p of [sevilla, badajoz, marseille, palermo]) {
+      expect(coverageProfile(p).covered).not.toContain('groundwater')
     }
   })
 

@@ -164,12 +164,18 @@ export const DATASETS: DatasetDef[] = [
           : 'unsupported',
     // The national deslinde that would answer "is this plot inside the strip"
     // is down, so the card reports the zoning in force around the point
-    // instead. `null` means no coastal zoning reaches here, which is a real
-    // answer; a thrown error stays an error.
+    // instead. A thrown error stays an error.
+    //
+    // A `null` — no zoning within ~3 km — is `not_applicable`, not
+    // `unavailable`. Inland towns that slip past the coastal test used to draw
+    // a coastal card that then reported "no data", while `ai.ts` told the model
+    // "No usable value". The query result is the real coastal test, so a miss
+    // retires the card instead — `isApplicableHere` drops the row and
+    // `buildEvidence` skips it.
     fetch: async loc => {
       try {
         const z = await getCoastalZoning(loc.coordinates)
-        return z === null ? { status: 'unavailable' } : ok(z)
+        return z === null ? { status: 'not_applicable' } : ok(z)
       } catch (e) { return err(e) }
     },
   },
@@ -178,14 +184,23 @@ export const DATASETS: DatasetDef[] = [
     hazard: 'water',
     category: 'hazard',
     source: { name: 'IGME' },
-    mapRole: 'primary',
+    // No map layer left to draw: the geometry behind it was fabricated and has
+    // been removed, and MITECO's service that publishes the real units is down.
+    mapRole: 'none',
     aiAllowed: true,
     audienceWeight: { resident_owner: 5, buyer_investor: 3 },
     defaultOrder: 6,
-    // IGME's hydrogeological units are Spanish.
-    applicability: p => (p.countryCode === 'es' ? 'covered' : 'unsupported'),
+    // `unsupported` everywhere, including Spain: IGME's hydrogeological units
+    // are Spanish, but no live service publishes them (see
+    // services/groundwater.ts), so `covered` would have the coverage box
+    // promise a check that cannot run. Restore the country test when a real
+    // source is wired up.
+    applicability: () => 'unsupported',
     fetch: async loc => {
-      try { return ok(getGroundwaterStatus(loc.coordinates)) } catch (e) { return err(e) }
+      try {
+        const g = getGroundwaterStatus(loc.coordinates)
+        return g === null ? { status: 'unavailable' } : ok(g)
+      } catch (e) { return err(e) }
     },
   },
   {
@@ -200,10 +215,13 @@ export const DATASETS: DatasetDef[] = [
     // The EEA register is EU-wide, so fixing the coastal test is all this
     // needed to start working in France and Italy.
     applicability: p => (isCoastal(p.coordinates) ? 'covered' : 'not_applicable'),
+    // No site within 5 km is the same shape of answer as the coastal zoning
+    // miss above: the distance check is the honest one. Retire the card rather
+    // than report "no data" about beaches to somebody in the Sierra de Huelva.
     fetch: async loc => {
       try {
         const s = await getNearestBathingSite(loc.coordinates)
-        return s === null ? { status: 'unavailable' } : ok(s)
+        return s === null ? { status: 'not_applicable' } : ok(s)
       } catch (e) { return err(e) }
     },
   },

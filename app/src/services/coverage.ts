@@ -33,7 +33,7 @@ interface DetailedRegion {
   /** ISO 3166-2 level-4 code, so new regions can join by code, not by polygon. */
   region: string
   effectiveDate: string
-  geometry: GeoJSON.Feature<GeoJSON.Polygon>
+  geometry: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>
 }
 
 /**
@@ -45,8 +45,12 @@ const DETAILED_REGIONS: DetailedRegion[] = [
   {
     id: 'andalucia',
     region: 'ES-AN',
-    effectiveDate: '2026-07-24',
-    geometry: andaluciaBoundary as GeoJSON.Feature<GeoJSON.Polygon>,
+    effectiveDate: '2026-07-30',
+    // NOTE (verified 2026-07): the real administrative boundary, from OSM via
+    // scripts/fetch-andalucia-boundary.mjs. The 24-point sketch this replaced
+    // put Tarifa — mainland Spain's southernmost town, in Cádiz — outside
+    // coverage entirely.
+    geometry: andaluciaBoundary as GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>,
   },
 ]
 

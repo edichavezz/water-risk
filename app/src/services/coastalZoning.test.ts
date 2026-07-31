@@ -103,6 +103,30 @@ describe('getCoastalZoning', () => {
     await expect(getCoastalZoning(coords)).rejects.toThrow()
   })
 
+  it('queries a box wide enough to reach the zoning geometry', async () => {
+    // The stretches and transects are lines, so the query box width drives how
+    // far MapServer's search tolerance reaches. At the original 0.003 every
+    // coastal town probed — Tarifa, Marbella, Nerja, Roquetas — returned
+    // "Search returned no results" from a healthy service, and the card
+    // reported no coastal zoning at plainly coastal addresses. The lower bound
+    // pins the fix. The upper bound is the measured ceiling: the parser takes
+    // the first feature and the service does not order by distance, and 0.2 is
+    // where an inland guard town (Jerez) first starts returning one. See the
+    // NOTE on QUERY_DELTA for the probe this encodes.
+    const seen: string[] = []
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      seen.push(url)
+      return new Response(EMPTY, { status: 200, headers: { 'content-type': 'text/plain' } })
+    }))
+    await getCoastalZoning(coords)
+
+    const bbox = /BBOX=([^&]+)/.exec(seen[0])?.[1] ?? ''
+    const [minLng, , maxLng] = decodeURIComponent(bbox).split(',').map(Number)
+    const widthKm = (maxLng - minLng) * 111 * Math.cos((coords.lat * Math.PI) / 180)
+    expect(widthKm).toBeGreaterThan(14)
+    expect(widthKm).toBeLessThan(22)
+  })
+
   it('rejects a profileUrl that is not a REDIAM https link', async () => {
     const evil = PROFILE_BODY.replace(
       'https://portalrediam.cica.es/repositorio/x/Cadiz_02.pdf',

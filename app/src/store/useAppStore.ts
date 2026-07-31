@@ -8,7 +8,7 @@ import type {
 import { coverageProfile, type CoverageProfile } from '../services/coverage'
 import { getDataset } from '../registry/datasets'
 import type { NewsAnswer, NewsState } from '../types/news'
-import { getNewsForLocation } from '../services/news'
+import { getNewsForLocation, reserveNewsSlot } from '../services/news'
 
 const MAX_CONTEXT_LAYERS = 2
 
@@ -200,8 +200,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
       return
     }
 
+    // Loading goes up *before* the wait, not after. It is what the reader has
+    // asked for either way, and the `status === 'loading'` guard above is what
+    // makes repeated Retry taps free instead of one request each.
     set({ news: { status: 'loading' } })
     try {
+      const wait = reserveNewsSlot()
+      if (wait > 0) await new Promise(resolve => setTimeout(resolve, wait))
+      // Panning between places queues one of these per place. Checking again
+      // here means only the place the reader actually settled on spends its
+      // slot; the ones passed through on the way drop out having sent nothing.
+      if (!get().location || newsKey(get().location!) !== key) return
+
       const answer = await getNewsForLocation(location)
       newsCache.set(key, answer)
       // The reader may have moved on while the request was in flight; writing

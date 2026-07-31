@@ -59,14 +59,17 @@ describe('dataset registry', () => {
     expect(resident[0]).toBe('drought')
   })
 
-  it('map roles: five primaries, two context overlays, the rest panel-only', () => {
+  it('map roles: four primaries, two context overlays, the rest panel-only', () => {
     expect(DATASETS.filter(d => d.mapRole === 'primary').map(d => d.id).sort())
-      .toEqual(['coastalFlood', 'drought', 'fireDanger', 'flood', 'groundwater'])
+      .toEqual(['coastalFlood', 'drought', 'fireDanger', 'flood'])
     expect(DATASETS.filter(d => d.mapRole === 'context').map(d => d.id).sort())
       .toEqual(['fireHistory', 'reservoirs'])
     expect(getDataset('waterQuality').mapRole).toBe('none')
     expect(getDataset('bathingWater').mapRole).toBe('none')
     expect(getDataset('firePrevention').mapRole).toBe('none')
+    // Not a primary any more: the polygons it painted were fabricated and the
+    // service that publishes the real ones is down.
+    expect(getDataset('groundwater').mapRole).toBe('none')
   })
 
   it('splits into the two hazard families the UI groups by', () => {

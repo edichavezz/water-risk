@@ -221,6 +221,44 @@ export function withinWindow(items: NewsItem[], window: NewsAnswer['window'], no
   return items.filter(i => i.seenAt >= cutoff)
 }
 
+/**
+ * GDELT's documented limit: one request every five seconds, per IP.
+ *
+ * Six, not five, because the clock that matters is theirs and we cannot see it.
+ */
+const MIN_INTERVAL_MS = 6000
+
+let nextAllowedAt = 0
+
+/**
+ * Claim the next slot in which a request may be sent, and say how long to wait.
+ *
+ * This exists because of a real incident: an hour of development testing put a
+ * residential IP into GDELT's penalty box, and it stayed there long after the
+ * bursts stopped — the 429 carries no `Retry-After`, and no CORS header either,
+ * so from a browser a block is indistinguishable from being offline. There is
+ * no way to detect the block, which means the only defence is not earning it.
+ *
+ * A reader can trip the limit as easily as I did. Panning between places with
+ * the news tab open queues one request per place, and the retry button spends a
+ * call per tap. Without this, ordinary browsing is a burst.
+ *
+ * The slot is claimed on call rather than on send, so simultaneous callers
+ * queue behind each other instead of both reading a stale clock. A caller that
+ * changes its mind after claiming should simply not send: the slot is then
+ * spent on nothing, which errs in the safe direction.
+ */
+export function reserveNewsSlot(now = Date.now()): number {
+  const at = Math.max(now, nextAllowedAt)
+  nextAllowedAt = at + MIN_INTERVAL_MS
+  return at - now
+}
+
+/** Test seam. The gate is module state, which would otherwise leak between specs. */
+export function resetNewsRateGate(): void {
+  nextAllowedAt = 0
+}
+
 /** Thrown for a throttle or a network failure — never for an empty result. */
 export class NewsUnreachable extends Error {}
 

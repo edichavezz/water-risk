@@ -61,6 +61,35 @@ export async function samplePixel(url: string): Promise<Rgba> {
   }
 }
 
+/**
+ * True when any pixel of the image at `url` is painted.
+ *
+ * Used as a liveness check: a service that answers with a valid but entirely
+ * empty raster is indistinguishable, at one point, from a service correctly
+ * reporting nothing there. Over a wide enough area the difference is decidable,
+ * so a caller that wants to read "unpainted" as a real answer can ask this
+ * first.
+ */
+export async function anyPixelPainted(url: string): Promise<boolean> {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`WMS ${res.status}`)
+  const blob = await res.blob()
+  if (!blob.type.startsWith('image/')) throw new Error('WMS returned a non-image')
+
+  const bitmap = await createImageBitmap(blob)
+  try {
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('no 2d context')
+    ctx.drawImage(bitmap, 0, 0)
+    const { data } = ctx.getImageData(0, 0, bitmap.width, bitmap.height)
+    for (let i = 3; i < data.length; i += 4) if (data[i] > 0) return true
+    return false
+  } finally {
+    bitmap.close()
+  }
+}
+
 /** Nearest palette entry to `px`, or null when nothing is within `tolerance`. */
 export function nearestColour<T>(
   px: Rgba,
