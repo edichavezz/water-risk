@@ -499,7 +499,6 @@
     "loading": "Looking for recent coverage…",
     "windowWeek": "Headlines from the last week that mention this area.",
     "windowMonth": "Nothing in the last week — showing the last month.",
-    "ringWidened": "No coverage named the municipality, so this is the wider area.",
     "empty": "No coverage found for this area in the last month. That is not the same as nothing having happened — small towns are thinly covered by the news sources we can search.",
     "unreachableTitle": "Couldn’t reach the news source",
     "unreachableBody": "The news service is rate-limited and turned us away. This says nothing about the area — try again in a moment.",

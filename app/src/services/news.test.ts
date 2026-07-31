@@ -36,7 +36,7 @@ const NOW = Date.UTC(2026, 6, 31, 12, 0, 0)
 const daysAgo = (n: number) => NOW - n * 86_400_000
 
 describe('newsQueryUrl', () => {
-  const url = newsQueryUrl(marseille, 'municipality')
+  const url = newsQueryUrl(marseille)
   const query = new URL(url).searchParams.get('query') ?? ''
 
   it('searches the municipality and its province', () => {
@@ -71,22 +71,18 @@ describe('newsQueryUrl', () => {
 
   it('omits sourcecountry rather than guessing one', () => {
     const elsewhere = { ...marseille, countryCode: 'ma' }
-    expect(newsQueryUrl(elsewhere, 'municipality')).not.toContain('sourcecountry')
+    expect(newsQueryUrl(elsewhere)).not.toContain('sourcecountry')
   })
 })
 
 describe('toponymsFor', () => {
-  it('leads with the municipality on the tight ring', () => {
-    expect(toponymsFor(marseille, 'municipality')[0]).toBe('Marseille')
-  })
-
-  it('drops the municipality when widening', () => {
-    expect(toponymsFor(marseille, 'region')).not.toContain('Marseille')
+  it('leads with the municipality, closest to the pin', () => {
+    expect(toponymsFor(marseille)).toEqual(['Marseille', 'Bouches-du-Rhône'])
   })
 
   it('falls back to the display name for a bare map pin', () => {
     const pin: PlaceContext = { displayName: 'Sierra de Grazalema', coordinates: { lat: 36.7, lng: -5.4 } }
-    expect(toponymsFor(pin, 'municipality')).toEqual(['Sierra de Grazalema'])
+    expect(toponymsFor(pin)).toEqual(['Sierra de Grazalema'])
   })
 })
 
@@ -269,49 +265,39 @@ describe('getNewsForLocation', () => {
 
   beforeEach(() => vi.useFakeTimers().setSystemTime(NOW))
 
-  it('widens to the region only when the tight ring found nothing', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok([]))
-      .mockResolvedValueOnce(ok([
-        { url: 'https://a.fr/1', title: 'Sécheresse dans les Bouches-du-Rhône', seendate: '20260730T080000Z' },
-      ]))
-    vi.stubGlobal('fetch', fetchMock)
-
-    const answer = await getNewsForLocation(marseille, NOW)
-    expect(fetchMock).toHaveBeenCalledTimes(2)
-    expect(answer.ring).toBe('region')
-    expect(answer.items).toHaveLength(1)
-  })
-
-  // Emptiness is measured after the title filter. A ring that returns five
-  // body-only matches has found nothing local, and treating that as a full
-  // house would leave the reader on Ávila's fires under Ronda's name.
-  it('widens when the tight ring returned articles but none named the place', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok([
-        { url: 'https://a.es/1', title: 'ECLIPSE SOLAR | El más largo del siglo', seendate: '20260731T080000Z' },
-        { url: 'https://a.es/2', title: 'Cinco bomberos cordobeses en los incendios de Ávila', seendate: '20260731T080000Z' },
-      ]))
-      .mockResolvedValueOnce(ok([
-        { url: 'https://a.es/3', title: 'Sequía histórica en Málaga', seendate: '20260730T080000Z' },
-      ]))
-    vi.stubGlobal('fetch', fetchMock)
-
-    const answer = await getNewsForLocation(ronda, NOW)
-    expect(fetchMock).toHaveBeenCalledTimes(2)
-    expect(answer.ring).toBe('region')
-    expect(answer.items.map(i => i.title)).toEqual(['Sequía histórica en Málaga'])
-  })
-
-  it('spends exactly one request when the tight ring answers', async () => {
+  // One request per place, always. A second, wider ring was built and removed:
+  // its toponyms were the province plus the display name, and a province-titled
+  // article already matches the first query and survives `relevantHere`. It
+  // spent the scarcest thing we have against this API to find nothing new.
+  it('spends exactly one request, whatever comes back', async () => {
     const fetchMock = vi.fn().mockResolvedValue(ok([
       { url: 'https://a.fr/1', title: 'Incendie à Marseille', seendate: '20260730T080000Z' },
     ]))
     vi.stubGlobal('fetch', fetchMock)
 
-    const answer = await getNewsForLocation(marseille, NOW)
+    await getNewsForLocation(marseille, NOW)
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(answer.ring).toBe('municipality')
+  })
+
+  it('does not retry when nothing local was found', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([
+      { url: 'https://a.es/1', title: 'ECLIPSE SOLAR | El más largo del siglo', seendate: '20260731T080000Z' },
+    ]))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const answer = await getNewsForLocation(ronda, NOW)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    // An empty answer is a real finding, and distinct from `unreachable`.
+    expect(answer.items).toEqual([])
+  })
+
+  it('keeps a province headline the same query already reaches', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(ok([
+      { url: 'https://a.es/1', title: 'Sequía histórica en Málaga', seendate: '20260730T080000Z' },
+    ])))
+
+    const answer = await getNewsForLocation(ronda, NOW)
+    expect(answer.items.map(i => i.title)).toEqual(['Sequía histórica en Málaga'])
   })
 
   // The throttle notice arrives as prose with a 200, so a naive JSON.parse

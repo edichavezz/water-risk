@@ -1,5 +1,5 @@
 import type { PlaceContext } from '../types/place'
-import type { NewsAnswer, NewsItem, NewsRing } from '../types/news'
+import type { NewsAnswer, NewsItem } from '../types/news'
 import { allKeywords, classifyTitle, fold, sourceCountryFor } from '../data/newsKeywords'
 
 /**
@@ -47,26 +47,28 @@ interface RawArticle {
 }
 
 /**
- * The toponyms to search, closest to the pin first.
+ * The toponyms to search: the municipality, and its province alongside.
  *
- * `municipality` is the tight ring and is what the reader actually asked
- * about; the province rides along in the same query so one request covers both
- * and `rank` separates them afterwards. `region` is the widening step, used
- * only when the tight ring came back with nothing at all.
+ * Both go in one query rather than two, and `rank` separates them afterwards.
+ * There is deliberately no second, wider ring. One was built and removed: its
+ * toponyms were the province plus the full display name, and since a
+ * province-titled article already matches here *and* survives `relevantHere`,
+ * the only thing the wider ring added was `"Ronda, Málaga"` quoted whole,
+ * which no headline writes. It spent a second request — the scarcest thing we
+ * have against this API — to find nothing the first had not.
+ *
+ * A genuine widening step needs a region *name*, and `PlaceContext.region` is
+ * an ISO code (`ES-AN`). Adding one is geocoder work, not a query change.
  */
-export function toponymsFor(place: PlaceContext, ring: NewsRing): string[] {
-  const province = place.provinceName
-  if (ring === 'municipality') {
-    const names = [place.municipality, province].filter((n): n is string => !!n)
-    // A place with neither — a bare map pin over open country — still has its
-    // display name, which is better than an unbounded query.
-    return names.length > 0 ? names : [place.displayName]
-  }
-  return [province, place.displayName].filter((n): n is string => !!n)
+export function toponymsFor(place: PlaceContext): string[] {
+  const names = [place.municipality, place.provinceName].filter((n): n is string => !!n)
+  // A place with neither — a bare map pin over open country — still has its
+  // display name, which is better than an unbounded query.
+  return names.length > 0 ? names : [place.displayName]
 }
 
-export function newsQueryUrl(place: PlaceContext, ring: NewsRing): string {
-  const places = toponymsFor(place, ring).map(n => `"${n}"`).join(' OR ')
+export function newsQueryUrl(place: PlaceContext): string {
+  const places = toponymsFor(place).map(n => `"${n}"`).join(' OR ')
   const words = allKeywords(place.countryCode).join(' OR ')
   const country = sourceCountryFor(place.countryCode)
 
@@ -167,6 +169,13 @@ export function shapeArticles(raw: RawArticle[], place: PlaceContext): NewsItem[
  *
  * The side effect is worth naming: every rendered item now carries a Fire or
  * Water pill, because an item with no hazard in its title no longer survives.
+ *
+ * The filter is not free, and the cost is invisible from here. `maxrecords=75`
+ * with `sort=datedesc` truncates *server-side*, before any of this runs: GDELT
+ * returns the 75 most recent articles of the month and we then keep the handful
+ * whose titles qualify. In a busy province those 75 can be filled by recent
+ * body-only matches while a genuinely local story from three weeks ago never
+ * reaches us at all.
  */
 export function relevantHere(items: NewsItem[]): NewsItem[] {
   return items.filter(i => (i.namesMunicipality || i.namesProvince) && i.hazard !== null)
@@ -215,10 +224,10 @@ export function withinWindow(items: NewsItem[], window: NewsAnswer['window'], no
 /** Thrown for a throttle or a network failure — never for an empty result. */
 export class NewsUnreachable extends Error {}
 
-async function fetchRing(place: PlaceContext, ring: NewsRing): Promise<NewsItem[]> {
+async function fetchNews(place: PlaceContext): Promise<NewsItem[]> {
   let res: Response
   try {
-    res = await fetch(newsQueryUrl(place, ring))
+    res = await fetch(newsQueryUrl(place))
   } catch {
     // A 429 from GDELT carries no CORS header, so the browser reports it as a
     // network error. Indistinguishable from being offline, and treated as such.
@@ -227,9 +236,13 @@ async function fetchRing(place: PlaceContext, ring: NewsRing): Promise<NewsItem[
   if (!res.ok) throw new NewsUnreachable(`GDELT ${res.status}`)
 
   const body = await res.text()
-  // The throttle notice comes back as prose with a 200. Anything that is not
-  // an object is a refusal, not an empty answer.
-  if (!body.trimStart().startsWith('{')) throw new NewsUnreachable('throttled')
+  // The throttle notice comes back as prose with a 200, and so do query
+  // errors — a malformed query answers "Parentheses may only be used around
+  // OR'd statements", also with a 200. Anything that is not an object is a
+  // refusal, not an empty answer. A query error is our bug rather than the
+  // network's, but `unreachable` is still the right thing to tell the reader:
+  // we did not learn what is happening there.
+  if (!body.trimStart().startsWith('{')) throw new NewsUnreachable('refused')
 
   let parsed: { articles?: RawArticle[] }
   try {
@@ -241,23 +254,14 @@ async function fetchRing(place: PlaceContext, ring: NewsRing): Promise<NewsItem[
 }
 
 /**
- * One request, widened at most once.
+ * Exactly one request per place. See `toponymsFor` for why there is no second.
  *
- * The second call happens when the tight ring kept nothing — measured *after*
- * `relevantHere`, not before, since a ring that returns five body-only
- * matches has found nothing local and should still widen. If that second call
- * is itself throttled the result is `unreachable`, not "no coverage", because
- * we never learned the answer.
+ * An empty answer here is a real finding — nothing local was published, or
+ * nothing that our sources index. A throttle is not, and comes back as
+ * `NewsUnreachable` so the caller can say something different.
  */
 export async function getNewsForLocation(place: PlaceContext, now = Date.now()): Promise<NewsAnswer> {
-  let ring: NewsRing = 'municipality'
-  let items = await fetchRing(place, ring)
-
-  if (items.length === 0 && place.provinceName) {
-    ring = 'region'
-    items = await fetchRing(place, ring)
-  }
-
+  const items = await fetchNews(place)
   const window = partitionByWindow(items, now)
-  return { items: rank(withinWindow(items, window, now)), window, ring }
+  return { items: rank(withinWindow(items, window, now)), window }
 }

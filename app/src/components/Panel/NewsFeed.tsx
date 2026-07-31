@@ -93,14 +93,18 @@ export default function NewsFeed() {
     )
   }
 
-  const { items, window, ring } = news.answer
+  const { items, window } = news.answer
 
   return (
     <div>
-      <p className="text-[11.5px] leading-snug text-muted">
-        {t(window === 'week' ? 'news.windowWeek' : 'news.windowMonth')}
-        {ring === 'region' && ` ${t('news.ringWidened')}`}
-      </p>
+      {/* Suppressed when there is nothing to describe. Otherwise the empty
+          state reads "Headlines from the last week…" directly above "No
+          coverage found… in the last month", which contradicts itself. */}
+      {items.length > 0 && (
+        <p className="text-[11.5px] leading-snug text-muted">
+          {t(window === 'week' ? 'news.windowWeek' : 'news.windowMonth')}
+        </p>
+      )}
 
       {items.length === 0 ? (
         <p className="mt-3 rounded-xl bg-subtle-warm p-4 text-sm text-muted">{t('news.empty')}</p>

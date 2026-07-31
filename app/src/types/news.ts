@@ -22,16 +22,12 @@ export interface NewsItem {
   namesProvince: boolean
 }
 
-/** Which toponym ring produced the answer. */
-export type NewsRing = 'municipality' | 'region'
-
 /** Which time window the rendered items came from. */
 export type NewsWindow = 'week' | 'month'
 
 export interface NewsAnswer {
   items: NewsItem[]
   window: NewsWindow
-  ring: NewsRing
 }
 
 /**
