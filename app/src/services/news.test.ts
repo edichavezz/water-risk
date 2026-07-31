@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import {
   newsQueryUrl, toponymsFor, parseSeenDate, shapeArticles,
-  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle,
+  rank, partitionByWindow, withinWindow, getNewsForLocation, NewsUnreachable, tidyTitle, namesThePlace,
 } from './news'
 import { classifyTitle } from '../data/newsKeywords'
 import type { PlaceContext } from '../types/place'
@@ -21,6 +21,15 @@ const marseille: PlaceContext = {
   province: 'FR-13',
   provinceName: 'Bouches-du-Rhône',
   municipality: 'Marseille',
+}
+
+const ronda: PlaceContext = {
+  displayName: 'Ronda, Málaga',
+  coordinates: { lat: 36.74, lng: -5.17 },
+  countryCode: 'es',
+  province: 'ES-MA',
+  provinceName: 'Málaga',
+  municipality: 'Ronda',
 }
 
 const NOW = Date.UTC(2026, 6, 31, 12, 0, 0)
@@ -139,6 +148,35 @@ describe('shapeArticles', () => {
   })
 })
 
+describe('namesThePlace', () => {
+  // The bug this exists for, found by looking at the screen: a search for
+  // Ronda returned the 2027 solar eclipse, a Cerro del Villar dig and Córdoba
+  // firefighters working a blaze in Ávila. All matched in the article body.
+  it('drops headlines that never name the place', () => {
+    const items = shapeArticles(
+      [
+        { url: 'https://a.es/1', title: 'Incendio forestal en la Serranía de Ronda', seendate: '20260730T080000Z' },
+        { url: 'https://a.es/2', title: 'Cinco bomberos cordobeses en los incendios de Ávila', seendate: '20260731T080000Z' },
+        { url: 'https://a.es/3', title: 'ECLIPSE SOLAR | El más largo del siglo llegará en 2027', seendate: '20260731T080000Z' },
+      ],
+      ronda,
+    )
+    expect(namesThePlace(items).map(i => i.title)).toEqual([
+      'Incendio forestal en la Serranía de Ronda',
+    ])
+  })
+
+  it('keeps a province match as the honest second best', () => {
+    const items = shapeArticles(
+      [{ url: 'https://a.es/1', title: 'Sequía histórica en Málaga', seendate: '20260730T080000Z' }],
+      ronda,
+    )
+    expect(namesThePlace(items)).toHaveLength(1)
+    expect(items[0].namesMunicipality).toBe(false)
+    expect(items[0].namesProvince).toBe(true)
+  })
+})
+
 describe('classifyTitle', () => {
   it('tags from the local vocabulary, accents and case ignored', () => {
     expect(classifyTitle('SECHERESSE historique', 'fr')).toBe('water')
@@ -157,7 +195,7 @@ describe('classifyTitle', () => {
 describe('rank', () => {
   const item = (over: Partial<NewsItem>): NewsItem => ({
     title: '', url: Math.random().toString(), domain: '', seenAt: NOW,
-    language: '', hazard: null, namesMunicipality: false, ...over,
+    language: '', hazard: null, namesMunicipality: false, namesProvince: false, ...over,
   })
 
   // Primary key, not a tiebreaker: ambiguous toponyms are the rule, not the
@@ -183,7 +221,7 @@ describe('rank', () => {
 describe('the week/month window', () => {
   const item = (seenAt: number): NewsItem => ({
     title: '', url: String(seenAt), domain: '', seenAt,
-    language: '', hazard: null, namesMunicipality: false,
+    language: '', hazard: null, namesMunicipality: false, namesProvince: false,
   })
 
   // The clock is frozen deliberately. A fixture of fixed dates measured
@@ -225,6 +263,26 @@ describe('getNewsForLocation', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
     expect(answer.ring).toBe('region')
     expect(answer.items).toHaveLength(1)
+  })
+
+  // Emptiness is measured after the title filter. A ring that returns five
+  // body-only matches has found nothing local, and treating that as a full
+  // house would leave the reader on Ávila's fires under Ronda's name.
+  it('widens when the tight ring returned articles but none named the place', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(ok([
+        { url: 'https://a.es/1', title: 'ECLIPSE SOLAR | El más largo del siglo', seendate: '20260731T080000Z' },
+        { url: 'https://a.es/2', title: 'Cinco bomberos cordobeses en los incendios de Ávila', seendate: '20260731T080000Z' },
+      ]))
+      .mockResolvedValueOnce(ok([
+        { url: 'https://a.es/3', title: 'Sequía histórica en Málaga', seendate: '20260730T080000Z' },
+      ]))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const answer = await getNewsForLocation(ronda, NOW)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(answer.ring).toBe('region')
+    expect(answer.items.map(i => i.title)).toEqual(['Sequía histórica en Málaga'])
   })
 
   it('spends exactly one request when the tight ring answers', async () => {

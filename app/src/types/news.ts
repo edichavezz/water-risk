@@ -18,6 +18,8 @@ export interface NewsItem {
   hazard: HazardFamily | null
   /** The title names the municipality itself, not just the province. */
   namesMunicipality: boolean
+  /** The title names the province. */
+  namesProvince: boolean
 }
 
 /** Which toponym ring produced the answer. */

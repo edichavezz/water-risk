@@ -127,22 +127,45 @@ export function tidyTitle(title: string): string {
 
 export function shapeArticles(raw: RawArticle[], place: PlaceContext): NewsItem[] {
   const municipality = place.municipality ? fold(place.municipality) : null
+  const province = place.provinceName ? fold(place.provinceName) : null
   const items: NewsItem[] = []
 
   for (const a of raw) {
     const seenAt = parseSeenDate(a.seendate)
     if (!a.url || !a.title || seenAt === null) continue
+    const title = tidyTitle(a.title)
+    const folded = fold(title)
     items.push({
-      title: tidyTitle(a.title),
+      title,
       url: a.url,
       domain: a.domain ?? '',
       seenAt,
       language: a.language ?? '',
-      hazard: classifyTitle(a.title, place.countryCode),
-      namesMunicipality: municipality ? fold(a.title).includes(municipality) : false,
+      hazard: classifyTitle(title, place.countryCode),
+      namesMunicipality: municipality ? folded.includes(municipality) : false,
+      namesProvince: province ? folded.includes(province) : false,
     })
   }
   return items
+}
+
+/**
+ * Keep only the headlines that actually name the place.
+ *
+ * GDELT matches the article *body*, and the difference is not academic: a
+ * search for Ronda returned a piece on the 2027 solar eclipse, a Cerro del
+ * Villar dig and firefighters from Córdoba working a blaze in Ávila, 500 km
+ * away. Every one contained the word somewhere and a hazard keyword somewhere
+ * else.
+ *
+ * Ranking those below the local items is not enough — they still sit under the
+ * place's name, beside hazard data, borrowing its authority. The reader asked
+ * what is happening *here*, and a title that never names the place is not an
+ * answer to that question. The honest cost is a feed that is often empty, and
+ * `news.empty` says so plainly.
+ */
+export function namesThePlace(items: NewsItem[]): NewsItem[] {
+  return items.filter(i => i.namesMunicipality || i.namesProvince)
 }
 
 /**
@@ -210,15 +233,17 @@ async function fetchRing(place: PlaceContext, ring: NewsRing): Promise<NewsItem[
   } catch {
     throw new NewsUnreachable('unparseable')
   }
-  return shapeArticles(parsed.articles ?? [], place)
+  return namesThePlace(shapeArticles(parsed.articles ?? [], place))
 }
 
 /**
  * One request, widened at most once.
  *
- * The second call only happens when the tight ring returned literally nothing,
- * which is rare — and if that call is itself throttled the result is
- * `unreachable`, not "no coverage", because we never learned the answer.
+ * The second call happens when the tight ring kept nothing — measured *after*
+ * `namesThePlace`, not before, since a ring that returns five body-only
+ * matches has found nothing local and should still widen. If that second call
+ * is itself throttled the result is `unreachable`, not "no coverage", because
+ * we never learned the answer.
  */
 export async function getNewsForLocation(place: PlaceContext, now = Date.now()): Promise<NewsAnswer> {
   let ring: NewsRing = 'municipality'
