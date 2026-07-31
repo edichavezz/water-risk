@@ -3,7 +3,8 @@
     "tagline": "Water and fire risk across the Mediterranean",
     "navAbout": "About",
     "nav": "Sections",
-    "backToMap": "Back to map"
+    "backToMap": "Back to map",
+    "language": "Language"
   },
   "layers": {
     "button": "Map layers",

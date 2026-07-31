@@ -71,6 +71,20 @@ body {
   @apply font-sans text-ink bg-page;
 }
 
+/* Atkinson Hyperlegible and Petrona are both Latin-only here — Fontsource
+   publishes no Greek or Arabic subset for either — so those scripts fall
+   through to `system-ui` glyph by glyph. For Greek that is fine and needs no
+   rule. Arabic needs one: left to `sans-serif` it can land on a face with no
+   Arabic at all and render tofu, so name the system faces, and give it a little
+   more leading, because Arabic's ascenders and descenders collide at the
+   line-height Latin copy is set at. Overriding the theme variable rather than
+   `font-family` keeps every `font-sans`/`font-display` utility following along. */
+:root:lang(ar) {
+  --font-sans: "SF Arabic", "Geeza Pro", "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-display: "SF Arabic", "Geeza Pro", "Noto Naskh Arabic", Georgia, serif;
+  line-height: 1.7;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
@@ -130,7 +144,9 @@ body {
   color: var(--color-ink);
 }
 
-.reservoir-popup__name { font-weight: 700; padding-right: 12px; }
+/* Logical, so the gap stays on the side away from MapLibre's close button,
+   which the popup itself mirrors under dir="rtl". */
+.reservoir-popup__name { font-weight: 700; padding-inline-end: 12px; }
 .reservoir-popup__pct {
   font-size: 20px;
   font-weight: 700;

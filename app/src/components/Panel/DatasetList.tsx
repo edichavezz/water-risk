@@ -54,7 +54,7 @@ function Group({ hazard, defs }: { hazard: HazardFamily; defs: DatasetDef[] }) {
             aria-expanded={false}
             /* Muted and never green: a collapsed row the reader does not open
                must still not read as "nothing wrong here". */
-            className="flex min-h-11 w-full items-center border-t border-hairline-soft text-left text-[11px] text-muted hover:text-ink"
+            className="flex min-h-11 w-full items-center border-t border-hairline-soft text-start text-[11px] text-muted hover:text-ink"
           >
             {t('panel.noResultCount', { count: empty.length })}
           </button>

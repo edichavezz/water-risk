@@ -3,7 +3,8 @@
     "tagline": "Riesgos de agua e incendio en el Mediterráneo",
     "navAbout": "Acerca de",
     "nav": "Secciones",
-    "backToMap": "Volver al mapa"
+    "backToMap": "Volver al mapa",
+    "language": "Idioma"
   },
   "layers": {
     "button": "Capas del mapa",

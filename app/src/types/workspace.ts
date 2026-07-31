@@ -1,3 +1,5 @@
+import type { Language } from './index'
+
 export type Audience = 'resident_owner' | 'buyer_investor'
 
 /**
@@ -64,7 +66,10 @@ export interface InterpretationState {
   text?: string
   questions?: string[]
   basis?: DatasetId[]
-  language?: 'en' | 'es'
+  // The language the text was generated in, so a language switch can mark it
+  // stale. Follows `Language` rather than restating it — a seventh bundle
+  // should not need an edit here. Type-only, so the barrel cycle is erased.
+  language?: Language
   // Why a ready text went stale, so the banner can name the actual reason.
   staleReason?: 'language' | 'audience'
 }

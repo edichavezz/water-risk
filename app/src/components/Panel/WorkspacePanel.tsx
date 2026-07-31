@@ -21,7 +21,7 @@ export default function WorkspacePanel() {
        when it had four rows to show. `max-h` keeps a long list scrollable
        without ever forcing the panel to fill the viewport. */
     <aside
-      className={`absolute left-8 top-[88px] z-10 hidden max-h-[calc(100dvh-7.5rem)] flex-col overflow-y-auto rounded-2xl bg-canvas p-5 shadow-[0_10px_28px_rgba(30,42,56,.16)] transition-[width] duration-[var(--dur-panel)] md:flex ${
+      className={`absolute start-8 top-[88px] z-10 hidden max-h-[calc(100dvh-7.5rem)] flex-col overflow-y-auto rounded-2xl bg-canvas p-5 shadow-[0_10px_28px_rgba(30,42,56,.16)] transition-[width] duration-[var(--dur-panel)] md:flex ${
         WIDTH_BY_DEPTH[panelDepth]
       } max-w-[calc(100vw-4rem)]`}
     >
