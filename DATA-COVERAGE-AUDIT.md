@@ -20,7 +20,7 @@ not a reimplementation).
 | Tarifa | ok | ok | ok | GAP | ok | GAP | ok |
 | Guadix | ok | ok | ok | GAP | n/a | GAP | n/a |
 | Zuheros | ok | ok | ok | GAP | n/a | GAP | n/a |
-| Lepe | ok | ok | ok | GAP | n/a | GAP | n/a |
+| Lepe | ok | ok | ok | GAP | ok\* | GAP | n/a |
 | Órgiva | ok | ok | GAP | GAP | n/a | GAP | n/a |
 | Cartagena | ok | ok | GAP | GAP | n/a | GAP | ok |
 | Valencia | ok | ok | GAP | ok | n/a | GAP | ok |
@@ -29,6 +29,11 @@ not a reimplementation).
 and no bathing site) and the card is retired rather than shown empty.
 `GAP` = we have no reading. Cartagena and Valencia are outside the covered
 region and are there as controls.
+
+\* The table is from the full harness run at `QUERY_DELTA = 0.05`. The delta was
+then raised to 0.1 on direct probe evidence (below), which recovers Lepe's
+coastal zoning; that one cell is verified by probe, not by a re-run of the
+harness. Re-running the audit is the first item in `HANDOFF.md`.
 
 Before this work, four of the seven columns were wrong in ways that did not look
 wrong. Every fix below was verified by a before/after audit run; 242 tests pass.
@@ -100,22 +105,30 @@ town probed missed on both layers against a healthy service — Tarifa, Marbella
 Nerja, Roquetas all got "Search returned no results" at unambiguously coastal
 addresses.
 
-Widened to 0.05 in two steps, with the attribution checked rather than just the
-hit count — `parseFeatureInfo` takes the first feature and the service does not
+Widened to 0.1 in stages, with the attribution checked rather than just the hit
+count — `parseFeatureInfo` takes the first feature and the service does not
 order by distance, so a wide box could return a neighbour's transect and look
 authoritative:
 
-| Point | 0.003 | 0.03 | 0.05 | feature returned at 0.05 |
-|---|---|---|---|---|
-| Tarifa | miss | HIT | HIT | `MUNICIPIO = TARIFA`, Tarifa_10 "Tarifa Urbano" |
-| Nerja | miss | HIT | HIT | `MUNICIPIO = NERJA`, Nerja_06 "Playa el Carabeo" |
-| Marbella | miss | miss | HIT | `MUNICIPIO = MARBELLA`, Marbella_14 "Urbanización Pino Mar" |
-| Roquetas | miss | miss | HIT | `MUNICIPIO = ROQUETAS DE MAR`, Roquetas_09 |
+| Point | 0.003 | 0.03 | 0.05 | 0.1 | feature returned |
+|---|---|---|---|---|---|
+| Tarifa | miss | HIT | HIT | HIT | `MUNICIPIO = TARIFA`, Tarifa_10 "Tarifa Urbano" |
+| Nerja | miss | HIT | HIT | HIT | `MUNICIPIO = NERJA`, Nerja_06 "Playa el Carabeo" |
+| Marbella | miss | miss | HIT | HIT | `MUNICIPIO = MARBELLA`, Marbella_14 |
+| Roquetas | miss | miss | HIT | HIT | `MUNICIPIO = ROQUETAS DE MAR`, Roquetas_09 |
+| Lepe | miss | miss | miss | HIT | `MUNICIPIO = LEPE` |
+| Níjar | miss | miss | miss | miss | — (still misses at 0.2 and 0.3) |
 
-Every feature named the town queried — no leakage. The guard against the wider
-box producing false positives is inland towns in coastal provinces: Aracena,
-Guadix, Órgiva, Ronda, Jerez and Córdoba all return nothing at both widths.
-`coastalZoning.test.ts` pins the box width at both ends.
+Every feature named the town queried, at every width up to 0.1 — no leakage.
+
+The guard against the wider box producing false positives is inland towns in
+coastal provinces: Aracena, Guadix, Órgiva, Ronda, Jerez and Córdoba all return
+nothing at 0.1. Jerez first returns a feature at 0.2, so **0.1 is the last width
+proven clean**, not merely one that happened to work. `coastalZoning.test.ts`
+pins the box width at both ends.
+
+Widening past that would not help regardless: the server's search tolerance
+grows far more slowly than the box, so reach stays at a few pixels either way.
 
 ### 5. Flood — an all-clear derived from a third of the evidence
 
@@ -154,14 +167,29 @@ wiring). `ai.test.ts` now pins that:
   not as the bare word "none" that reads as missing data;
 - what `buildEvidence` produces is byte-for-byte what `/api/interpret` receives.
 
-## Known limitations, stated rather than fixed
+## Open defect: Níjar is told coastal zoning does not apply to it
 
-**Centroid-based querying misses coastal towns whose centre is inland.** Lepe
-misses coastal zoning at every width tested; its geocoded centroid is ~5 km from
-its own coastline at La Antilla. Níjar (Cabo de Gata) is the same shape of
-problem. This is not a service failure and widening the box further would start
-returning neighbouring municipalities' transects. The honest fix is to query the
-nearest coastline point rather than the centroid — not attempted here.
+Worth stating as a defect rather than a limitation, because the classification
+is wrong and the data exists.
+
+`not_applicable` retires the card *and* drops the dataset from the AI evidence
+entirely. For Aracena, Guadix and Órgiva that is correct — no coastline, nothing
+owed. For **Níjar it is a misclassification**: the municipality contains the
+whole Cabo de Gata coast, and ZSP publishes profiles along it. Queried directly,
+San José, Las Negras and Agua Amarga all return `MUNICIPIO = NIJAR`.
+
+The reason we miss it is that Níjar's geocoded centroid sits ~25 km inland of
+its own coastline, and as shown above the server's tolerance does not grow
+enough with the box to bridge that. So a user in a Cabo de Gata beach town gets
+no coastal-protection card and no signal that one was expected, and the model is
+never told the question exists.
+
+This is the house failure mode in different clothes: not a dead service reading
+as safety, but a **missed query reading as inapplicable**. Lepe had the same
+defect and is fixed by the wider box; Níjar needs the query moved to the nearest
+coastline point, which is the recommended next piece of work in `HANDOFF.md`.
+
+## Also worth knowing
 
 **The audit harness bypasses the coverage gate.** It calls each dataset's fetch
 directly, which is why Valencia shows a water-quality reading in the table. The

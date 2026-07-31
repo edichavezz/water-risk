@@ -24,26 +24,33 @@ const COASTAL_PROXY = '/api/wms-proxy?upstream=rediam-coastal'
 // than derived from a distance: what follows is what the live service returned,
 // not a radius we measured.
 //
-// NOTE (verified 2026-07-30 against the live REDIAM service): at 0.003 every
+// NOTE (verified 2026-07-30/31 against the live REDIAM service): at 0.003 every
 // coastal town probed missed on both layers — Tarifa, Marbella, Lepe, Nerja,
 // Roquetas all got "Search returned no results" from a healthy service, so the
 // card reported no coastal zoning at unambiguously coastal addresses. Widening
 // recovers them one at a time: 0.03 reaches Tarifa (ZSP Tarifa_10, "Tarifa
-// Urbano") and Nerja (both layers); 0.05 additionally reaches Marbella
-// (Marbella_14, "Urbanización Pino Mar") and Roquetas de Mar (Roquetas de
-// Mar_09). Attribution was checked, not just hit/miss: every feature returned
-// at 0.05 carries the MUNICIPIO of the town queried, so the wider box is not
-// picking up a neighbour's transect — which matters because `parseFeatureInfo`
-// takes the first feature and the service does not order by distance.
+// Urbano") and Nerja; 0.05 adds Marbella (Marbella_14) and Roquetas de Mar;
+// 0.1 adds Lepe.
+//
+// Attribution was checked, not just hit/miss — this matters because
+// `parseFeatureInfo` takes the first feature and the service does not order by
+// distance, so a box that is too wide returns a neighbour's transect and looks
+// authoritative. At 0.1 every feature returned still carries the MUNICIPIO of
+// the town queried (LEPE, MARBELLA, ROQUETAS DE MAR).
 //
 // The guard against a false positive is inland towns in coastal provinces:
-// Aracena, Guadix, Órgiva, Ronda, Jerez and Córdoba all return nothing at both
-// 0.03 and 0.05. `coastalZoning.test.ts` pins the box width at both ends.
+// Aracena, Guadix, Órgiva, Ronda, Jerez and Córdoba all return nothing at 0.1.
+// Jerez first returns a feature at 0.2, which is where this stops being safe —
+// so 0.1 is the last width proven clean, not merely a width that happened to
+// work. `coastalZoning.test.ts` pins the box width at both ends.
 //
-// Known limitation: Lepe misses at every width tested. Its geocoded centroid is
-// ~5 km inland of its own coastline (La Antilla), so this is centroid-based
-// querying reaching its limit, not a service failure.
-const QUERY_DELTA = 0.05
+// Widening further would not help anyway: the server's tolerance grows much
+// more slowly than the box, so reach is roughly a few pixels either way.
+// Níjar still misses at 0.3 even though ZSP publishes profiles along its own
+// coast (San José, Las Negras, Agua Amarga all return MUNICIPIO = NIJAR when
+// queried directly). Its centroid is ~25 km from that coastline. Fixing that
+// case needs the query moved to the nearest coastline point, not a bigger box.
+const QUERY_DELTA = 0.1
 const GRID = 101
 
 function featureInfoUrl(coords: Coordinates, layer: string): string {

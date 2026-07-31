@@ -109,9 +109,9 @@ describe('getCoastalZoning', () => {
     // coastal town probed — Tarifa, Marbella, Nerja, Roquetas — returned
     // "Search returned no results" from a healthy service, and the card
     // reported no coastal zoning at plainly coastal addresses. The lower bound
-    // pins the fix; the upper bound keeps the box from growing until it starts
-    // returning a neighbouring municipality's transect, since the parser takes
-    // the first feature and the service does not order by distance. See the
+    // pins the fix. The upper bound is the measured ceiling: the parser takes
+    // the first feature and the service does not order by distance, and 0.2 is
+    // where an inland guard town (Jerez) first starts returning one. See the
     // NOTE on QUERY_DELTA for the probe this encodes.
     const seen: string[] = []
     vi.stubGlobal('fetch', vi.fn(async (url: string) => {
@@ -123,8 +123,8 @@ describe('getCoastalZoning', () => {
     const bbox = /BBOX=([^&]+)/.exec(seen[0])?.[1] ?? ''
     const [minLng, , maxLng] = decodeURIComponent(bbox).split(',').map(Number)
     const widthKm = (maxLng - minLng) * 111 * Math.cos((coords.lat * Math.PI) / 180)
-    expect(widthKm).toBeGreaterThan(8)
-    expect(widthKm).toBeLessThan(12)
+    expect(widthKm).toBeGreaterThan(14)
+    expect(widthKm).toBeLessThan(22)
   })
 
   it('rejects a profileUrl that is not a REDIAM https link', async () => {
