@@ -292,8 +292,8 @@
     "buyer": "Estoy pensando en comprar o invertir",
     "submit": "Consultar esta zona",
     "exploreHint": "o haz clic en cualquier punto del mapa",
-    "coverageNote": "Funciona en todo el Mediterráneo, con el mayor detalle en Andalucía. En el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
-    "keyAvailable": "Mayor detalle aquí",
+    "coverageNote": "Funciona en todo el Mediterráneo. Los países sombreados son aquellos con registros nacionales detrás de las respuestas, con el mayor detalle en Andalucía; en el resto, la aplicación indica qué comprobaciones no ha podido hacer.",
+    "keyAvailable": "Registros nacionales aquí",
     "keyUnavailable": "Menos registros locales",
     "noResults": "No se ha encontrado la ubicación. Prueba con un municipio cercano o un código postal."
   },
@@ -363,7 +363,7 @@
       }
     },
     "coverageHeading": "Dónde funciona",
-    "coverageBody": "La aplicación responde en todo el Mediterráneo, pero no con la misma profundidad en todas partes. Andalucía es donde hay más: sistemas de abastecimiento investigados a mano y niveles de embalses actualizados a diario. En el resto de España están las capas nacionales de inundación y aguas subterráneas. En Francia e Italia, los registros europeos de sequía y aguas de baño. Cuando una comprobación no tiene fuente, la aplicación lo dice en lugar de omitir la fila.",
+    "coverageBody": "La aplicación responde en todo el Mediterráneo, pero no con la misma profundidad en todas partes. Andalucía es donde hay más: sistemas de abastecimiento investigados a mano y niveles de embalses actualizados a diario. España y Francia aparecen sombreadas en el mapa porque allí también responden registros nacionales: inundación, agua de consumo y aguas subterráneas en España; el registro de agua potable y las restricciones por sequía en vigor en Francia. En el resto, incluida Italia, están los registros europeos de sequía e incendios. Cuando una comprobación no tiene fuente, la aplicación lo dice en lugar de omitir la fila.",
     "disclaimerHeading": "No es asesoramiento profesional",
     "disclaimerBody": "Esta es información de contexto, no asesoramiento jurídico, financiero ni pericial. No te bases solo en ella para una compra, una decisión de seguro o una solicitud urbanística. Confirma siempre con la fuente oficial y con un profesional cualificado.",
     "makerHeading": "Quién ha hecho esto, y por qué",
@@ -497,9 +497,14 @@
     "detailRegionLabel": "Más detalle aquí"
   },
   "news": {
-    "pendingTitle": "Todavía sin conectar",
-    "pendingBody": "Esta pestaña mostrará titulares recientes que mencionen esta zona, etiquetados según si hablan de agua o de incendios.",
-    "disclaimer": "Cuando esté activa, los titulares se recogerán automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados."
+    "loading": "Buscando noticias recientes…",
+    "windowWeek": "Titulares de la última semana que mencionan esta zona.",
+    "windowMonth": "Nada en la última semana: se muestra el último mes.",
+    "empty": "No se han encontrado noticias de esta zona en el último mes. Eso no significa que no haya pasado nada: los municipios pequeños apenas aparecen en las fuentes que podemos consultar.",
+    "unreachableTitle": "No se ha podido acceder a la fuente de noticias",
+    "unreachableBody": "El servicio de noticias limita las peticiones y ha rechazado la nuestra. Esto no dice nada sobre la zona: inténtalo de nuevo en un momento.",
+    "disclaimer": "Los titulares se recogen automáticamente de fuentes de noticias públicas: se buscan por nombre de lugar y no están verificados.",
+    "sourceNote": "Fuente: GDELT. Estas noticias mencionan este lugar por su nombre: la búsqueda es por nombre, no por distancia."
   },
   "supply": {
     "curated": "Abastecido por {{system}}. Estos embalses se han investigado a mano a partir de las publicaciones del propio operador.",

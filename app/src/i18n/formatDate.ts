@@ -43,3 +43,19 @@ export function formatMeasurement(
 ): string {
   return value.toLocaleString(localeFor(lang), options)
 }
+
+/**
+ * "2 days ago" for a news timestamp, localised by the browser.
+ *
+ * News is the one place in the app where relative time is the clearer form:
+ * the reader is judging freshness, not recording a reading date. Rounded down
+ * to whole days, so a headline is never described as newer than it is.
+ *
+ * Goes through `localeFor` like every other formatter here, so the day count
+ * in Arabic is written in the same Latin digits as the rest of the app.
+ */
+export function relativeDay(epochMs: number, lang = i18n.language, now = Date.now()): string {
+  const days = Math.floor((now - epochMs) / 86_400_000)
+  const rtf = new Intl.RelativeTimeFormat(localeFor(lang), { numeric: 'auto' })
+  return rtf.format(-days, 'day')
+}

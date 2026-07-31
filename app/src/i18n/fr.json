@@ -497,9 +497,14 @@
     "detailRegionLabel": "Plus de détail ici"
   },
   "news": {
-    "pendingTitle": "Pas encore connecté",
-    "pendingBody": "Cet onglet affichera les titres récents mentionnant ce secteur, étiquetés selon qu'ils parlent d'eau ou de feu.",
-    "disclaimer": "Une fois en service, les titres seront collectés automatiquement depuis des sources d'information publiques — repérés par nom de lieu, et non vérifiés."
+    "loading": "Recherche d'articles récents…",
+    "windowWeek": "Titres de la semaine dernière mentionnant ce secteur.",
+    "windowMonth": "Rien la semaine dernière — affichage du dernier mois.",
+    "empty": "Aucun article trouvé pour ce secteur au cours du dernier mois. Cela ne signifie pas qu'il ne s'est rien passé : les petites communes sont peu couvertes par les sources d'information que nous pouvons interroger.",
+    "unreachableTitle": "Impossible d'accéder à la source d'information",
+    "unreachableBody": "Le service d'information limite les requêtes et a rejeté la nôtre. Cela ne dit rien sur le secteur : réessayez dans un instant.",
+    "disclaimer": "Les titres sont collectés automatiquement depuis des sources d'information publiques — repérés par nom de lieu, et non vérifiés.",
+    "sourceNote": "Source : GDELT. Ces articles mentionnent ce lieu par son nom — la recherche se fait par nom, non par distance."
   },
   "supply": {
     "curated": "Alimenté par {{system}}. Ces retenues ont été recensées à la main à partir des publications de l'exploitant lui-même.",

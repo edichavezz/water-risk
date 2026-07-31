@@ -497,9 +497,14 @@
     "detailRegionLabel": "Più dettaglio qui"
   },
   "news": {
-    "pendingTitle": "Non ancora collegato",
-    "pendingBody": "Questa scheda mostrerà i titoli recenti che citano questa zona, etichettati a seconda che parlino di acqua o di incendi.",
-    "disclaimer": "Quando sarà attiva, i titoli verranno raccolti automaticamente da fonti di informazione pubbliche — individuati per nome di luogo, e non verificati."
+    "loading": "Ricerca di notizie recenti…",
+    "windowWeek": "Titoli dell'ultima settimana che citano quest'area.",
+    "windowMonth": "Niente nell'ultima settimana: si mostra l'ultimo mese.",
+    "empty": "Nessuna notizia trovata per quest'area nell'ultimo mese. Non significa che non sia successo nulla: i piccoli comuni sono poco coperti dalle fonti che possiamo consultare.",
+    "unreachableTitle": "Impossibile raggiungere la fonte delle notizie",
+    "unreachableBody": "Il servizio di notizie limita le richieste e ha respinto la nostra. Questo non dice nulla sull'area: riprova tra poco.",
+    "disclaimer": "I titoli sono raccolti automaticamente da fonti di informazione pubbliche: individuati per nome del luogo e non verificati.",
+    "sourceNote": "Fonte: GDELT. Questi articoli citano questo luogo per nome: la ricerca è per nome, non per distanza."
   },
   "supply": {
     "curated": "Alimentato da {{system}}. Questi invasi sono stati ricostruiti a mano dalle pubblicazioni del gestore stesso.",

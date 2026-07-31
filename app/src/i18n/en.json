@@ -292,8 +292,8 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Works anywhere in the Mediterranean, with the most detail in Andalucía. Everywhere else the app shows which checks it could not run.",
-    "keyAvailable": "Most detail here",
+    "coverageNote": "Works anywhere in the Mediterranean. The shaded countries are the ones with national registers behind the answers, with the most detail in Andalucía; everywhere else the app shows which checks it could not run.",
+    "keyAvailable": "National records here",
     "keyUnavailable": "Fewer local records",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
   },
@@ -363,7 +363,7 @@
       }
     },
     "coverageHeading": "Where it works",
-    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Elsewhere in Spain you get the national flood and groundwater layers. In France and Italy you get the Europe-wide drought and bathing-water records. Wherever a check has no source, the app says so rather than leaving the row out.",
+    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Spain and France are shaded on the map because national registers answer there too — flood, drinking water and groundwater in Spain, the drinking-water register and the drought restrictions in force in France. Elsewhere, including Italy, you get the Europe-wide drought and fire records. Wherever a check has no source, the app says so rather than leaving the row out.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
     "makerHeading": "Who made this, and why",
@@ -497,9 +497,14 @@
     "detailRegionLabel": "More detail here"
   },
   "news": {
-    "pendingTitle": "Not connected yet",
-    "pendingBody": "This tab will show recent headlines mentioning this area, tagged by whether they are about water or fire.",
-    "disclaimer": "When it is live, headlines will be pulled automatically from public news sources — matched by place name, not verified."
+    "loading": "Looking for recent coverage…",
+    "windowWeek": "Headlines from the last week that mention this area.",
+    "windowMonth": "Nothing in the last week — showing the last month.",
+    "empty": "No coverage found for this area in the last month. That is not the same as nothing having happened — small towns are thinly covered by the news sources we can search.",
+    "unreachableTitle": "Couldn’t reach the news source",
+    "unreachableBody": "The news service is rate-limited and turned us away. This says nothing about the area — try again in a moment.",
+    "disclaimer": "Headlines are pulled automatically from public news sources — matched by place name, not verified.",
+    "sourceNote": "Source: GDELT. These articles mention this place by name — the search is by name, not by distance."
   },
   "supply": {
     "curated": "Supplied by {{system}}. These reservoirs were researched by hand from the operator’s own publications.",

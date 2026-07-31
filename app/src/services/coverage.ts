@@ -5,6 +5,7 @@ import type { PlaceContext } from '../types/place'
 import type { DatasetId } from '../types/workspace'
 import { DATASETS } from '../registry/datasets'
 import andaluciaBoundary from '../data/andalucia-boundary.json'
+import countryOutlines from '../data/country-outlines.generated.json'
 
 /**
  * How much detail a place gets.
@@ -57,6 +58,18 @@ const DETAILED_REGIONS: DetailedRegion[] = [
  */
 const CONTINENTAL = new Set<DatasetId>(['drought', 'fireDanger', 'fireHistory'])
 
+/**
+ * Countries where a national register answers, beyond the continental layers —
+ * Spain (SNCZI, SINAC, IGME) and France (Hub'Eau, VigiEau).
+ *
+ * Lowercased to match `PlaceContext.countryCode`. This is the one place a
+ * country list is written down, and `coverage.test.ts` probes every dataset's
+ * `applicability` to prove it matches what the registry actually answers. Add a
+ * country when a predicate covers it, not when a source is planned — the map
+ * paints this list, and a painted country is a promise.
+ */
+export const NATIONAL_COUNTRIES = ['es', 'fr'] as const
+
 function detailedRegionAt(coords: Coordinates): DetailedRegion | undefined {
   const pt = point([coords.lng, coords.lat])
   return DETAILED_REGIONS.find(r => booleanPointInPolygon(pt, r.geometry))
@@ -102,4 +115,22 @@ export function coverageProfile(place: PlaceContext): CoverageProfile {
  */
 export function detailedRegionsGeoJSON(): GeoJSON.FeatureCollection {
   return { type: 'FeatureCollection', features: DETAILED_REGIONS.map(r => r.geometry) }
+}
+
+/**
+ * The countries the map paints underneath the detailed regions.
+ *
+ * Deliberately a weaker wash than {@link detailedRegionsGeoJSON}: two tiers
+ * that look alike would tell the reader that France has what Andalucía has.
+ */
+export function nationalCoverageGeoJSON(): GeoJSON.FeatureCollection {
+  const { features } = countryOutlines as unknown as GeoJSON.FeatureCollection
+  return {
+    type: 'FeatureCollection',
+    features: features.filter(f =>
+      (NATIONAL_COUNTRIES as readonly string[]).includes(
+        String(f.properties?.iso),
+      ),
+    ),
+  }
 }
