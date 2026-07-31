@@ -2,7 +2,7 @@ import type maplibregl from 'maplibre-gl'
 import type { ExpressionSpecification } from 'maplibre-gl'
 import maplibre from 'maplibre-gl'
 import i18n from '../i18n'
-import { formatLongDate } from '../i18n/formatDate'
+import { formatLongDate, formatMeasurement } from '../i18n/formatDate'
 import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
@@ -289,8 +289,8 @@ export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
   const lines: string[] = []
   if (props.storedHm3 != null && props.capacityHm3 != null) {
     lines.push(i18n.t('map.reservoir.storage', {
-      stored: props.storedHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
-      capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+      stored: formatMeasurement(props.storedHm3, i18n.language, { maximumFractionDigits: 1 }),
+      capacity: formatMeasurement(props.capacityHm3, i18n.language, { maximumFractionDigits: 1 }),
     }))
   }
   // Today's level only means something next to a normal year. Rendered as a

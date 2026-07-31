@@ -32,7 +32,7 @@ export default function EntryCard() {
   return (
     /* Docked left and sized to its content — never stretched to full height,
        so the map stays readable behind and beside it. */
-    <div className="absolute left-8 top-[88px] z-10 max-h-[calc(100dvh-7.5rem)] w-[360px] max-w-[calc(100vw-4rem)] overflow-y-auto rounded-2xl bg-canvas p-6 shadow-[0_10px_28px_rgba(30,42,56,.16)]">
+    <div className="absolute start-8 top-[88px] z-10 max-h-[calc(100dvh-7.5rem)] w-[360px] max-w-[calc(100vw-4rem)] overflow-y-auto rounded-2xl bg-canvas p-6 shadow-[0_10px_28px_rgba(30,42,56,.16)]">
       {/* The heading this card used to carry is now the header tagline. */}
       <p className="text-[13px] leading-relaxed text-muted">{t('entry.supporting')}</p>
 
@@ -50,7 +50,7 @@ export default function EntryCard() {
           onKeyDown={e => { if (e.key === 'Enter' && suggestions.length > 0) choose(suggestions[0]) }}
           className="min-h-11 w-full rounded-[10px] border border-field bg-canvas px-3 py-2 text-sm outline-none focus:border-primary"
         />
-        {searching && <span className="absolute right-3 top-10 text-xs text-muted">…</span>}
+        {searching && <span className="absolute end-3 top-10 text-xs text-muted">…</span>}
         {suggestions.length > 0 && (
           <ul role="listbox" className="absolute z-20 mt-1 w-full overflow-hidden rounded-[10px] border border-hairline bg-canvas shadow-[0_10px_28px_rgba(30,42,56,.16)]">
             {suggestions.map((s, i) => (
@@ -59,7 +59,7 @@ export default function EntryCard() {
                   role="option"
                   aria-selected={false}
                   onClick={() => choose(s)}
-                  className="block min-h-11 w-full px-3 py-2 text-left text-sm hover:bg-subtle-cool"
+                  className="block min-h-11 w-full px-3 py-2 text-start text-sm hover:bg-subtle-cool"
                 >
                   <span className="font-bold text-ink">{s.municipality || s.displayName.split(',')[0]}</span>
                   {s.provinceName && <span className="text-muted"> · {s.provinceName}</span>}
@@ -87,7 +87,7 @@ export default function EntryCard() {
               onClick={() => toggleAudience(a)}
               /* Selected reads as a deliberate 1.5px teal outline over the cool
                  wash, rather than a heavier filled state. */
-              className={`min-h-11 rounded-[10px] px-3 py-2 text-left text-[13px] text-ink ${
+              className={`min-h-11 rounded-[10px] px-3 py-2 text-start text-[13px] text-ink ${
                 audience === a
                   ? 'border-[1.5px] border-primary bg-primary-soft'
                   /* Half-strength wash: the token equals `primary-soft`, so a

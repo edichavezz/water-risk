@@ -120,7 +120,7 @@ export default function LayerTray() {
        omitted them). Collapsed, the card folds to a pill and leaves the map
        open for unobstructed exploration. */
     <div
-      className={`absolute right-14 top-[88px] z-10 max-h-[calc(100dvh-7.5rem)] overflow-y-auto bg-canvas transition-[width,border-radius,padding] duration-[var(--dur-panel)] ${
+      className={`absolute end-14 top-[88px] z-10 max-h-[calc(100dvh-7.5rem)] overflow-y-auto bg-canvas transition-[width,border-radius,padding] duration-[var(--dur-panel)] ${
         open
           ? 'w-[236px] rounded-[14px] p-4 shadow-[0_10px_26px_rgba(30,42,56,.16)]'
           : 'rounded-[24px] px-4 py-2.5 shadow-[0_8px_20px_rgba(30,42,56,.16)]'

@@ -101,7 +101,7 @@ export default function InterpretationView() {
                   <button
                     key={i}
                     onClick={() => ask(q)}
-                    className="min-h-11 rounded-[20px] border border-field px-3.5 py-2 text-left text-xs text-ink hover:bg-subtle-cool"
+                    className="min-h-11 rounded-[20px] border border-field px-3.5 py-2 text-start text-xs text-ink hover:bg-subtle-cool"
                   >
                     {q}
                   </button>

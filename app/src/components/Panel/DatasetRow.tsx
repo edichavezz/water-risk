@@ -45,7 +45,7 @@ export default function DatasetRow({ def }: { def: DatasetDef }) {
     <div className={`border-t border-hairline-soft ${FADED.has(status) ? 'opacity-60' : ''}`}>
       <button
         onClick={() => selectDataset(def.id)}
-        className="flex min-h-11 w-full flex-col items-start gap-0.5 py-[11px] text-left hover:bg-subtle-cool/50"
+        className="flex min-h-11 w-full flex-col items-start gap-0.5 py-[11px] text-start hover:bg-subtle-cool/50"
       >
         <span className="flex flex-wrap items-center gap-x-[7px] gap-y-1">
           {/* Hazard colour is added to the glyph, never substituted for it —
@@ -83,13 +83,13 @@ export default function DatasetRow({ def }: { def: DatasetDef }) {
         {/* The summary states the status in words for every non-available
             case, so the glyph above is decorative and needs no sr-only twin.
             Indented to hang under the name, clear of the status dot. */}
-        <span className="ml-4 text-[11.5px] leading-snug text-ink">
+        <span className="ms-4 text-[11.5px] leading-snug text-ink">
           {resultSummary(def.id, result, t)}
         </span>
-        <span className="ml-4 text-[10px] text-muted">{t(`registry.${def.id}.cadence`)}</span>
+        <span className="ms-4 text-[10px] text-muted">{t(`registry.${def.id}.cadence`)}</span>
       </button>
       {status === 'error' && (
-        <div className="ml-4 pb-2">
+        <div className="ms-4 pb-2">
           <button
             onClick={() => void retryDataset(def.id)}
             className="min-h-11 rounded-lg border border-field px-2.5 py-1 text-[11px] font-bold text-ink hover:bg-subtle-cool"

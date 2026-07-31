@@ -135,7 +135,7 @@ export default function DatasetDetail() {
           not a warning block competing with the result above them. */}
       <div className="rounded-xl border border-[#E9D9C2] p-3.5">
         <p className="mb-1.5 text-[11.5px] font-bold text-accent-ink">{t('panel.doesNotShow')}</p>
-        <ul className="list-disc pl-4 text-[11.5px] leading-relaxed text-[#4A3A2C]">
+        <ul className="list-disc ps-4 text-[11.5px] leading-relaxed text-[#4A3A2C]">
           {limitations.map((l, i) => <li key={i}>{l}</li>)}
         </ul>
       </div>
