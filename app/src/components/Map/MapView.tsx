@@ -4,7 +4,13 @@ import maplibregl from 'maplibre-gl'
 // it here too would re-inject it unlayered and beat every Tailwind utility.
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
-import { addDetailRegionLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
+import {
+  addDetailRegionLayers,
+  addNationalCoverageLayers,
+  setCoverageVisible,
+  ENTRY_CENTER,
+  ENTRY_ZOOM,
+} from '../../map/coverageLayers'
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
   applyReservoirHighlight, fitReservoirsInView, updateFireHistorySource,
@@ -62,7 +68,10 @@ export default function MapView() {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
       map.addControl(new maplibregl.ScaleControl(), 'bottom-left')
       map.on('load', () => {
+        // National wash first, so the Andalucía detail tier draws over it.
+        addNationalCoverageLayers(map)
         addDetailRegionLayers(map)
+        setCoverageVisible(map, useAppStore.getState().view === 'entry')
         ensureDataLayers(map)
         bindMapInteractions(map)
         // Results can land before the style finishes loading (reservoirs
@@ -122,6 +131,14 @@ export default function MapView() {
     if (map.isMoving()) map.once('moveend', fit)
     else fit()
   }, [reservoirResult, location, searchOrigin, contextLayers])
+
+  // ── Coverage shading is entry-only ───────────────────────────────────────
+  // It is explained by CoverageKey, which App only renders on the entry view.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    setCoverageVisible(map, view === 'entry')
+  }, [view])
 
   // ── Camera follows workspace state ───────────────────────────────────────
   useEffect(() => {

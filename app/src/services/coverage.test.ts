@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { coverageProfile, detailedRegionsGeoJSON } from './coverage'
+import { booleanPointInPolygon } from '@turf/boolean-point-in-polygon'
+import { point } from '@turf/helpers'
+import {
+  coverageProfile,
+  detailedRegionsGeoJSON,
+  nationalCoverageGeoJSON,
+  NATIONAL_COUNTRIES,
+} from './coverage'
 import { DATASETS } from '../registry/datasets'
 import type { PlaceContext } from '../types/place'
 
@@ -79,5 +86,76 @@ describe('detailedRegionsGeoJSON', () => {
     const fc = detailedRegionsGeoJSON()
     expect(fc.type).toBe('FeatureCollection')
     expect(fc.features.length).toBe(1)
+  })
+})
+
+describe('nationalCoverageGeoJSON', () => {
+  it('paints exactly the countries in NATIONAL_COUNTRIES', () => {
+    const fc = nationalCoverageGeoJSON()
+    expect(fc.features.map(f => f.properties?.iso).sort()).toEqual(
+      [...NATIONAL_COUNTRIES].sort(),
+    )
+  })
+
+  it('leaves out the overseas territories the app is not framed on', () => {
+    const pt = point([-52.3, 4.9]) // Cayenne, French Guiana.
+    const hit = nationalCoverageGeoJSON().features.some(f =>
+      booleanPointInPolygon(pt, f as GeoJSON.Feature<GeoJSON.MultiPolygon>),
+    )
+    expect(hit).toBe(false)
+  })
+
+  it('covers the mainlands and the islands the registers reach', () => {
+    const fc = nationalCoverageGeoJSON()
+    const inside = ([lng, lat]: [number, number]) =>
+      fc.features.some(f =>
+        booleanPointInPolygon(point([lng, lat]), f as GeoJSON.Feature<GeoJSON.MultiPolygon>),
+      )
+    // Madrid, Palma, Gran Canaria, Paris, Ajaccio.
+    for (const c of [
+      [-3.7, 40.4], [2.65, 39.57], [-15.43, 28.1], [2.35, 48.86], [8.74, 41.93],
+    ] as [number, number][]) {
+      expect(inside(c)).toBe(true)
+    }
+  })
+})
+
+/**
+ * The house rule in `coverage.ts` is that coverage copy is derived from the
+ * registry, never from a hand-kept table. `NATIONAL_COUNTRIES` is the one
+ * exception — the map needs a list of shapes to paint — so this probes the
+ * registry and fails if the list and the predicates ever disagree.
+ *
+ * Italy is the case this exists for: the About copy and a registry comment both
+ * mention it, but no predicate covers it, so it must not be painted.
+ */
+describe('NATIONAL_COUNTRIES', () => {
+  // One fixed coastal, inhabited point, with only the country code varying.
+  // Holding the geometry still is what isolates the country dimension:
+  // bathingWater covers any coast and drought covers the continent, so probing
+  // real coordinates per country would count those as national sources.
+  const PROBE = { lat: 43.29, lng: 5.37 }
+  const CANDIDATES = ['es', 'fr', 'it', 'pt', 'gr', 'ma', 'dz', 'hr']
+
+  const verdicts = (code: string) =>
+    DATASETS.map(d => d.applicability(place(`Probe, ${code}`, PROBE.lat, PROBE.lng, code)))
+
+  /** Datasets whose answer turns on which country you are in. */
+  const nationalDatasets = DATASETS.filter((_, i) =>
+    new Set(CANDIDATES.map(c => verdicts(c)[i])).size > 1,
+  )
+
+  it('finds the registry actually has country-dependent sources to paint', () => {
+    expect(nationalDatasets.length).toBeGreaterThan(0)
+  })
+
+  it('lists every country a national source answers in, and no others', () => {
+    const answered = CANDIDATES.filter(code =>
+      nationalDatasets.some(
+        d => d.applicability(place(`Probe, ${code}`, PROBE.lat, PROBE.lng, code)) === 'covered',
+      ),
+    )
+
+    expect(answered.sort()).toEqual([...NATIONAL_COUNTRIES].sort())
   })
 })

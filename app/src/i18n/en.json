@@ -291,8 +291,8 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Works anywhere in the Mediterranean, with the most detail in Andalucía. Everywhere else the app shows which checks it could not run.",
-    "keyAvailable": "Most detail here",
+    "coverageNote": "Works anywhere in the Mediterranean. The shaded countries are the ones with national registers behind the answers, with the most detail in Andalucía; everywhere else the app shows which checks it could not run.",
+    "keyAvailable": "National records here",
     "keyUnavailable": "Fewer local records",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
   },
@@ -362,7 +362,7 @@
       }
     },
     "coverageHeading": "Where it works",
-    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Elsewhere in Spain you get the national flood and groundwater layers. In France and Italy you get the Europe-wide drought and bathing-water records. Wherever a check has no source, the app says so rather than leaving the row out.",
+    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Spain and France are shaded on the map because national registers answer there too — flood, drinking water and groundwater in Spain, the drinking-water register and the drought restrictions in force in France. Elsewhere, including Italy, you get the Europe-wide drought and fire records. Wherever a check has no source, the app says so rather than leaving the row out.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
     "makerHeading": "Who made this, and why",

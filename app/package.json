@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "fetch:reservoirs": "node scripts/fetch-reservoirs.mjs"
+    "fetch:reservoirs": "node scripts/fetch-reservoirs.mjs",
+    "fetch:coastline": "node scripts/fetch-coastline.mjs",
+    "fetch:country-outlines": "node scripts/fetch-country-outlines.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
