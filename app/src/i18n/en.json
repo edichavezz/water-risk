@@ -184,7 +184,7 @@
     },
     "fireDanger": {
       "name": "Fire danger forecast",
-      "cadence": "Updated daily (EFFIS Fire Weather Index)",
+      "cadence": "Requested live for today (EFFIS Fire Weather Index)",
       "resolution": "~8 km grid",
       "limitations": [
         "Does not show whether a fire is burning now",
@@ -192,12 +192,22 @@
         "A forecast class, not a measurement"
       ]
     },
+    "activeFire": {
+      "name": "Recent satellite fire detections",
+      "cadence": "Updated after NOAA-20 satellite overpasses (NASA FIRMS / VIIRS)",
+      "resolution": "375 m thermal-anomaly pixels within 30 km",
+      "limitations": [
+        "A thermal detection is not a confirmed wildfire incident",
+        "Cloud, smoke and the time between satellite passes can hide fires",
+        "Industrial heat and other hot surfaces can also be detected"
+      ]
+    },
     "fireHistory": {
       "name": "Past fires nearby",
       "cadence": "Updated through the season (EFFIS burnt areas)",
-      "resolution": "Perimeters from satellite, fires above roughly 30 ha",
+      "resolution": "Satellite-derived mapped perimeters; completeness varies by incident and season",
       "limitations": [
-        "Small fires are not mapped, so absence is not proof nothing burned",
+        "Some fires, especially smaller ones, may be missing, so absence is not proof nothing burned",
         "Records where fire has been, not where it is likely to go next",
         "Perimeters are satellite-derived and approximate"
       ]
@@ -280,6 +290,9 @@
     },
     "fireHistory": {
       "burnt": "Burnt area"
+    },
+    "activeFire": {
+      "detection": "Recent thermal detection"
     }
   },
   "entry": {
@@ -348,6 +361,10 @@
       "fireDanger": {
         "question": "How dangerous is fire weather here right now?",
         "answer": "Europe's fire information system forecasts, each day, how readily a fire would start and spread given the weather — heat, wind, humidity and how dry the ground has become. We read the class for your point off that forecast. It describes conditions, not whether anything is alight."
+      },
+      "activeFire": {
+        "question": "Has a satellite detected fire-like heat nearby recently?",
+        "answer": "The VIIRS instrument on NASA's NOAA-20 feed flags unusually hot pixels after each satellite pass. We show presumed vegetation-fire detections within 30 km from the last 24 hours, with the recorded UTC time. These are thermal anomalies, not confirmed incidents, and cloud or gaps between passes can hide a fire."
       },
       "fireHistory": {
         "question": "Has this area burned before?",
@@ -443,7 +460,12 @@
       },
       "fireHistory": {
         "none": "No mapped fire within {{km}} km since {{since}}",
-        "count": "{{count}} mapped fires within {{km}} km — largest {{largest}} ha, most recent {{year}}"
+        "count": "{{count}} mapped fires within {{km}} km — largest {{largest}} ha, most recent {{date}}"
+      },
+      "activeFire": {
+        "none": "No satellite thermal detection within {{km}} km in the last {{hours}} hours",
+        "count": "{{count}} thermal detection within {{km}} km in the last 24 hours — latest {{date}}",
+        "count_other": "{{count}} thermal detections within {{km}} km in the last 24 hours — latest {{date}}"
       },
       "firePrevention": {
         "plan": "{{region}} publishes {{plan}}"
@@ -454,7 +476,10 @@
     },
     "newsTab": "Live news",
     "noResultCount": "{{count}} checks have no source here — show them",
-    "preventionCheckedAt": "Link last checked {{date}}"
+    "preventionCheckedAt": "Link last checked {{date}}",
+    "fireDanger": {
+      "forDate": "Forecast for {{date}}"
+    }
   },
   "states": {
     "loading": "Checking source…",

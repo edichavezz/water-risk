@@ -59,11 +59,11 @@ describe('dataset registry', () => {
     expect(resident[0]).toBe('drought')
   })
 
-  it('map roles: four primaries, two context overlays, the rest panel-only', () => {
+  it('map roles: four primaries, three context overlays, the rest panel-only', () => {
     expect(DATASETS.filter(d => d.mapRole === 'primary').map(d => d.id).sort())
       .toEqual(['coastalFlood', 'drought', 'fireDanger', 'flood'])
     expect(DATASETS.filter(d => d.mapRole === 'context').map(d => d.id).sort())
-      .toEqual(['fireHistory', 'reservoirs'])
+      .toEqual(['activeFire', 'fireHistory', 'reservoirs'])
     expect(getDataset('waterQuality').mapRole).toBe('none')
     expect(getDataset('bathingWater').mapRole).toBe('none')
     expect(getDataset('firePrevention').mapRole).toBe('none')
@@ -74,7 +74,7 @@ describe('dataset registry', () => {
 
   it('splits into the two hazard families the UI groups by', () => {
     expect(DATASETS.filter(d => d.hazard === 'fire').map(d => d.id).sort())
-      .toEqual(['fireDanger', 'fireHistory', 'firePrevention'])
+      .toEqual(['activeFire', 'fireDanger', 'fireHistory', 'firePrevention'])
     expect(DATASETS.every(d => d.hazard === 'water' || d.hazard === 'fire')).toBe(true)
   })
 

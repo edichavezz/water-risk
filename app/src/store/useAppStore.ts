@@ -7,6 +7,7 @@ import type {
 } from '../types/workspace'
 import { coverageProfile, type CoverageProfile } from '../services/coverage'
 import { getDataset } from '../registry/datasets'
+import { isDrawableHere } from '../registry/ordering'
 import type { NewsAnswer, NewsState } from '../types/news'
 import { getNewsForLocation, reserveNewsSlot } from '../services/news'
 
@@ -162,11 +163,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   selectDataset: id => {
     const def = getDataset(id)
-    set({
-      selectedDataset: id,
-      panelDepth: 'detail',
-      panelMode: 'data',
-      ...(def.mapRole === 'primary' ? { primaryLayer: id } : {}),
+    set(state => {
+      const drawable = isDrawableHere(id, state.results)
+      let contextLayers = state.contextLayers
+      if (def.mapRole === 'context' && drawable && !contextLayers.includes(id)) {
+        contextLayers = contextLayers.length >= MAX_CONTEXT_LAYERS
+          ? [...contextLayers.slice(1), id]
+          : [...contextLayers, id]
+      }
+      return {
+        selectedDataset: id,
+        panelDepth: 'detail',
+        panelMode: 'data',
+        contextLayers,
+        ...(def.mapRole === 'primary' && drawable ? { primaryLayer: id } : {}),
+      }
     })
   },
 

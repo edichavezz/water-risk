@@ -58,6 +58,35 @@ describe('workspace store', () => {
     expect(s.primaryLayer).toBe('flood')
   })
 
+  it('selecting mapped fire history opens detail and activates its context layer', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    useAppStore.getState().setResult('fireHistory', {
+      status: 'available', data: { fires: [], radiusKm: 30, since: 2012, source: 'Copernicus EFFIS' },
+    })
+    useAppStore.getState().selectDataset('fireHistory')
+    expect(useAppStore.getState().contextLayers).toEqual(['reservoirs', 'fireHistory'])
+  })
+
+  it('selecting a new context result replaces the oldest overlay at the limit', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    useAppStore.getState().setResult('fireHistory', {
+      status: 'available', data: { fires: [], radiusKm: 30, since: 2012, source: 'Copernicus EFFIS' },
+    })
+    useAppStore.getState().selectDataset('fireHistory')
+    useAppStore.getState().setResult('activeFire', {
+      status: 'available', data: { detections: [], radiusKm: 30, windowHours: 24, through: '2026-08-03T12:00:00Z', source: 'NASA FIRMS' },
+    })
+    useAppStore.getState().selectDataset('activeFire')
+    expect(useAppStore.getState().contextLayers).toEqual(['fireHistory', 'activeFire'])
+  })
+
+  it('does not activate a fire-danger raster when its dated reading is unavailable', () => {
+    useAppStore.getState().beginSearch(sevilla)
+    useAppStore.getState().setResult('fireDanger', { status: 'unavailable' })
+    useAppStore.getState().selectDataset('fireDanger')
+    expect(useAppStore.getState().primaryLayer).toBeNull()
+  })
+
   it('primary layers are mutually exclusive', () => {
     useAppStore.getState().beginSearch(sevilla)
     useAppStore.getState().setPrimaryLayer('flood')

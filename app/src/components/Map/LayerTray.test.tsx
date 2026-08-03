@@ -95,6 +95,12 @@ describe('layer tray', () => {
     expect(screen.getByRole('radio', { name: /river flood zones/i })).not.toBeDisabled()
   })
 
+  it('fails closed for a missing dated fire forecast', () => {
+    useAppStore.setState({ results: { fireDanger: { status: 'unavailable' } } })
+    render(<LayerTray />)
+    expect(screen.getByRole('radio', { name: /fire danger forecast/i })).toBeDisabled()
+  })
+
   it('drops a selected layer that stops applying, rather than stranding it', async () => {
     useAppStore.setState({ primaryLayer: 'coastalFlood' })
     const { rerender } = render(<LayerTray />)

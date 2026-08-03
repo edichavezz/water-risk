@@ -18,6 +18,7 @@ export type DatasetId =
   | 'groundwater'
   | 'bathingWater'
   | 'fireDanger'
+  | 'activeFire'
   | 'fireHistory'
   | 'firePrevention'
   | 'waterRestrictions'
@@ -25,7 +26,7 @@ export type DatasetId =
 export const ALL_DATASET_IDS: DatasetId[] = [
   'flood', 'drought', 'reservoirs', 'waterQuality',
   'coastalFlood', 'groundwater', 'bathingWater',
-  'fireDanger', 'fireHistory', 'firePrevention',
+  'fireDanger', 'activeFire', 'fireHistory', 'firePrevention',
   'waterRestrictions',
 ]
 

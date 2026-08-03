@@ -8,6 +8,7 @@ export const DATASET_MAP_LAYERS: Record<DatasetId, string[]> = {
   groundwater: [],
   reservoirs: ['reservoirs-halo', 'reservoirs-circle', 'reservoirs-label', 'reservoirs-name'],
   fireDanger: ['fire-danger-layer'],
+  activeFire: ['active-fire-circle'],
   fireHistory: ['fire-history-fill', 'fire-history-line'],
   waterQuality: [],
   bathingWater: [],

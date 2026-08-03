@@ -128,4 +128,16 @@ describe('getFireHistory', () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 503 })))
     await expect(getFireHistory(ronda)).rejects.toThrow('503')
   })
+
+  it('keeps the returned perimeter geometry for the map instead of refetching it', async () => {
+    const mapped = feature(-5.2, 36.8, {
+      FIREDATE: '2026-07-29 00:00:00', AREA_HA: '318',
+    })
+    vi.stubGlobal('fetch', vi.fn(async () => ({
+      ok: true, json: async () => ({ type: 'FeatureCollection', features: [mapped] }),
+    })))
+    const result = await getFireHistory(ronda)
+    expect(result.perimeters?.type).toBe('FeatureCollection')
+    expect(result.perimeters?.features).toEqual([mapped])
+  })
 })

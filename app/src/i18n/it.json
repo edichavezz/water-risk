@@ -184,7 +184,7 @@
     },
     "fireDanger": {
       "name": "Previsione del pericolo di incendio",
-      "cadence": "Aggiornato ogni giorno (indice meteo-incendi EFFIS)",
+      "cadence": "Richiesto in tempo reale per oggi (indice meteo-incendi EFFIS)",
       "resolution": "Griglia di circa 8 km",
       "limitations": [
         "Non indica se un incendio è in corso adesso",
@@ -192,12 +192,22 @@
         "È una classe di previsione, non una misura"
       ]
     },
+    "activeFire": {
+      "name": "Rilevamenti satellitari recenti di incendi",
+      "cadence": "Aggiornato dopo i passaggi del satellite NOAA-20 (NASA FIRMS / VIIRS)",
+      "resolution": "Pixel di anomalia termica da 375 m entro 30 km",
+      "limitations": [
+        "Un rilevamento termico non è un incendio boschivo confermato",
+        "Nuvole, fumo e l’intervallo tra i passaggi possono nascondere gli incendi",
+        "Anche il calore industriale e altre superfici calde possono essere rilevati"
+      ]
+    },
     "fireHistory": {
       "name": "Incendi passati nelle vicinanze",
       "cadence": "Aggiornato durante la stagione (aree bruciate EFFIS)",
-      "resolution": "Perimetri da satellite, incendi oltre i 30 ha circa",
+      "resolution": "Perimetri mappati da satellite; la completezza varia per incendio e stagione",
       "limitations": [
-        "Gli incendi piccoli non vengono cartografati: la loro assenza non prova nulla",
+        "Alcuni incendi, soprattutto quelli piccoli, possono mancare: la loro assenza non prova nulla",
         "Registra dove il fuoco è passato, non dove è probabile che vada",
         "I perimetri derivano dal satellite e sono approssimativi"
       ]
@@ -280,6 +290,9 @@
     },
     "fireHistory": {
       "burnt": "Area bruciata"
+    },
+    "activeFire": {
+      "detection": "Rilevamento termico recente"
     }
   },
   "entry": {
@@ -348,6 +361,10 @@
       "fireDanger": {
         "question": "Quanto è pericoloso il meteo-incendi qui in questo momento?",
         "answer": "Il sistema europeo di informazione sugli incendi boschivi prevede ogni giorno con quanta facilità un incendio si innescherebbe e si propagherebbe date le condizioni meteo — caldo, vento, umidità e quanto si è seccato il terreno. Leggiamo la classe corrispondente al tuo punto. Descrive le condizioni, non se qualcosa stia bruciando."
+      },
+      "activeFire": {
+        "question": "Un satellite ha rilevato di recente calore simile a un incendio nelle vicinanze?",
+        "answer": "Lo strumento VIIRS della NASA segnala i pixel insolitamente caldi dopo ogni passaggio. Mostriamo i rilevamenti attribuibili alla vegetazione entro 30 km nelle ultime 24 ore, con l’ora UTC registrata. Sono anomalie termiche, non incendi confermati, e nuvole o intervalli tra i passaggi possono nascondere un incendio."
       },
       "fireHistory": {
         "question": "Questa zona ha già bruciato?",
@@ -443,7 +460,12 @@
       },
       "fireHistory": {
         "none": "Nessun incendio cartografato entro {{km}} km dal {{since}}",
-        "count": "{{count}} incendi cartografati entro {{km}} km — il più grande {{largest}} ha, il più recente nel {{year}}"
+        "count": "{{count}} incendi cartografati entro {{km}} km — il più grande {{largest}} ha, il più recente il {{date}}"
+      },
+      "activeFire": {
+        "none": "Nessun rilevamento termico satellitare entro {{km}} km nelle ultime {{hours}} ore",
+        "count": "{{count}} rilevamento termico entro {{km}} km nelle ultime 24 ore — il più recente il {{date}}",
+        "count_other": "{{count}} rilevamenti termici entro {{km}} km nelle ultime 24 ore — il più recente il {{date}}"
       },
       "firePrevention": {
         "plan": "{{region}} pubblica {{plan}}"
@@ -454,7 +476,10 @@
     },
     "newsTab": "Notizie",
     "noResultCount": "{{count}} verifiche senza fonte qui — mostrale",
-    "preventionCheckedAt": "Link verificato il {{date}}"
+    "preventionCheckedAt": "Link verificato il {{date}}",
+    "fireDanger": {
+      "forDate": "Previsione per il {{date}}"
+    }
   },
   "states": {
     "loading": "Consultazione della fonte…",

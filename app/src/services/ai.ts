@@ -5,7 +5,8 @@ import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, BathingWaterResult,
-  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
+  ActiveFireResult, FireDangerResult, FireHistoryResult, FirePreventionResult,
+  WaterRestrictionResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -97,6 +98,17 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       // Named as a published forecast class, not a number we derived — the
       // model must not describe it as a measurement.
       return `EFFIS fire danger forecast class for ${d.forDate}: ${d.danger.replace('_', ' ')} (source Copernicus EFFIS).`
+    }
+    case 'activeFire': {
+      const d = r.data as ActiveFireResult
+      if (d.detections.length === 0) {
+        return `No VIIRS thermal anomaly recorded within ${d.radiusKm} km during the last ${d.windowHours} hours through ${d.through} (source NASA FIRMS). This is not proof no fire is burning; satellite timing, cloud and smoke can cause misses.`
+      }
+      const listed = d.detections
+        .slice(0, 10)
+        .map(x => `${x.detectedAt}, ${x.distanceKm} km away, ${x.confidence} confidence, ${x.satellite}`)
+        .join('; ')
+      return `${d.detections.length} VIIRS thermal anomaly detection(s) within ${d.radiusKm} km during the last ${d.windowHours} hours: ${listed} (source NASA FIRMS). These are satellite heat detections, not confirmed wildfire incidents.`
     }
     case 'fireHistory': {
       const d = r.data as FireHistoryResult

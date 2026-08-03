@@ -14,10 +14,11 @@ import {
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
   applyReservoirHighlight, fitReservoirsInView, updateFireHistorySource,
+  updateActiveFireSource,
 } from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
 import { reservoirLngLat } from '../../services/reservoirs'
-import type { Reservoir } from '../../types'
+import type { ActiveFireResult, FireHistoryResult } from '../../types'
 import type { DatasetResult } from '../../types/workspace'
 import type { SupplyAnswer } from '../../types/supply'
 
@@ -41,6 +42,8 @@ export default function MapView() {
   const primaryLayer = useAppStore(s => s.primaryLayer)
   const contextLayers = useAppStore(s => s.contextLayers)
   const reservoirResult = useAppStore(s => s.results.reservoirs)
+  const activeFireResult = useAppStore(s => s.results.activeFire)
+  const fireHistoryResult = useAppStore(s => s.results.fireHistory)
 
   // ── Bootstrap the single map instance ────────────────────────────────────
   useEffect(() => {
@@ -80,6 +83,18 @@ export default function MapView() {
         const { primaryLayer: p, contextLayers: c, results } = useAppStore.getState()
         applyLayerPlan(map, p, c)
         applyReservoirHighlight(map, resultCodEsts(results.reservoirs))
+        updateActiveFireSource(
+          map,
+          results.activeFire?.status === 'available'
+            ? results.activeFire.data as ActiveFireResult
+            : null,
+        )
+        updateFireHistorySource(
+          map,
+          results.fireHistory?.status === 'available'
+            ? results.fireHistory.data as FireHistoryResult
+            : null,
+        )
       })
       mapRef.current = map
     })()
@@ -132,6 +147,30 @@ export default function MapView() {
     else fit()
   }, [reservoirResult, location, searchOrigin, contextLayers])
 
+  // ── Populate recent satellite detections for this search ───────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    updateActiveFireSource(
+      map,
+      activeFireResult?.status === 'available'
+        ? activeFireResult.data as ActiveFireResult
+        : null,
+    )
+  }, [activeFireResult])
+
+  // ── Populate the historic perimeters returned to the panel ─────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    updateFireHistorySource(
+      map,
+      fireHistoryResult?.status === 'available'
+        ? fireHistoryResult.data as FireHistoryResult
+        : null,
+    )
+  }, [fireHistoryResult])
+
   // ── Coverage shading is entry-only ───────────────────────────────────────
   // It is explained by CoverageKey, which App only renders on the entry view.
   //
@@ -155,9 +194,6 @@ export default function MapView() {
     if (!map) return
     if (view === 'searched' && location) {
       const { lat, lng } = location.coordinates
-      // Point the burnt-area overlay at this place, whether or not the reader
-      // has it switched on — so turning it on paints immediately.
-      updateFireHistorySource(map, location.coordinates)
       markerRef.current?.remove()
       const el = document.createElement('div')
       el.style.cssText =

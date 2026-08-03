@@ -9,6 +9,7 @@ import { getCoastalZoning } from '../services/coastalZoning'
 import { getGroundwaterStatus } from '../services/groundwater'
 import { getNearestBathingSite } from '../services/bathingWater'
 import { getFireDanger } from '../services/fireDanger'
+import { getRecentFireDetections } from '../services/activeFires'
 import { getFireHistory } from '../services/fireHistory'
 import { getPreventionPlan, PREVENTION_REGIONS } from '../data/firePrevention'
 import { getWaterRestrictions } from '../services/waterRestrictions'
@@ -269,6 +270,23 @@ export const DATASETS: DatasetDef[] = [
     },
   },
   {
+    id: 'activeFire',
+    hazard: 'fire',
+    category: 'hazard',
+    source: {
+      name: 'NASA FIRMS — NOAA-20 VIIRS',
+      url: 'https://firms.modaps.eosdis.nasa.gov/',
+    },
+    mapRole: 'context',
+    aiAllowed: true,
+    audienceWeight: { resident_owner: 1, buyer_investor: 1 },
+    defaultOrder: 9,
+    applicability: () => 'covered',
+    fetch: async p => {
+      try { return ok(await getRecentFireDetections(p.coordinates)) } catch (e) { return err(e) }
+    },
+  },
+  {
     id: 'fireHistory',
     hazard: 'fire',
     category: 'hazard',
@@ -279,7 +297,7 @@ export const DATASETS: DatasetDef[] = [
     mapRole: 'context',
     aiAllowed: true,
     audienceWeight: { resident_owner: 2, buyer_investor: 1 },
-    defaultOrder: 9,
+    defaultOrder: 10,
     applicability: () => 'covered',
     fetch: async p => {
       try {
@@ -300,7 +318,7 @@ export const DATASETS: DatasetDef[] = [
     // interpret and a plan's existence says nothing about risk at this point.
     aiAllowed: false,
     audienceWeight: { resident_owner: 8, buyer_investor: 8 },
-    defaultOrder: 10,
+    defaultOrder: 11,
     applicability: p =>
       p.region && PREVENTION_REGIONS.has(p.region) ? 'covered' : 'unsupported',
     fetch: async p => {

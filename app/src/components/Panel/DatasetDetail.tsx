@@ -3,8 +3,11 @@ import { useAppStore } from '../../store/useAppStore'
 import { getDataset } from '../../registry/datasets'
 import { resultSummary } from './resultSummary'
 import { requestInterpretation } from '../../services/ai'
-import { formatLongDate } from '../../i18n/formatDate'
-import type { FloodZoneResult, Reservoir, CoastalZoning, DroughtStatus } from '../../types'
+import { formatDateTime, formatLongDate } from '../../i18n/formatDate'
+import type {
+  ActiveFireResult, FireDangerResult, FireHistoryResult,
+  FloodZoneResult, CoastalZoning, DroughtStatus,
+} from '../../types'
 import type { SupplyAnswer } from '../../types/supply'
 import ReservoirLevels from './ReservoirLevels'
 import CoastalZoningDetail from './CoastalZoningDetail'
@@ -42,6 +45,18 @@ export default function DatasetDetail() {
   const drought =
     id === 'drought' && result?.status === 'available'
       ? (result.data as DroughtStatus)
+      : undefined
+  const fireDanger =
+    id === 'fireDanger' && result?.status === 'available'
+      ? (result.data as FireDangerResult)
+      : undefined
+  const activeFire =
+    id === 'activeFire' && result?.status === 'available'
+      ? (result.data as ActiveFireResult)
+      : undefined
+  const fireHistory =
+    id === 'fireHistory' && result?.status === 'available'
+      ? (result.data as FireHistoryResult)
       : undefined
   const reservoirAsOf = reservoirs?.[0]?.fillPercentAsOf
   // Names the system the highlighted markers belong to, so the map emphasis is
@@ -121,6 +136,43 @@ export default function DatasetDetail() {
           )}
         </div>
       )}
+
+      {fireDanger && (
+        <p className="text-[11px] text-muted">
+          {t('panel.fireDanger.forDate', { date: formatLongDate(fireDanger.forDate) })}
+        </p>
+      )}
+
+      {activeFire?.detections.length ? (
+        <ul aria-label={t('registry.activeFire.name')} className="flex flex-col gap-2">
+          {activeFire.detections.slice(0, 10).map(detection => (
+            <li key={detection.id} className="rounded-lg bg-accent-soft/60 px-3 py-2">
+              <p className="text-[12px] font-bold text-ink">
+                {formatDateTime(detection.detectedAt)}
+              </p>
+              <p className="text-[11.5px] text-muted">
+                {detection.distanceKm} km · {detection.satellite} · {detection.confidence}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {fireHistory?.fires.length ? (
+        <ul aria-label={t('registry.fireHistory.name')} className="flex flex-col gap-2">
+          {fireHistory.fires.slice(0, 10).map((fire, index) => (
+            <li key={`${fire.date}-${fire.distanceKm}-${index}`} className="rounded-lg bg-accent-soft/60 px-3 py-2">
+              <p className="text-[12px] font-bold text-ink">{formatLongDate(fire.date)}</p>
+              {(fire.commune || fire.province) && (
+                <p className="text-[11.5px] text-ink">
+                  {[fire.commune, fire.province].filter(Boolean).join(', ')}
+                </p>
+              )}
+              <p className="text-[11.5px] text-muted">{fire.areaHa} ha · {fire.distanceKm} km</p>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-[5px] text-[11.5px]">
         <dt className="font-bold text-muted">{t('panel.cadence')}</dt>

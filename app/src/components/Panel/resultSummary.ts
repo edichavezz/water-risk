@@ -2,9 +2,11 @@ import type { DatasetId, DatasetResult } from '../../types/workspace'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, GroundwaterResult, BathingWaterResult,
-  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
+  ActiveFireResult, FireDangerResult, FireHistoryResult, FirePreventionResult,
+  WaterRestrictionResult,
 } from '../../types'
 import type { SupplyAnswer } from '../../types/supply'
+import { formatLongDate } from '../../i18n/formatDate'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
 
@@ -98,6 +100,19 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       const d = r!.data as FireDangerResult
       return t(`risk.fireDanger.${d.danger}`)
     }
+    case 'activeFire': {
+      const d = r!.data as ActiveFireResult
+      if (d.detections.length === 0) {
+        return t('panel.summary.activeFire.none', {
+          km: d.radiusKm, hours: d.windowHours,
+        })
+      }
+      return t('panel.summary.activeFire.count', {
+        count: d.detections.length,
+        km: d.radiusKm,
+        date: formatLongDate(d.detections[0].detectedAt),
+      })
+    }
     case 'fireHistory': {
       const d = r!.data as FireHistoryResult
       // An empty archive is an answer, not a gap — but it must be scoped, or
@@ -111,7 +126,7 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
         count: d.fires.length,
         km: d.radiusKm,
         largest: worst.areaHa,
-        year: d.fires[0].date.slice(0, 4),
+        date: formatLongDate(d.fires[0].date),
       })
     }
     case 'waterRestrictions': {

@@ -60,7 +60,7 @@ const DETAILED_REGIONS: DetailedRegion[] = [
  * layers. Add to this when a new pan-European source lands, or `minimal` will
  * quietly stop meaning anything.
  */
-const CONTINENTAL = new Set<DatasetId>(['drought', 'fireDanger', 'fireHistory'])
+const CONTINENTAL = new Set<DatasetId>(['drought', 'fireDanger', 'activeFire', 'fireHistory'])
 
 /**
  * Countries where a national register answers, beyond the continental layers —

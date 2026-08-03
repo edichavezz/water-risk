@@ -7,7 +7,6 @@ import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
 import { getFireDangerWmsUrl } from '../services/fireDanger'
-import { fireHistoryQueryUrl } from '../services/fireHistory'
 import { getCoastalWmsUrl, COASTAL_MAP_LAYERS } from '../services/coastalFlood'
 import { allReservoirCodEsts, getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
@@ -17,6 +16,7 @@ import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
 const FIRE_SCAR = '#8A3E1E'
 import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
+import type { ActiveFireResult, FireHistoryResult } from '../types'
 
 // Markers appear at the entry view's zoom (6.3) so toggling the reservoirs
 // layer there visibly does something; the per-marker text only joins once
@@ -84,6 +84,31 @@ export function ensureDataLayers(map: maplibregl.Map): void {
       type: 'line',
       source: 'fire-history-src',
       paint: { 'line-color': FIRE_SCAR, 'line-width': 1.5, 'line-opacity': 0.9 },
+      layout: { visibility: 'none' },
+    })
+  }
+
+  // ── Recent VIIRS thermal detections ───────────────────────────────────
+  // Local GeoJSON rather than a remote vector source: the NASA tiles use an
+  // EPSG:4326 tile matrix, while MapLibre's native vector-tile source assumes
+  // Web Mercator. The service has already decoded and radius-filtered these
+  // points for the current search.
+  if (!map.getSource('active-fire-src')) {
+    map.addSource('active-fire-src', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    })
+    map.addLayer({
+      id: 'active-fire-circle',
+      type: 'circle',
+      source: 'active-fire-src',
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#C63726',
+        'circle-opacity': 0.9,
+        'circle-stroke-color': '#FBF8F2',
+        'circle-stroke-width': 1.5,
+      },
       layout: { visibility: 'none' },
     })
   }
@@ -428,14 +453,37 @@ export function bindMapInteractions(map: maplibregl.Map): void {
 }
 
 /**
- * Points the burnt-area overlay at the searched place.
- *
- * MapLibre fetches a GeoJSON source given a URL, so the layer loads the same
- * query the panel used and the browser cache serves one of the two. Nothing is
- * drawn until the reader turns the overlay on.
+ * Reuses the exact EFFIS features that produced the panel result. Refetching
+ * the WFS here allowed the panel request to succeed while MapLibre's second
+ * request failed, leaving a checked but empty overlay.
  */
-export function updateFireHistorySource(map: maplibregl.Map, coords: { lat: number; lng: number }): void {
+export function updateFireHistorySource(
+  map: maplibregl.Map,
+  result: FireHistoryResult | null,
+): void {
   const src = map.getSource('fire-history-src') as maplibregl.GeoJSONSource | undefined
   if (!src) return
-  src.setData(fireHistoryQueryUrl(coords))
+  src.setData(result?.perimeters ?? { type: 'FeatureCollection', features: [] })
+}
+
+/** Paint only the recent detections returned for the current searched point. */
+export function updateActiveFireSource(
+  map: maplibregl.Map,
+  result: ActiveFireResult | null,
+): void {
+  const src = map.getSource('active-fire-src') as maplibregl.GeoJSONSource | undefined
+  if (!src) return
+  src.setData({
+    type: 'FeatureCollection',
+    features: (result?.detections ?? []).map(detection => ({
+      type: 'Feature' as const,
+      id: detection.id,
+      geometry: { type: 'Point' as const, coordinates: [detection.lng, detection.lat] },
+      properties: {
+        detectedAt: detection.detectedAt,
+        confidence: detection.confidence,
+        satellite: detection.satellite,
+      },
+    })),
+  })
 }

@@ -16,16 +16,16 @@ import { samplePixel, sampleUrl, nearestColour } from './wmsSample'
  *    advertised in GetCapabilities and answers 200 for every date, but returns
  *    an empty raster — 243 bytes, nothing painted, at every date tried. The
  *    0.07-degree variant is the one carrying data.
+ * 3. **A date is mandatory.** An undated request can return the service's old
+ *    default slice. Every map and point request therefore carries the same
+ *    explicit `TIME`; if that slice is blank, the app reports no current
+ *    forecast instead of relabelling the default as today.
  */
 const EFFIS_WMS = 'https://ies-ows.jrc.ec.europa.eu/effis'
 const FWI_LAYER = 'ecmwf007.fwi'
 
 /**
  * The six danger classes, read from this layer's own GetLegendGraphic.
- *
- * Do not pass a TIME: the advertised extent (2018-01-01/2099-12-31) is a schema
- * artefact rather than a real range, and naming a date does not change what is
- * returned. The service serves its own current slice.
  */
 const FWI_PALETTE: { rgb: [number, number, number]; value: FireDangerClass }[] = [
   { rgb: [145, 252, 170], value: 'low' },
@@ -37,11 +37,11 @@ const FWI_PALETTE: { rgb: [number, number, number]; value: FireDangerClass }[] =
 ]
 
 /** Raster tile template for the map overlay. */
-export function getFireDangerWmsUrl(): string {
+export function getFireDangerWmsUrl(forDate = new Date().toISOString().slice(0, 10)): string {
   return (
     `${EFFIS_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap` +
     `&LAYERS=${FWI_LAYER}&STYLES=&FORMAT=image/png&TRANSPARENT=true` +
-    `&SRS=EPSG:3857&WIDTH=256&HEIGHT=256` +
+    `&SRS=EPSG:3857&WIDTH=256&HEIGHT=256&TIME=${encodeURIComponent(forDate)}` +
     `&BBOX={bbox-epsg-3857}`
   )
 }
@@ -58,21 +58,25 @@ export const FIRE_DANGER_PALETTE = FWI_PALETTE
  * This is the *published forecast class*, not a number we computed. Nothing
  * here should ever be presented as a measured index.
  */
-export async function getFireDanger(coords: Coordinates): Promise<FireDangerResult> {
-  const today = new Date().toISOString().split('T')[0]
+export async function getFireDanger(
+  coords: Coordinates,
+  forDate = new Date().toISOString().slice(0, 10),
+): Promise<FireDangerResult> {
   const unknown: FireDangerResult = {
     danger: 'unknown',
-    forDate: today,
+    forDate,
     source: 'Copernicus EFFIS',
   }
 
   try {
-    const px = await samplePixel(sampleUrl(EFFIS_WMS, FWI_LAYER, coords.lng, coords.lat))
+    const url = `${sampleUrl(EFFIS_WMS, FWI_LAYER, coords.lng, coords.lat)}` +
+      `&TIME=${encodeURIComponent(forDate)}`
+    const px = await samplePixel(url)
     // Outside the model domain — sea, or beyond the grid — nothing is painted.
     if (px.a === 0) return unknown
     const danger = nearestColour(px, FWI_PALETTE)
     if (!danger) return unknown
-    return { danger, forDate: today, source: 'Copernicus EFFIS' }
+    return { danger, forDate, source: 'Copernicus EFFIS' }
   } catch {
     return unknown
   }

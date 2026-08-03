@@ -35,6 +35,17 @@ export function formatLongDate(iso: string, lang = i18n.language): string {
   })
 }
 
+/** Exact UTC acquisition time for satellite observations. */
+export function formatDateTime(iso: string, lang = i18n.language): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return iso
+  return d.toLocaleString(localeFor(lang), {
+    day: 'numeric', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC',
+    timeZoneName: 'short',
+  })
+}
+
 /** Measurements — reservoir volumes, hectares. See localeFor on digits. */
 export function formatMeasurement(
   value: number,

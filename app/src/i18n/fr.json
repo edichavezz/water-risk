@@ -184,7 +184,7 @@
     },
     "fireDanger": {
       "name": "Prévision du danger d'incendie",
-      "cadence": "Mis à jour quotidiennement (indice météo-feu EFFIS)",
+      "cadence": "Demandé en direct pour aujourd’hui (indice météo-feu EFFIS)",
       "resolution": "Maille d'environ 8 km",
       "limitations": [
         "N'indique pas si un feu est en cours",
@@ -192,12 +192,22 @@
         "C'est une classe de prévision, pas une mesure"
       ]
     },
+    "activeFire": {
+      "name": "Détections satellitaires récentes de feu",
+      "cadence": "Mis à jour après les passages du satellite NOAA-20 (NASA FIRMS / VIIRS)",
+      "resolution": "Pixels d’anomalie thermique de 375 m dans un rayon de 30 km",
+      "limitations": [
+        "Une détection thermique n’est pas un incendie confirmé",
+        "Les nuages, la fumée et l’intervalle entre les passages peuvent masquer des feux",
+        "La chaleur industrielle et d’autres surfaces chaudes peuvent aussi être détectées"
+      ]
+    },
     "fireHistory": {
       "name": "Incendies passés à proximité",
       "cadence": "Mis à jour au fil de la saison (surfaces brûlées EFFIS)",
-      "resolution": "Périmètres satellitaires, incendies de plus de 30 ha environ",
+      "resolution": "Périmètres cartographiés par satellite ; l’exhaustivité varie selon le feu et la saison",
       "limitations": [
-        "Les petits feux ne sont pas cartographiés : leur absence ne prouve rien",
+        "Certains feux, surtout les plus petits, peuvent manquer : leur absence ne prouve rien",
         "Recense où le feu est passé, pas où il est susceptible d'aller",
         "Les périmètres sont dérivés du satellite et approximatifs"
       ]
@@ -280,6 +290,9 @@
     },
     "fireHistory": {
       "burnt": "Surface brûlée"
+    },
+    "activeFire": {
+      "detection": "Détection thermique récente"
     }
   },
   "entry": {
@@ -348,6 +361,10 @@
       "fireDanger": {
         "question": "Quel est le danger météo d'incendie ici en ce moment ?",
         "answer": "Le système européen d'information sur les feux de forêt prévoit chaque jour avec quelle facilité un feu partirait et se propagerait compte tenu de la météo — chaleur, vent, humidité et sécheresse du sol. Nous lisons la classe correspondant à votre point. Cela décrit des conditions, pas la présence d'un feu."
+      },
+      "activeFire": {
+        "question": "Un satellite a-t-il détecté récemment une chaleur évoquant un feu à proximité ?",
+        "answer": "L’instrument VIIRS de la NASA signale les pixels anormalement chauds après chaque passage. Nous montrons les détections présumées liées à la végétation dans un rayon de 30 km au cours des dernières 24 heures, avec l’heure UTC enregistrée. Ce sont des anomalies thermiques, pas des incendies confirmés, et les nuages ou l’intervalle entre passages peuvent masquer un feu."
       },
       "fireHistory": {
         "question": "Ce secteur a-t-il déjà brûlé ?",
@@ -443,7 +460,12 @@
       },
       "fireHistory": {
         "none": "Aucun incendie cartographié dans un rayon de {{km}} km depuis {{since}}",
-        "count": "{{count}} incendies cartographiés dans un rayon de {{km}} km — le plus grand {{largest}} ha, le plus récent en {{year}}"
+        "count": "{{count}} incendies cartographiés dans un rayon de {{km}} km — le plus grand {{largest}} ha, le plus récent le {{date}}"
+      },
+      "activeFire": {
+        "none": "Aucune détection thermique satellitaire dans un rayon de {{km}} km au cours des {{hours}} dernières heures",
+        "count": "{{count}} détection thermique dans un rayon de {{km}} km au cours des dernières 24 heures — dernière le {{date}}",
+        "count_other": "{{count}} détections thermiques dans un rayon de {{km}} km au cours des dernières 24 heures — dernière le {{date}}"
       },
       "firePrevention": {
         "plan": "{{region}} publie {{plan}}"
@@ -454,7 +476,10 @@
     },
     "newsTab": "Actualités",
     "noResultCount": "{{count}} vérifications sans source ici — les afficher",
-    "preventionCheckedAt": "Lien vérifié le {{date}}"
+    "preventionCheckedAt": "Lien vérifié le {{date}}",
+    "fireDanger": {
+      "forDate": "Prévision pour le {{date}}"
+    }
   },
   "states": {
     "loading": "Consultation de la source…",

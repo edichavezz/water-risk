@@ -61,6 +61,10 @@ export function isDrawableHere(
   results: Partial<Record<DatasetId, DatasetResult>>,
 ): boolean {
   const status = results[id]?.status
+  // These two layers are meaningful only for the exact dated response fetched
+  // for this search. Unlike a static flood-zone raster, an unavailable current
+  // slice must not fall back to painting some service default.
+  if (id === 'fireDanger' || id === 'activeFire') return status === 'available'
   return status !== 'not_applicable' && status !== 'unsupported'
 }
 

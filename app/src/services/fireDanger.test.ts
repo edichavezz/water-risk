@@ -32,35 +32,37 @@ describe('the FWI palette', () => {
 
 describe('getFireDangerWmsUrl', () => {
   it('requests the 0.07-degree layer, which is the one carrying data', () => {
-    const url = getFireDangerWmsUrl()
+    const url = getFireDangerWmsUrl('2026-08-03')
     expect(url).toContain('LAYERS=ecmwf007.fwi')
     // ecmwf.fwi.fwi is advertised but returns an empty raster at every date.
     expect(url).not.toContain('LAYERS=ecmwf.fwi.fwi')
     expect(url).toContain('{bbox-epsg-3857}')
   })
 
-  it('passes no TIME — the advertised extent is a schema artefact', () => {
-    expect(getFireDangerWmsUrl()).not.toContain('TIME=')
+  it('requests the exact forecast day instead of accepting the service default', () => {
+    expect(getFireDangerWmsUrl('2026-08-03')).toContain('TIME=2026-08-03')
   })
 })
 
 describe('getFireDanger', () => {
   it('classifies a painted pixel against the published legend', async () => {
     vi.spyOn(wmsSample, 'samplePixel').mockResolvedValue({ r: 231, g: 117, b: 0, a: 255 })
-    const result = await getFireDanger(ronda)
+    const result = await getFireDanger(ronda, '2026-08-03')
     expect(result.danger).toBe('very_high')
+    expect(result.forDate).toBe('2026-08-03')
     expect(result.source).toBe('Copernicus EFFIS')
+    expect(wmsSample.samplePixel).toHaveBeenCalledWith(expect.stringContaining('TIME=2026-08-03'))
   })
 
   it('treats an unpainted pixel as no forecast rather than low danger', async () => {
     vi.spyOn(wmsSample, 'samplePixel').mockResolvedValue({ r: 0, g: 0, b: 0, a: 0 })
-    expect((await getFireDanger(ronda)).danger).toBe('unknown')
+    expect((await getFireDanger(ronda, '2026-08-03')).danger).toBe('unknown')
   })
 
   // A dead upstream must never read as "low danger" — that is the whole
   // missing-data-never-looks-safe rule, and this is a hazard layer.
   it('reports unknown when the service fails', async () => {
     vi.spyOn(wmsSample, 'samplePixel').mockRejectedValue(new Error('gateway'))
-    expect((await getFireDanger(ronda)).danger).toBe('unknown')
+    expect((await getFireDanger(ronda, '2026-08-03')).danger).toBe('unknown')
   })
 })

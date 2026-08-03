@@ -67,7 +67,9 @@ export default function Legend() {
       ? (reservoirResult.data as SupplyAnswer).reservoirs
       : []
 
-  if (!primaryLayer && highlighted.length === 0) return null
+  const showsFireHistory = contextLayers.includes('fireHistory')
+  const showsActiveFire = contextLayers.includes('activeFire')
+  if (!primaryLayer && highlighted.length === 0 && !showsFireHistory && !showsActiveFire) return null
 
   const def = primaryLayer ? getDataset(primaryLayer) : null
   const rows = primaryLayer ? legendRows(primaryLayer, t) : []
@@ -98,7 +100,17 @@ export default function Legend() {
         </>
       )}
 
-      {contextLayers.includes('fireHistory') && (
+      {showsActiveFire && (
+        <div className={primaryLayer ? 'mt-3 border-t border-hairline pt-2' : ''}>
+          <p className="mb-1.5 font-bold text-ink">{t('registry.activeFire.name')}</p>
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-3 w-3 shrink-0 rounded-full border border-white bg-[#C63726]" />
+            <span className="text-ink">{t('legend.activeFire.detection')}</span>
+          </div>
+        </div>
+      )}
+
+      {showsFireHistory && (
         <div className={primaryLayer ? 'mt-3 border-t border-hairline pt-2' : ''}>
           <p className="mb-1.5 font-bold text-ink">{t('registry.fireHistory.name')}</p>
           <div className="flex items-center gap-2">

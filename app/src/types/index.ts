@@ -142,6 +142,34 @@ export interface FireDangerResult {
   source: 'Copernicus EFFIS'
 }
 
+export type ActiveFireConfidence = 'low' | 'nominal' | 'high' | 'unknown'
+export type ActiveFireDetectionType = 'vegetation' | 'volcano' | 'other' | 'offshore' | 'unknown'
+
+/** A satellite-observed thermal anomaly, not a confirmed wildfire incident. */
+export interface ActiveFireDetection {
+  /** Stable NASA identifier, namespaced by satellite and acquisition day. */
+  id: string
+  /** ISO timestamp in UTC, assembled from FIRMS acquisition date and time. */
+  detectedAt: string
+  lat: number
+  lng: number
+  distanceKm: number
+  confidence: ActiveFireConfidence
+  satellite: string
+  type: ActiveFireDetectionType
+  frpMw?: number
+}
+
+export interface ActiveFireResult {
+  /** Thermal detections within the stated radius and rolling time window. */
+  detections: ActiveFireDetection[]
+  radiusKm: number
+  windowHours: number
+  /** End of the queried observation window, ISO timestamp in UTC. */
+  through: string
+  source: 'NASA FIRMS'
+}
+
 export interface BurntArea {
   /** ISO date of the fire's start, as EFFIS records it. */
   date: string
@@ -160,6 +188,8 @@ export interface FireHistoryResult {
   radiusKm: number
   /** Earliest year the archive covers, so "none found" can be scoped. */
   since: number
+  /** The exact WFS features used to build `fires`, reused by the map layer. */
+  perimeters?: GeoJSON.FeatureCollection
   source: 'Copernicus EFFIS'
 }
 

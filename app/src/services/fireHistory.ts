@@ -126,6 +126,10 @@ export async function getFireHistory(
     fires: shapeFires(data.features ?? [], coords, radiusKm),
     radiusKm,
     since: ARCHIVE_SINCE,
+    perimeters: {
+      type: 'FeatureCollection',
+      features: (data.features ?? []) as unknown as GeoJSON.Feature[],
+    },
     source: 'Copernicus EFFIS',
   }
 }

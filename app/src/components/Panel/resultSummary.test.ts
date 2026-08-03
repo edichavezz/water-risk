@@ -28,4 +28,40 @@ describe('resultSummary', () => {
     const s = resultSummary('flood', { status: 'available', data: { inZone: true, returnPeriod: '100', source: 'SNCZI' } }, t)
     expect(s).toMatch(/T100/)
   })
+
+  it('shows the exact date of the most recent mapped fire, not only its year', () => {
+    const s = resultSummary('fireHistory', {
+      status: 'available',
+      data: {
+        fires: [
+          { date: '2026-07-29', areaHa: 318, distanceKm: 12 },
+          { date: '2025-06-01', areaHa: 20, distanceKm: 8 },
+        ],
+        radiusKm: 30,
+        since: 2012,
+        source: 'Copernicus EFFIS',
+      },
+    }, t)
+    expect(s).toContain('29 July 2026')
+  })
+
+  it('distinguishes recent thermal detections from confirmed active fires', () => {
+    const s = resultSummary('activeFire', {
+      status: 'available',
+      data: {
+        detections: [{
+          id: 'n20-1', detectedAt: '2026-08-03T11:42:00Z',
+          lat: 44.84, lng: -0.58, distanceKm: 4.2,
+          confidence: 'nominal', satellite: 'NOAA-20',
+        }],
+        radiusKm: 30,
+        windowHours: 24,
+        through: '2026-08-03T12:00:00Z',
+        source: 'NASA FIRMS',
+      },
+    }, t)
+    expect(s).toMatch(/1 thermal detection/i)
+    expect(s).toContain('3 August 2026')
+    expect(s).not.toMatch(/1 active fire/i)
+  })
 })
