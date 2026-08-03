@@ -42,7 +42,9 @@ function utcDayBefore(date: Date): Date {
 
 function distanceKm(a: Coordinates, b: Coordinates): number {
   const midLat = ((a.lat + b.lat) / 2) * (Math.PI / 180)
-  const dx = (b.lng - a.lng) * Math.cos(midLat) * KM_PER_DEG
+  // Normalize across the antimeridian: 179.9° to -179.9° is 0.2°, not 359.8°.
+  const deltaLng = ((b.lng - a.lng + 540) % 360) - 180
+  const dx = deltaLng * Math.cos(midLat) * KM_PER_DEG
   const dy = (b.lat - a.lat) * KM_PER_DEG
   return Math.hypot(dx, dy)
 }
@@ -55,20 +57,25 @@ export function gibsTileCoordinates(
   const dLat = radiusKm / KM_PER_DEG
   const cosLat = Math.max(Math.cos((coords.lat * Math.PI) / 180), 0.01)
   const dLng = radiusKm / (KM_PER_DEG * cosLat)
-  const west = Math.max(-180, coords.lng - dLng)
-  const east = Math.min(180, coords.lng + dLng)
   const north = Math.min(90, coords.lat + dLat)
   const south = Math.max(-90, coords.lat - dLat)
   const tileWidth = 360 / MATRIX_WIDTH
   const tileHeight = 180 / MATRIX_HEIGHT
-  const minCol = Math.max(0, Math.floor((west + 180) / tileWidth))
-  const maxCol = Math.min(MATRIX_WIDTH - 1, Math.floor((east + 180) / tileWidth))
+  const minRawCol = Math.floor((coords.lng - dLng + 180) / tileWidth)
+  const maxRawCol = Math.floor((coords.lng + dLng + 180) / tileWidth)
   const minRow = Math.max(0, Math.floor((90 - north) / tileHeight))
   const maxRow = Math.min(MATRIX_HEIGHT - 1, Math.floor((90 - south) / tileHeight))
 
   const tiles: TileCoordinate[] = []
+  const seen = new Set<string>()
   for (let row = minRow; row <= maxRow; row += 1) {
-    for (let col = minCol; col <= maxCol; col += 1) tiles.push({ row, col })
+    for (let rawCol = minRawCol; rawCol <= maxRawCol; rawCol += 1) {
+      const col = ((rawCol % MATRIX_WIDTH) + MATRIX_WIDTH) % MATRIX_WIDTH
+      const key = `${row}:${col}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      tiles.push({ row, col })
+    }
   }
   return tiles
 }

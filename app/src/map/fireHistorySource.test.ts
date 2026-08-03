@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type maplibregl from 'maplibre-gl'
 import type { FireHistoryResult } from '../types'
-import { updateFireHistorySource } from './dataLayers'
+import { updateActiveFireSource, updateFireHistorySource } from './dataLayers'
 
 describe('historic-fire map source', () => {
   it('uses the exact perimeters already returned to the panel', () => {
@@ -27,5 +27,28 @@ describe('historic-fire map source', () => {
     const map = { getSource: () => ({ setData }) } as unknown as maplibregl.Map
     updateFireHistorySource(map, null)
     expect(setData).toHaveBeenCalledWith({ type: 'FeatureCollection', features: [] })
+  })
+})
+
+describe('recent-detection map source', () => {
+  it('updates whenever the source exists, even while the overall style is loading', () => {
+    const setData = vi.fn()
+    const map = {
+      isStyleLoaded: () => false,
+      getSource: (id: string) => id === 'active-fire-src' ? { setData } : undefined,
+    } as unknown as maplibregl.Map
+    updateActiveFireSource(map, {
+      detections: [{
+        id: 'one', detectedAt: '2026-08-03T11:00:00Z',
+        lat: 44.84, lng: -0.58, distanceKm: 2,
+        confidence: 'high', satellite: 'NOAA-20', type: 'vegetation',
+      }],
+      radiusKm: 30, windowHours: 24,
+      through: '2026-08-03T12:00:00Z', source: 'NASA FIRMS',
+    })
+    expect(setData).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'FeatureCollection',
+      features: [expect.objectContaining({ id: 'one' })],
+    }))
   })
 })

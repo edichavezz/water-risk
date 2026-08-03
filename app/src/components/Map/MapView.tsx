@@ -14,11 +14,11 @@ import {
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
   applyReservoirHighlight, fitReservoirsInView, updateFireHistorySource,
-  updateActiveFireSource,
+  updateActiveFireSource, updateFireDangerSource,
 } from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
 import { reservoirLngLat } from '../../services/reservoirs'
-import type { ActiveFireResult, FireHistoryResult } from '../../types'
+import type { ActiveFireResult, FireDangerResult, FireHistoryResult } from '../../types'
 import type { DatasetResult } from '../../types/workspace'
 import type { SupplyAnswer } from '../../types/supply'
 
@@ -44,6 +44,7 @@ export default function MapView() {
   const reservoirResult = useAppStore(s => s.results.reservoirs)
   const activeFireResult = useAppStore(s => s.results.activeFire)
   const fireHistoryResult = useAppStore(s => s.results.fireHistory)
+  const fireDangerResult = useAppStore(s => s.results.fireDanger)
 
   // ── Bootstrap the single map instance ────────────────────────────────────
   useEffect(() => {
@@ -77,9 +78,8 @@ export default function MapView() {
         setCoverageVisible(map, useAppStore.getState().view === 'entry')
         ensureDataLayers(map)
         bindMapInteractions(map)
-        // Results can land before the style finishes loading (reservoirs
-        // resolve synchronously from bundled JSON), and the effects below bail
-        // out until it has — so re-apply whatever state already exists.
+        // Results can land before their sources exist (reservoirs resolve
+        // synchronously from bundled JSON), so re-apply live state on load.
         const { primaryLayer: p, contextLayers: c, results } = useAppStore.getState()
         applyLayerPlan(map, p, c)
         applyReservoirHighlight(map, resultCodEsts(results.reservoirs))
@@ -93,6 +93,12 @@ export default function MapView() {
           map,
           results.fireHistory?.status === 'available'
             ? results.fireHistory.data as FireHistoryResult
+            : null,
+        )
+        updateFireDangerSource(
+          map,
+          results.fireDanger?.status === 'available'
+            ? results.fireDanger.data as FireDangerResult
             : null,
         )
       })
@@ -123,7 +129,7 @@ export default function MapView() {
   // ── Highlight the reservoirs behind the current result ───────────────────
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) return
+    if (!map) return
     const codEsts = resultCodEsts(reservoirResult)
     applyReservoirHighlight(map, codEsts)
 
@@ -150,7 +156,7 @@ export default function MapView() {
   // ── Populate recent satellite detections for this search ───────────────
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) return
+    if (!map) return
     updateActiveFireSource(
       map,
       activeFireResult?.status === 'available'
@@ -162,7 +168,7 @@ export default function MapView() {
   // ── Populate the historic perimeters returned to the panel ─────────────
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) return
+    if (!map) return
     updateFireHistorySource(
       map,
       fireHistoryResult?.status === 'available'
@@ -170,6 +176,18 @@ export default function MapView() {
         : null,
     )
   }, [fireHistoryResult])
+
+  // ── Bind the displayed FWI raster to the sampled result's date ─────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    updateFireDangerSource(
+      map,
+      fireDangerResult?.status === 'available'
+        ? fireDangerResult.data as FireDangerResult
+        : null,
+    )
+  }, [fireDangerResult])
 
   // ── Coverage shading is entry-only ───────────────────────────────────────
   // It is explained by CoverageKey, which App only renders on the entry view.

@@ -283,7 +283,13 @@ export const DATASETS: DatasetDef[] = [
     defaultOrder: 9,
     applicability: () => 'covered',
     fetch: async p => {
-      try { return ok(await getRecentFireDetections(p.coordinates)) } catch (e) { return err(e) }
+      try {
+        return ok(await getRecentFireDetections(p.coordinates))
+      } catch {
+        // A failed live feed is an unavailable observation, never evidence of
+        // zero detections. This layer has no useful retry/fallback map state.
+        return { status: 'unavailable' }
+      }
     },
   },
   {

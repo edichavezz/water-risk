@@ -16,7 +16,7 @@ import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
 const FIRE_SCAR = '#8A3E1E'
 import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
-import type { ActiveFireResult, FireHistoryResult } from '../types'
+import type { ActiveFireResult, FireDangerResult, FireHistoryResult } from '../types'
 
 // Markers appear at the entry view's zoom (6.3) so toggling the reservoirs
 // layer there visibly does something; the per-marker text only joins once
@@ -464,6 +464,16 @@ export function updateFireHistorySource(
   const src = map.getSource('fire-history-src') as maplibregl.GeoJSONSource | undefined
   if (!src) return
   src.setData(result?.perimeters ?? { type: 'FeatureCollection', features: [] })
+}
+
+/** Keep the raster tile date identical to the sampled, labelled forecast. */
+export function updateFireDangerSource(
+  map: maplibregl.Map,
+  result: FireDangerResult | null,
+): void {
+  if (!result) return
+  const src = map.getSource('fire-danger-src') as maplibregl.RasterTileSource | undefined
+  src?.setTiles([getFireDangerWmsUrl(result.forDate)])
 }
 
 /** Paint only the recent detections returned for the current searched point. */

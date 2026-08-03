@@ -31,7 +31,7 @@ export function formatLongDate(iso: string, lang = i18n.language): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
   return d.toLocaleDateString(localeFor(lang), {
-    day: 'numeric', month: 'long', year: 'numeric',
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
   })
 }
 

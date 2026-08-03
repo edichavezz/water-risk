@@ -49,6 +49,21 @@ describe('NASA GIBS detection tiles', () => {
     expect(detections[0].distanceKm).toBeLessThan(1)
   })
 
+  it('wraps tiles and distances across the antimeridian', () => {
+    const centre = { lat: 0, lng: 179.9 }
+    expect(gibsTileCoordinates(centre, 30)).toEqual([
+      { row: 39, col: 159 }, { row: 39, col: 0 },
+      { row: 40, col: 159 }, { row: 40, col: 0 },
+    ])
+    const detections = filterRecentDetections([{
+      id: 'across', detectedAt: '2026-08-03T11:00:00Z',
+      lat: 0, lng: -179.95, distanceKm: 0,
+      confidence: 'high', satellite: 'NOAA-20', type: 'vegetation',
+    }], centre, 30, new Date('2026-08-03T12:00:00Z'))
+    expect(detections).toHaveLength(1)
+    expect(detections[0].distanceKm).toBeLessThan(20)
+  })
+
   it('does not turn a failed feed into zero detections', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 503 })))
     await expect(
