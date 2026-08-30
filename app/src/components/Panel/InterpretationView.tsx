@@ -17,7 +17,6 @@ function AssistedLabel({ text }: { text: string }) {
 export default function InterpretationView() {
   const { t } = useTranslation()
   const interpretation = useAppStore(s => s.interpretation)
-  const coverage = useAppStore(s => s.coverage)
   const [followUp, setFollowUp] = useState('')
 
   const scope = interpretation.scope ?? { type: 'location' as const }
@@ -28,10 +27,6 @@ export default function InterpretationView() {
       ? t('ai.titleDataset', { dataset: t(`registry.${scope.id}.name`) })
       : t('ai.titleLocation')
   const regenerate = () => void requestInterpretation(scope)
-
-  if (coverage && !coverage.supported) {
-    return <p className="text-[13px] leading-relaxed text-ink">{t('ai.unsupported')}</p>
-  }
 
   if (interpretation.status === 'idle') return null
 
@@ -106,7 +101,7 @@ export default function InterpretationView() {
                   <button
                     key={i}
                     onClick={() => ask(q)}
-                    className="min-h-11 rounded-[20px] border border-field px-3.5 py-2 text-left text-xs text-ink hover:bg-subtle-cool"
+                    className="min-h-11 rounded-[20px] border border-field px-3.5 py-2 text-start text-xs text-ink hover:bg-subtle-cool"
                   >
                     {q}
                   </button>

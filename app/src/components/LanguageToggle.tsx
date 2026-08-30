@@ -1,36 +1,42 @@
-import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../store/useAppStore'
-import type { Language } from '../types'
+import { LANGUAGES, type Language } from '../types'
+import { LANGUAGE_NAMES } from '../i18n'
 
-/* Reads as one pill — "EN · ES" — rather than two boxes, matching the About
-   pill beside it. The interpunct is decorative; each half stays a real button. */
+/* Was a two-button "EN · ES" pill. Six languages do not read as a pill, and a
+   row of six codes is a worse tap target than a menu — so this is a native
+   <select> wearing the pill's border. Native buys keyboard handling, the
+   platform's own long-list behaviour and correct mirroring under RTL for free.
+   The visible text is each language's own name: a reader who needs the Greek
+   bundle cannot be assumed to recognise the English word "Greek". */
 export default function LanguageToggle() {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { language, setLanguage } = useAppStore()
 
-  const toggle = (lang: Language) => {
+  const change = (lang: Language) => {
     setLanguage(lang)
     i18n.changeLanguage(lang)
   }
 
   return (
-    <div className="flex min-h-11 items-center rounded-[20px] border border-hairline px-1 text-xs font-bold">
-      {(['en', 'es'] as Language[]).map((lang, i) => (
-        <Fragment key={lang}>
-          {i > 0 && <span aria-hidden className="text-hairline">·</span>}
-          <button
-            type="button"
-            onClick={() => toggle(lang)}
-            aria-current={language === lang ? 'true' : undefined}
-            className={`rounded-[20px] px-2.5 py-2 uppercase transition-colors duration-[var(--dur-control)] ${
-              language === lang ? 'text-primary' : 'text-muted hover:text-ink'
-            }`}
-          >
-            {lang}
-          </button>
-        </Fragment>
-      ))}
+    <div className="relative flex min-h-11 items-center rounded-[20px] border border-hairline">
+      <select
+        aria-label={t('app.language')}
+        value={language}
+        onChange={e => change(e.target.value as Language)}
+        /* `pe-7` clears the chevron on whichever side the text ends — a
+           physical `pr-7` would leave it over the first letter in Arabic. */
+        className="min-h-11 cursor-pointer appearance-none rounded-[20px] bg-transparent ps-3.5 pe-7 text-[13px] font-bold text-ink"
+      >
+        {LANGUAGES.map(lang => (
+          <option key={lang} value={lang}>
+            {LANGUAGE_NAMES[lang]}
+          </option>
+        ))}
+      </select>
+      <span aria-hidden className="pointer-events-none absolute end-3 text-[10px] text-muted">
+        ▾
+      </span>
     </div>
   )
 }

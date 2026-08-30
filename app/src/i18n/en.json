@@ -1,9 +1,10 @@
 {
   "app": {
-    "tagline": "Check water risks for a place in Spain",
+    "tagline": "Water and fire risk across the Mediterranean",
     "navAbout": "About",
     "nav": "Sections",
-    "backToMap": "Back to map"
+    "backToMap": "Back to map",
+    "language": "Language"
   },
   "layers": {
     "button": "Map layers",
@@ -16,7 +17,9 @@
     "collapse": "Collapse map layers",
     "expand": "Expand map layers",
     "legendHeading": "Legend",
-    "noData": "Nothing to show here"
+    "noData": "Nothing to show here",
+    "primaryNote": "One at a time, across both.",
+    "mixedFamilyWarning": "A fire layer and a water layer at once can be hard to read."
   },
   "risk": {
     "title": "Risk Profile",
@@ -93,6 +96,21 @@
       "unknown": "Not assessed this season",
       "distance": "{{distance}} km away",
       "source": "Source: EEA Bathing Water Directive — {{year}} season"
+    },
+    "fireDanger": {
+      "low": "Low fire danger forecast",
+      "moderate": "Moderate fire danger forecast",
+      "high": "High fire danger forecast",
+      "very_high": "Very high fire danger forecast",
+      "extreme": "Extreme fire danger forecast",
+      "very_extreme": "Very extreme fire danger forecast",
+      "unknown": "No forecast available"
+    },
+    "waterRestrictions": {
+      "vigilance": "Watch",
+      "alerte": "Alert",
+      "alerte_renforcee": "Reinforced alert",
+      "crise": "Crisis"
     }
   },
   "registry": {
@@ -163,6 +181,46 @@
         "Does not reflect conditions on a given day",
         "Assessment year is approximate for this source"
       ]
+    },
+    "fireDanger": {
+      "name": "Fire danger forecast",
+      "cadence": "Updated daily (EFFIS Fire Weather Index)",
+      "resolution": "~8 km grid",
+      "limitations": [
+        "Does not show whether a fire is burning now",
+        "Describes the weather that drives fire, not the fuel or terrain at your address",
+        "A forecast class, not a measurement"
+      ]
+    },
+    "fireHistory": {
+      "name": "Past fires nearby",
+      "cadence": "Updated through the season (EFFIS burnt areas)",
+      "resolution": "Perimeters from satellite, fires above roughly 30 ha",
+      "limitations": [
+        "Small fires are not mapped, so absence is not proof nothing burned",
+        "Records where fire has been, not where it is likely to go next",
+        "Perimeters are satellite-derived and approximate"
+      ]
+    },
+    "firePrevention": {
+      "name": "Prevention plan",
+      "cadence": "Checked by hand; date shown with the link",
+      "resolution": "Regional",
+      "limitations": [
+        "Links to the published plan; does not summarise what it requires of you",
+        "Says nothing about risk at this address",
+        "A plan existing is not evidence it is funded or enforced"
+      ]
+    },
+    "waterRestrictions": {
+      "name": "Water restrictions in force",
+      "cadence": "Updated daily from prefectural decrees (VigiEau)",
+      "resolution": "Restriction zone, set by the département",
+      "limitations": [
+        "France only — Spain and Italy publish restrictions with no common feed",
+        "Shows the level in force, not what you personally may use",
+        "The decree itself is the authority; this is a summary of it"
+      ]
     }
   },
   "map": {
@@ -178,7 +236,11 @@
     "pickLoading": "Finding this place…",
     "pickSearchHere": "Search here",
     "pickNoPlace": "No place found here",
-    "pickOutsideCoverage": "Outside coverage — location only"
+    "pickTier": {
+      "detailed": "Detailed data here",
+      "partial": "Some checks available here",
+      "minimal": "Limited data here"
+    }
   },
   "legend": {
     "source": "Source: {{source}}",
@@ -207,10 +269,21 @@
       "low": "<25%",
       "mid": "25–60%",
       "high": ">60%"
+    },
+    "fireDanger": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "very_high": "Very high",
+      "extreme": "Extreme",
+      "very_extreme": "Very extreme"
+    },
+    "fireHistory": {
+      "burnt": "Burnt area"
     }
   },
   "entry": {
-    "supporting": "Public data on flooding, drought, reservoirs and water quality.",
+    "supporting": "Public data on flooding, drought, reservoirs, water quality and wildfire.",
     "locationLabel": "Postcode, town or address",
     "audiencePrompt": "What brings you here?",
     "optional": "Optional",
@@ -219,17 +292,17 @@
     "buyer": "I'm considering buying or investing",
     "submit": "Check this area",
     "exploreHint": "or click anywhere on the map",
-    "coverageNote": "Detailed results are available for Andalucía. Flood and drought cover the whole region; the supply and drinking-water records are researched municipality by municipality, so some places are still blank.",
-    "keyAvailable": "Detailed data available",
-    "keyUnavailable": "Not yet available",
+    "coverageNote": "Works anywhere in the Mediterranean. The shaded countries are the ones with national registers behind the answers, with the most detail in Andalucía; everywhere else the app shows which checks it could not run.",
+    "keyAvailable": "National records here",
+    "keyUnavailable": "Fewer local records",
     "noResults": "Location could not be found. Try a nearby town or a postcode."
   },
   "about": {
     "title": "About {{name}}",
-    "introHeading": "Public water data for one address, in one place",
-    "introLead": "Spain publishes a great deal of water data. It is just scattered — flood maps at one ministry, drought bulletins at a European agency, reservoir levels at the river basin authority, drinking-water records at the health ministry. Each one is public, and each one is hard work to read.",
-    "introBodyOne": "Water Risk Explorer pulls those sources together and asks them all about a single point on the map. Type a postcode, a town or an address and you get one page: whether the spot is in a mapped flood zone, whether the area is in drought, which reservoirs supply it and how full they are, what the drinking-water record says, and — near the coast — how close you are to the sea’s protected strip.",
-    "introBodyTwo": "Why bother? Because water is quietly one of the biggest questions about a place in Spain, and it usually only comes up once it is expensive: after a flood, during a hosepipe ban, or halfway through buying a house. This tool exists so you can ask the question early, for free, without knowing any hydrology.",
+    "introHeading": "Water and fire, for one place, in one page",
+    "introLead": "Mediterranean countries publish a great deal about water and wildfire. It is just scattered — flood maps at one ministry, drought and fire indicators at a European agency, reservoir levels at the river basin authority, restriction decrees at the préfecture. Each one is public, and each one is hard work to read.",
+    "introBodyOne": "Fire and Rain asks all of them about a single point on the map. Type a postcode, a town or an address and you get one page: whether the spot is in a mapped flood zone, whether the area is in drought, what the fire danger forecast says and whether the land nearby has burned before, which reservoirs or networks supply the tap, and what restrictions are in force.",
+    "introBodyTwo": "Why bother? Because water and fire are quietly two of the biggest questions about a place here, and they usually only come up once they are expensive: after a flood, during a hosepipe ban, in a bad fire summer, or halfway through buying a house. This tool exists so you can ask early, for free, without knowing any hydrology.",
     "introCta": "Try it out",
     "introCtaHint": "Takes you to the map, ready for a postcode or place name.",
     "aiHeading": "How the AI is used",
@@ -239,7 +312,7 @@
     "aiAudienceBody": "The app asks one optional question: whether you live in or own the place, or you are thinking of buying. It is used for two things, and nothing else. First, it reorders the checks so the ones that usually matter most to you appear first — a buyer tends to want drought and reservoirs up top, an owner tends to want flood and drinking water. Second, it is passed to the model as framing: an owner gets practical next steps and who to contact, a buyer gets the legal and insurance angle, such as the nota simple, the SNCZI flood zone and the Consorcio de Compensación de Seguros.",
     "aiAudienceNote": "You can skip it or change it at any time. It never changes the underlying data — only the order it is shown in and the tone of the summary. There is no account and no profile kept.",
     "dataHeading": "What we ask, and what we ask it of",
-    "dataIntro": "No water background needed. Each row is a plain question about a place, what the app checks to answer it, and the public body the answer comes from.",
+    "dataIntro": "No background needed. Each row is a plain question about a place, what the app checks to answer it, and the public body the answer comes from. Water first, then fire.",
     "dataQuestionLabel": "The question",
     "dataAnswerLabel": "How we answer it",
     "dataSourceLabel": "Source",
@@ -271,10 +344,26 @@
       "bathingWater": {
         "question": "Is the nearest beach clean enough to swim in?",
         "answer": "Monitored beaches and bathing sites across Europe get an annual water-quality rating from years of sampling. We show the rating for the closest monitored site and how far away it is."
+      },
+      "fireDanger": {
+        "question": "How dangerous is fire weather here right now?",
+        "answer": "Europe's fire information system forecasts, each day, how readily a fire would start and spread given the weather — heat, wind, humidity and how dry the ground has become. We read the class for your point off that forecast. It describes conditions, not whether anything is alight."
+      },
+      "fireHistory": {
+        "question": "Has this area burned before?",
+        "answer": "Satellites map the outline of larger fires across Europe. We list the ones recorded within 30 km, with their size and how long ago. Small fires never make it into this record, so a short list is not proof of a quiet history."
+      },
+      "firePrevention": {
+        "question": "Does my region have a wildfire plan?",
+        "answer": "Most Mediterranean regions publish one — INFOCA in Andalucía, PPFCI in southern France, piani AIB in Italy. None of them is machine-readable, so this is a hand-checked list of links with the date we last looked."
+      },
+      "waterRestrictions": {
+        "question": "Am I allowed to water the garden?",
+        "answer": "In France, prefects issue decrees restricting water use during drought, and they are binding. We look up the level in force at your point — for rivers, groundwater and the drinking-water network separately — and link the decree itself. Spain and Italy restrict water too, but publish it per basin or region with no common feed we can read."
       }
     },
     "coverageHeading": "Where it works",
-    "coverageBody": "Detailed results are available for Andalucía. Elsewhere in Spain you will still get the nationwide layers such as flood zones and drought status, but local supply and water quality records may be missing. Within Andalucía the cover is uneven too, and deliberately so: flood zones, drought and the coastal zoning come from region-wide services, while the reservoir supply systems (132 of roughly 785 municipalities) and the drinking-water records (a 13-municipality sample) are compiled by hand and grow as they are researched. A blank card means we have not sourced that municipality yet, not that the water there is unrecorded. Other regions will be added over time.",
+    "coverageBody": "The app answers anywhere in the Mediterranean, but not with the same depth everywhere. Andalucía has the most: hand-researched supply systems and reservoir levels refreshed daily. Spain and France are shaded on the map because national registers answer there too — flood, drinking water and groundwater in Spain, the drinking-water register and the drought restrictions in force in France. Elsewhere, including Italy, you get the Europe-wide drought and fire records. Wherever a check has no source, the app says so rather than leaving the row out.",
     "disclaimerHeading": "Not professional advice",
     "disclaimerBody": "This is background information, not legal, financial, or surveying advice. Do not rely on it alone for a purchase, an insurance decision, or a planning application. Always confirm with the official source and a qualified professional.",
     "makerHeading": "Who made this, and why",
@@ -316,8 +405,6 @@
       "notAVerdict": "This is the coastal protection zoning in force around this point. It does not confirm whether a specific property lies inside the servidumbre or policía strip — that requires the national deslinde, which is currently unavailable.",
       "officialProfile": "Official profile (PDF)"
     },
-    "unsupportedTitle": "Detailed water-risk data is not yet available for this area.",
-    "unsupportedBody": "You can search another place, or explore the coverage map.",
     "home": "New search",
     "mapLayer": "Map layer",
     "summary": {
@@ -331,7 +418,10 @@
         "supplyScope": "Highlighted on the map: the reservoirs feeding {{system}}, which supplies this area.",
         "noSupplyRecord": "No supply-system record for this municipality yet",
         "avg": "{{years}}-yr avg {{mean}}%",
-        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average"
+        "comparisonLabel": "{{gap}} pts {{direction}} the {{years}}-year average",
+        "registry": "Registered network: {{network}}",
+        "registryMany": "{{count}} registered networks supply this commune",
+        "basin": "{{count}} reservoirs in the same river-basin district — supply link unknown"
       },
       "coastalFlood": {
         "servidumbre": "Within the 20 m coastal protection strip",
@@ -350,16 +440,30 @@
       },
       "waterQuality": {
         "value": "{{compliance}} · {{year}}"
+      },
+      "fireHistory": {
+        "none": "No mapped fire within {{km}} km since {{since}}",
+        "count": "{{count}} mapped fires within {{km}} km — largest {{largest}} ha, most recent {{year}}"
+      },
+      "firePrevention": {
+        "plan": "{{region}} publishes {{plan}}"
+      },
+      "waterRestrictions": {
+        "level": "{{level}} — restrictions in force in {{zone}}"
       }
-    }
+    },
+    "newsTab": "Live news",
+    "noResultCount": "{{count}} checks have no source here — show them",
+    "preventionCheckedAt": "Link last checked {{date}}"
   },
   "states": {
     "loading": "Checking source…",
     "unavailable": "No current result available",
     "not_applicable": "Not applicable to this place",
-    "unsupported": "Outside detailed coverage",
+    "unsupported": "No source covers this here yet",
     "error": "Source could not be reached",
-    "retry": "Retry"
+    "retry": "Retry",
+    "unsupportedReason": "No source covers this in {{country}} yet"
   },
   "ai": {
     "assistedLabel": "AI-assisted",
@@ -368,7 +472,6 @@
     "basis": "Based on: {{sources}}",
     "loading": "Generating interpretation…",
     "error": "Interpretation could not be generated.",
-    "unsupported": "Detailed data is not available here, so no interpretation can be made. Check authoritative regional sources instead.",
     "stale": "The language changed. Regenerate the interpretation?",
     "staleAudience": "You changed who this is for. Regenerate the explanation?",
     "regenerate": "Regenerate",
@@ -380,5 +483,34 @@
     "expand": "Expand results",
     "collapse": "Show map",
     "signals": "Key results"
+  },
+  "hazard": {
+    "water": "Water",
+    "fire": "Fire"
+  },
+  "coverage": {
+    "tier": {
+      "detailed": "Detailed here: {{count}} of {{total}} checks. This is where the app holds the most local records.",
+      "partial": "Partial here: {{count}} of {{total}} checks. Local supply and drinking-water records are missing.",
+      "minimal": "Limited here: {{count}} of {{total}} checks. Only the Europe-wide layers are available."
+    },
+    "detailRegionLabel": "More detail here"
+  },
+  "news": {
+    "loading": "Looking for recent coverage…",
+    "windowWeek": "Headlines from the last week that mention this area.",
+    "windowMonth": "Nothing in the last week — showing the last month.",
+    "empty": "No coverage found for this area in the last month. That is not the same as nothing having happened — small towns are thinly covered by the news sources we can search.",
+    "unreachableTitle": "Couldn’t reach the news source",
+    "unreachableBody": "The news service is rate-limited and turned us away. This says nothing about the area — try again in a moment.",
+    "disclaimer": "Headlines are pulled automatically from public news sources — matched by place name, not verified.",
+    "sourceNote": "Source: GDELT. These articles mention this place by name — the search is by name, not by distance."
+  },
+  "supply": {
+    "curated": "Supplied by {{system}}. These reservoirs were researched by hand from the operator’s own publications.",
+    "officialRegistry": "The national drinking-water register records which network supplies this commune. It does not record which reservoirs feed that network, so no levels are shown.",
+    "basin": "No confirmed supply link for this place. These are the largest reservoirs in the same river-basin district — they may or may not supply your tap.",
+    "none": "We don’t know which reservoirs supply this place.",
+    "networksLabel": "Distribution networks"
   }
 }

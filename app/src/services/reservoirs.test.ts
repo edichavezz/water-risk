@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { normalizeMunicipio, getReservoirsForLocation, getAllReservoirsGeoJSON } from './reservoirs'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
 describe('normalizeMunicipio', () => {
   it('lowercases and strips diacritics', () => {
@@ -12,11 +12,11 @@ describe('normalizeMunicipio', () => {
 
 describe('getReservoirsForLocation', () => {
   it('returns all 7 EMASESA reservoirs for Alcalá de Guadaíra (postcode 41500 area)', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Alcalá de Guadaíra, Sevilla, Spain',
       coordinates: { lat: 37.338, lng: -5.847 },
-      municipio: 'Alcalá de Guadaíra',
-      provincia: 'Sevilla',
+      municipality: 'Alcalá de Guadaíra', countryCode: 'es',
+      provinceName: 'Sevilla',
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBe(7)
@@ -30,26 +30,26 @@ describe('getReservoirsForLocation', () => {
   // No proximity fallback: a reservoir near a town may serve irrigation and
   // supply nobody, so nearness must never stand in for a supply record.
   it('returns nothing when the municipality has no supply-system record', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Somewhere unmapped, Spain',
       coordinates: { lat: 37.338, lng: -5.847 }, // well within 80 km of the EMASESA reservoirs
-      municipio: 'Not A Real Mapped Town',
-      provincia: 'Sevilla',
+      municipality: 'Not A Real Mapped Town',
+      provinceName: 'Sevilla',
     }
     expect(getReservoirsForLocation(location)).toEqual([])
   })
 
   it('returns nothing when municipio is missing entirely', () => {
-    const location: SearchResult = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
+    const location: PlaceContext = { displayName: 'Unknown', coordinates: { lat: 37.338, lng: -5.847 } }
     expect(getReservoirsForLocation(location)).toEqual([])
   })
 
   it('every returned reservoir names the system it was matched through', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: 'Córdoba, Spain',
       coordinates: { lat: 37.8882, lng: -4.7794 },
-      municipio: 'Córdoba',
-      provincia: 'Córdoba',
+      municipality: 'Córdoba', countryCode: 'es',
+      provinceName: 'Córdoba',
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBeGreaterThan(0)
@@ -72,10 +72,10 @@ describe('getReservoirsForLocation', () => {
       (nominatimAddress as any).municipality ||
       ''
 
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
       coordinates: { lat: 37.3433569, lng: -5.8402153 },
-      municipio,
+      municipality: municipio,
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBe(7)
@@ -101,10 +101,10 @@ describe('reservoir history', () => {
   })
 
   it('carries the averages through to the supply-system result', () => {
-    const location: SearchResult = {
+    const location: PlaceContext = {
       displayName: '41500, Alcalá de Guadaíra, Sevilla, Andalucía, España',
       coordinates: { lat: 37.3433569, lng: -5.8402153 },
-      municipio: 'Alcalá de Guadaíra',
+      municipality: 'Alcalá de Guadaíra',
     }
     const result = getReservoirsForLocation(location)
     expect(result.length).toBeGreaterThan(0)

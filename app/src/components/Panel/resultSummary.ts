@@ -2,7 +2,9 @@ import type { DatasetId, DatasetResult } from '../../types/workspace'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, GroundwaterResult, BathingWaterResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
 } from '../../types'
+import type { SupplyAnswer } from '../../types/supply'
 
 type TFunc = (key: string, opts?: Record<string, unknown>) => string
 
@@ -38,12 +40,33 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       return t(`risk.drought.${d.level}`)
     }
     case 'reservoirs': {
-      const rs = r!.data as Reservoir[]
-      if (rs.length === 0) return t('panel.summary.reservoirs.noSupplyRecord')
-      const closest = rs[0]
-      return t('panel.summary.reservoirs.headline', {
-        name: closest.name, percent: closest.fillPercent,
-      })
+      const supply = r!.data as SupplyAnswer
+      // One line per provenance tier and no shared fallback: a registry answer
+      // must never borrow a curated answer's phrasing, because the registry
+      // does not record which reservoirs feed the network.
+      switch (supply.provenance) {
+        case 'curated': {
+          const closest = supply.reservoirs[0]
+          if (!closest) return t('panel.summary.reservoirs.noSupplyRecord')
+          return t('panel.summary.reservoirs.headline', {
+            name: closest.name, percent: closest.fillPercent,
+          })
+        }
+        case 'official-registry':
+          // With several networks, count them rather than naming one: the
+          // register does not say which serves a given address, and a commune
+          // like Marseille lists industrial port supplies beside domestic
+          // ones, so singling one out would read as "yours".
+          return supply.networks.length > 1
+            ? t('panel.summary.reservoirs.registryMany', { count: supply.networks.length })
+            : t('panel.summary.reservoirs.registry', {
+                network: supply.networks[0]?.name ?? '',
+              })
+        case 'basin':
+          return t('panel.summary.reservoirs.basin', { count: supply.reservoirs.length })
+        default:
+          return t('panel.summary.reservoirs.noSupplyRecord')
+      }
     }
     case 'waterQuality': {
       const d = r!.data as WaterQualityResult
@@ -69,6 +92,39 @@ export function resultSummary(id: DatasetId, r: DatasetResult | undefined, t: TF
       const d = r!.data as BathingWaterResult
       return t('panel.summary.bathingWater.site', {
         name: d.siteName, rating: d.rating, km: d.distanceKm,
+      })
+    }
+    case 'fireDanger': {
+      const d = r!.data as FireDangerResult
+      return t(`risk.fireDanger.${d.danger}`)
+    }
+    case 'fireHistory': {
+      const d = r!.data as FireHistoryResult
+      // An empty archive is an answer, not a gap — but it must be scoped, or
+      // "no fires" reads as a guarantee rather than as a record of what was
+      // mapped within a radius since a given year.
+      if (d.fires.length === 0) {
+        return t('panel.summary.fireHistory.none', { km: d.radiusKm, since: d.since })
+      }
+      const worst = [...d.fires].sort((a, b) => b.areaHa - a.areaHa)[0]
+      return t('panel.summary.fireHistory.count', {
+        count: d.fires.length,
+        km: d.radiusKm,
+        largest: worst.areaHa,
+        year: d.fires[0].date.slice(0, 4),
+      })
+    }
+    case 'waterRestrictions': {
+      const d = r!.data as WaterRestrictionResult
+      return t('panel.summary.waterRestrictions.level', {
+        level: t(`risk.waterRestrictions.${d.level}`),
+        zone: d.zoneName,
+      })
+    }
+    case 'firePrevention': {
+      const d = r!.data as FirePreventionResult
+      return t('panel.summary.firePrevention.plan', {
+        plan: d.planName, region: d.regionName,
       })
     }
   }

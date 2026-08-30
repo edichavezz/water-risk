@@ -2,13 +2,19 @@ import type maplibregl from 'maplibre-gl'
 import type { ExpressionSpecification } from 'maplibre-gl'
 import maplibre from 'maplibre-gl'
 import i18n from '../i18n'
-import { formatLongDate } from '../i18n/formatDate'
+import { formatLongDate, formatMeasurement } from '../i18n/formatDate'
 import { useAppStore } from '../store/useAppStore'
 import { getSNCZIWmsUrl, SNCZI_LAYERS } from '../services/floodZone'
 import { getDroughtWmsUrl } from '../services/drought'
+import { getFireDangerWmsUrl } from '../services/fireDanger'
+import { fireHistoryQueryUrl } from '../services/fireHistory'
 import { getCoastalWmsUrl, COASTAL_MAP_LAYERS } from '../services/coastalFlood'
 import { allReservoirCodEsts, getAllReservoirsGeoJSON, titleCase } from '../services/reservoirs'
 import { DATASET_MAP_LAYERS, visibleLayerIds } from './layerPlan'
+
+/* Burn scars: the fire accent darkened, so an outline still reads over a
+   translucent primary raster. */
+const FIRE_SCAR = '#8A3E1E'
 import { bindLocationPicker } from './pickLocation'
 import type { DatasetId } from '../types/workspace'
 
@@ -38,6 +44,48 @@ export function ensureDataLayers(map: maplibregl.Map): void {
   if (!map.getSource('drought-src')) {
     map.addSource('drought-src', { type: 'raster', tiles: [getDroughtWmsUrl()], tileSize: 256 })
     map.addLayer({ id: 'drought-layer', type: 'raster', source: 'drought-src', paint: { 'raster-opacity': 0.45 }, layout: { visibility: 'none' } })
+  }
+
+  // ── Fire danger WMS raster ─────────────────────────────────────────────
+  // Lower opacity than drought: this is a continental forecast grid and at
+  // 0.45 its blocky ~8 km cells swamp the basemap's place names.
+  if (!map.getSource('fire-danger-src')) {
+    map.addSource('fire-danger-src', {
+      type: 'raster',
+      tiles: [getFireDangerWmsUrl()],
+      tileSize: 256,
+    })
+    map.addLayer({
+      id: 'fire-danger-layer',
+      type: 'raster',
+      source: 'fire-danger-src',
+      paint: { 'raster-opacity': 0.35 },
+      layout: { visibility: 'none' },
+    })
+  }
+
+  // ── Past fire perimeters ───────────────────────────────────────────────
+  // A context overlay, and deliberately outline-led: burn scars are irregular
+  // and a filled choropleth of them fights whatever primary layer is active.
+  if (!map.getSource('fire-history-src')) {
+    map.addSource('fire-history-src', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    })
+    map.addLayer({
+      id: 'fire-history-fill',
+      type: 'fill',
+      source: 'fire-history-src',
+      paint: { 'fill-color': FIRE_SCAR, 'fill-opacity': 0.18 },
+      layout: { visibility: 'none' },
+    })
+    map.addLayer({
+      id: 'fire-history-line',
+      type: 'line',
+      source: 'fire-history-src',
+      paint: { 'line-color': FIRE_SCAR, 'line-width': 1.5, 'line-opacity': 0.9 },
+      layout: { visibility: 'none' },
+    })
   }
 
   // ── Coastal DPH WMS rasters ────────────────────────────────────────────
@@ -237,8 +285,8 @@ export function reservoirDetailContent(props: ReservoirProps): HTMLElement {
   const lines: string[] = []
   if (props.storedHm3 != null && props.capacityHm3 != null) {
     lines.push(i18n.t('map.reservoir.storage', {
-      stored: props.storedHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
-      capacity: props.capacityHm3.toLocaleString(i18n.language, { maximumFractionDigits: 1 }),
+      stored: formatMeasurement(props.storedHm3, i18n.language, { maximumFractionDigits: 1 }),
+      capacity: formatMeasurement(props.capacityHm3, i18n.language, { maximumFractionDigits: 1 }),
     }))
   }
   // Today's level only means something next to a normal year. Rendered as a
@@ -377,4 +425,17 @@ export function bindMapInteractions(map: maplibregl.Map): void {
       useAppStore.getState().selectDataset('reservoirs')
     }
   })
+}
+
+/**
+ * Points the burnt-area overlay at the searched place.
+ *
+ * MapLibre fetches a GeoJSON source given a URL, so the layer loads the same
+ * query the panel used and the browser cache serves one of the two. Nothing is
+ * drawn until the reader turns the overlay on.
+ */
+export function updateFireHistorySource(map: maplibregl.Map, coords: { lat: number; lng: number }): void {
+  const src = map.getSource('fire-history-src') as maplibregl.GeoJSONSource | undefined
+  if (!src) return
+  src.setData(fireHistoryQueryUrl(coords))
 }

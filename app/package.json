@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "fetch:reservoirs": "node scripts/fetch-reservoirs.mjs"
+    "fetch:reservoirs": "node scripts/fetch-reservoirs.mjs",
+    "fetch:coastline": "node scripts/fetch-coastline.mjs",
+    "fetch:country-outlines": "node scripts/fetch-country-outlines.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
@@ -29,7 +31,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
-    "@fontsource/fredoka": "^5.3.0",
+    "@fontsource/petrona": "^5.2.6",
     "@turf/boolean-point-in-polygon": "^7.3.5",
     "@turf/helpers": "^7.3.5",
     "@types/geojson": "^7946.0.16",

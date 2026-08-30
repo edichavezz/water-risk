@@ -14,7 +14,7 @@ describe('normalized dataset states', () => {
     expect(NON_SAFE_STATUSES).toEqual(['unavailable', 'unsupported', 'error'])
   })
 
-  it('registers all seven datasets', () => {
-    expect(ALL_DATASET_IDS).toHaveLength(7)
+  it('registers every dataset in the union', () => {
+    expect(ALL_DATASET_IDS).toHaveLength(11)
   })
 })

@@ -5,29 +5,21 @@ import AudienceSwitcher from './AudienceSwitcher'
 import DatasetList from './DatasetList'
 import DatasetDetail from './DatasetDetail'
 import InterpretationView from './InterpretationView'
+import NewsFeed from './NewsFeed'
 
 /**
  * Mode tabs + depth switching, shared by the desktop panel and the mobile
- * sheet. Outside detailed coverage there are no dataset rows and no AI tab
- * (spec §15.2).
+ * sheet. Every place gets a list now; how much of it carries a result is the
+ * list's business, not this component's.
  */
 export default function PanelBody() {
   const { t } = useTranslation()
-  const coverage = useAppStore(s => s.coverage)
   const panelMode = useAppStore(s => s.panelMode)
   const panelDepth = useAppStore(s => s.panelDepth)
   const openDataMode = useAppStore(s => s.openDataMode)
   const openAiMode = useAppStore(s => s.openAiMode)
+  const openNewsMode = useAppStore(s => s.openNewsMode)
   const interpretation = useAppStore(s => s.interpretation)
-
-  if (coverage && !coverage.supported) {
-    return (
-      <div className="rounded-xl border border-hairline bg-accent-soft/60 p-4">
-        <p className="text-[13px] font-bold text-ink">{t('panel.unsupportedTitle')}</p>
-        <p className="mt-1 text-[13px] leading-relaxed text-muted">{t('panel.unsupportedBody')}</p>
-      </div>
-    )
-  }
 
   const openAi = () => {
     openAiMode()
@@ -44,7 +36,7 @@ export default function PanelBody() {
      AI-assisted" before anything is generated. The -mb-px pulls the 2px
      underline over the rail's own 1px line so they read as one edge. */
   const tabClass = (active: boolean, accent = false) =>
-    `-mb-px min-h-11 border-b-2 pb-2.5 text-[13px] font-bold ${
+    `-mb-px min-h-11 border-b-2 pb-2.5 font-display text-[13px] font-bold ${
       active
         ? `text-ink ${accent ? 'border-accent' : 'border-primary'}`
         : 'border-transparent text-tab-idle hover:text-ink'
@@ -71,13 +63,23 @@ export default function PanelBody() {
         >
           {t('panel.aiTab')}
         </button>
+        <button
+          role="tab"
+          aria-selected={panelMode === 'news'}
+          onClick={openNewsMode}
+          className={tabClass(panelMode === 'news')}
+        >
+          {t('panel.newsTab')}
+        </button>
       </div>
 
       {panelMode === 'ai'
         ? <InterpretationView />
-        : panelDepth === 'detail'
-          ? <DatasetDetail />
-          : <DatasetList />}
+        : panelMode === 'news'
+          ? <NewsFeed />
+          : panelDepth === 'detail'
+            ? <DatasetDetail />
+            : <DatasetList />}
     </>
   )
 }

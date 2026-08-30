@@ -1,9 +1,11 @@
 import type { Language } from '../types'
+import type { SupplyAnswer } from '../types/supply'
 import type { DatasetId, DatasetResult, InterpretationScope } from '../types/workspace'
 import { useAppStore } from '../store/useAppStore'
 import type {
   FloodZoneResult, DroughtStatus, Reservoir, WaterQualityResult,
   CoastalZoning, BathingWaterResult,
+  FireDangerResult, FireHistoryResult, FirePreventionResult, WaterRestrictionResult,
 } from '../types'
 
 export interface EvidenceItem { id: DatasetId; status: string; summary: string }
@@ -32,7 +34,14 @@ function summarize(id: DatasetId, r: DatasetResult): string {
         : `Combined Drought Indicator level: ${d.level} (${asOf}).`
     }
     case 'reservoirs': {
-      const rs = r.data as Reservoir[]
+      const supply = r.data as SupplyAnswer
+      if (supply.provenance === 'official-registry') {
+        return `Registered drinking-water network(s) for this commune: ${supply.networks.map(n => n.name).join('; ')}. The register does not record which reservoirs feed them, so no reservoir levels are available here (source Hub'Eau).`
+      }
+      if (supply.provenance === 'basin') {
+        return `Basin-level context only — no confirmed supply relationship. Largest reservoirs in the same river-basin district: ${supply.reservoirs.map(x => `${x.name} ${x.fillPercent}% full`).join('; ')}.`
+      }
+      const rs = supply.reservoirs
       const asOf = rs[0]?.fillPercentAsOf
       const system = rs[0]?.systemName
       const scope = system ? `Reservoirs supplying this area via ${system}` : 'Supply reservoirs'
@@ -83,6 +92,34 @@ function summarize(id: DatasetId, r: DatasetResult): string {
       const d = r.data as BathingWaterResult
       return `Nearest bathing site ${d.siteName} at ${d.distanceKm} km, rating ${d.rating} (source EEA).`
     }
+    case 'fireDanger': {
+      const d = r.data as FireDangerResult
+      // Named as a published forecast class, not a number we derived — the
+      // model must not describe it as a measurement.
+      return `EFFIS fire danger forecast class for ${d.forDate}: ${d.danger.replace('_', ' ')} (source Copernicus EFFIS).`
+    }
+    case 'fireHistory': {
+      const d = r.data as FireHistoryResult
+      if (d.fires.length === 0) {
+        return `No burnt area recorded within ${d.radiusKm} km since ${d.since} (source Copernicus EFFIS).`
+      }
+      const listed = d.fires
+        .slice(0, 5)
+        .map(f => `${f.date}, ${f.areaHa} ha, ${f.distanceKm} km away${f.commune ? ` near ${f.commune}` : ''}`)
+        .join('; ')
+      return `${d.fires.length} burnt area(s) recorded within ${d.radiusKm} km since ${d.since}: ${listed} (source Copernicus EFFIS).`
+    }
+    case 'waterRestrictions': {
+      const d = r.data as WaterRestrictionResult
+      const perResource = d.zones.map(z => `${z.resource} ${z.level}`).join(', ')
+      // Keep VigiEau's own severity word. This is a legal restriction, not an
+      // indicator, so softening or upgrading it would misstate the rule.
+      return `Drought restriction in force in "${d.zoneName}": ${d.level} (worst of ${perResource})${d.validTo ? `, decree valid to ${d.validTo}` : ''} (source VigiEau).`
+    }
+    case 'firePrevention': {
+      const d = r.data as FirePreventionResult
+      return `${d.regionName} has a published wildfire prevention plan (${d.planName}, ${d.source}). Existence of a plan says nothing about risk at this point.`
+    }
   }
 }
 
@@ -100,12 +137,19 @@ export async function requestInterpretation(
   question?: string,
 ): Promise<void> {
   const s = useAppStore.getState()
-  if (!s.location || !s.coverage?.supported) {
+  if (!s.location) {
     s.setInterpretation({ status: 'error', scope, text: undefined, questions: undefined })
     return
   }
+
+  // Gated on evidence, not on geography. Coverage was never what made an
+  // interpretation safe — evidence was, and buildEvidence already hands the
+  // model an explicit "no usable value" line per gap rather than hiding them.
+  // The old rule refused a place in Extremadura that had a live flood verdict
+  // and a live drought reading, because a polygon said "not Andalucía". This
+  // refuses only the case that was actually dangerous: nothing to interpret.
   const evidence = buildEvidence(s.results, s.language)
-  if (evidence.length === 0) {
+  if (!evidence.some(e => e.status === 'available')) {
     s.setInterpretation({ status: 'error', scope })
     return
   }
@@ -119,10 +163,10 @@ export async function requestInterpretation(
         audience: s.audience,
         scope: scope.type === 'dataset' ? scope.id : 'location',
         location: {
-          name: s.location.municipio || s.location.displayName,
-          municipio: s.location.municipio,
-          provincia: s.location.provincia,
-          basin: s.location.basin,
+          name: s.location.municipality || s.location.displayName,
+          municipio: s.location.municipality,
+          provincia: s.location.provinceName,
+          basin: s.location.basin?.name,
         },
         evidence,
         ...(question ? { question } : {}),

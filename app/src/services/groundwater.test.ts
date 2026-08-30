@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getGroundwaterStatus } from './groundwater'
 import { getDataset } from '../registry/datasets'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
 /**
  * This dataset used to answer everywhere off four hand-drawn rectangles, three
@@ -24,13 +24,12 @@ describe('groundwater', () => {
   })
 
   it('surfaces as unavailable, never as a clean bill of health', async () => {
-    const location = {
+    const location: PlaceContext = {
       displayName: 'Sevilla, Andalucía, España',
       coordinates: { lat: 37.3891, lng: -5.9845 },
-      municipio: 'Sevilla',
-      provincia: 'Sevilla',
-      basin: 'guadalquivir',
-    } as SearchResult
+      countryCode: 'es',
+      municipality: 'Sevilla',
+    }
 
     const result = await getDataset('groundwater').fetch(location)
     expect(result.status).toBe('unavailable')

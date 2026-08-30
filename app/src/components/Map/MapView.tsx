@@ -4,19 +4,28 @@ import maplibregl from 'maplibre-gl'
 // it here too would re-inject it unlayered and beat every Tailwind utility.
 import { useAppStore } from '../../store/useAppStore'
 import { loadQuietFocusStyle, BASEMAP_URL } from '../../map/basemapStyle'
-import { addCoverageLayers, ENTRY_CENTER, ENTRY_ZOOM } from '../../map/coverageLayers'
+import {
+  addDetailRegionLayers,
+  addNationalCoverageLayers,
+  setCoverageVisible,
+  ENTRY_CENTER,
+  ENTRY_ZOOM,
+} from '../../map/coverageLayers'
 import {
   ensureDataLayers, applyLayerPlan, bindMapInteractions,
-  applyReservoirHighlight, fitReservoirsInView,
+  applyReservoirHighlight, fitReservoirsInView, updateFireHistorySource,
 } from '../../map/dataLayers'
 import { mapRef } from '../../map/mapRef'
 import { reservoirLngLat } from '../../services/reservoirs'
 import type { Reservoir } from '../../types'
 import type { DatasetResult } from '../../types/workspace'
+import type { SupplyAnswer } from '../../types/supply'
 
 function resultCodEsts(result: DatasetResult | undefined): string[] {
   if (result?.status !== 'available') return []
-  return (result.data as Reservoir[]).map(r => r.codEst)
+  // A registry-tier answer names a distribution network and no reservoirs, so
+  // there is nothing on the map to emphasise.
+  return (result.data as SupplyAnswer).reservoirs.map(r => r.codEst)
 }
 
 const prefersReducedMotion = () =>
@@ -59,7 +68,10 @@ export default function MapView() {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
       map.addControl(new maplibregl.ScaleControl(), 'bottom-left')
       map.on('load', () => {
-        addCoverageLayers(map)
+        // National wash first, so the Andalucía detail tier draws over it.
+        addNationalCoverageLayers(map)
+        addDetailRegionLayers(map)
+        setCoverageVisible(map, useAppStore.getState().view === 'entry')
         ensureDataLayers(map)
         bindMapInteractions(map)
         // Results can land before the style finishes loading (reservoirs
@@ -120,17 +132,37 @@ export default function MapView() {
     else fit()
   }, [reservoirResult, location, searchOrigin, contextLayers])
 
+  // ── Coverage shading is entry-only ───────────────────────────────────────
+  // It is explained by CoverageKey, which App only renders on the entry view.
+  //
+  // No isStyleLoaded() guard, unlike the effect above: it goes false whenever a
+  // source is fetching, and a search starts the WMS fetches at the same moment
+  // it flips `view` — so the guard reads false exactly when this effect matters.
+  // A missed highlight is superseded by the next result; a missed coverage
+  // toggle is permanent, and leaves an unlabelled wash over two countries.
+  // setLayoutProperty is safe while the style is loading, and setCoverageVisible
+  // no-ops until the layers exist — at which point the load handler above has
+  // already applied visibility from live store state.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    setCoverageVisible(map, view === 'entry')
+  }, [view])
+
   // ── Camera follows workspace state ───────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
     if (view === 'searched' && location) {
       const { lat, lng } = location.coordinates
+      // Point the burnt-area overlay at this place, whether or not the reader
+      // has it switched on — so turning it on paints immediately.
+      updateFireHistorySource(map, location.coordinates)
       markerRef.current?.remove()
       const el = document.createElement('div')
       el.style.cssText =
-        'width:20px;height:20px;border-radius:50% 50% 50% 0;background:#285F77;' +
-        'border:2px solid #fff;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(32,49,42,.35)'
+        'width:20px;height:20px;border-radius:50% 50% 50% 0;background:#2B6E86;' +
+        'border:2px solid #FBF8F2;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(30,42,56,.35)'
       markerRef.current = new maplibregl.Marker({ element: el, anchor: 'bottom' })
         .setLngLat([lng, lat]).addTo(map)
       // A typed query lands at a fixed zoom; a point the user picked on the

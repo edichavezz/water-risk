@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useAppStore } from './useAppStore'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
-const sevilla: SearchResult = {
+const sevilla: PlaceContext = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir',
+  municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
-const madrid: SearchResult = {
+const madrid: PlaceContext = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.70 },
-  municipio: 'Madrid', provincia: 'Madrid',
+  municipality: 'Madrid', countryCode: 'es', provinceName: 'Madrid',
 }
 
 beforeEach(() => {
@@ -28,7 +28,7 @@ describe('workspace store', () => {
     useAppStore.getState().beginSearch(sevilla)
     const s = useAppStore.getState()
     expect(s.view).toBe('searched')
-    expect(s.coverage?.supported).toBe(true)
+    expect(s.coverage?.tier).toBe('detailed')
     expect(s.results).toEqual({})
     expect(s.interpretation.status).toBe('idle')
   })
@@ -40,9 +40,13 @@ describe('workspace store', () => {
     expect(useAppStore.getState().searchOrigin).toBe('map')
   })
 
-  it('beginSearch outside coverage marks unsupported', () => {
+  // Madrid is outside the detailed region but is still a real place with real
+  // results — it must not come back as a dead end.
+  it('beginSearch outside the detailed region still profiles the place', () => {
     useAppStore.getState().beginSearch(madrid)
-    expect(useAppStore.getState().coverage?.supported).toBe(false)
+    const c = useAppStore.getState().coverage
+    expect(c?.regionId).toBeUndefined()
+    expect(c?.coveredCount).toBeGreaterThan(0)
   })
 
   it('selecting a primary-mapped dataset opens detail and activates its layer', () => {

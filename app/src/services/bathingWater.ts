@@ -23,13 +23,30 @@ interface RawSite {
   bathingWaterIdentifier: string
 }
 
-let cachedSites: RawSite[] | null = null
+/**
+ * Only sites that could possibly be the nearest one are asked for.
+ *
+ * This used to fetch every Spanish site once and cache the lot, which made the
+ * register Spain-only for no reason the source imposes — the EEA layer covers
+ * the whole EU, and the country filter was the only thing stopping bathing
+ * water working in France and Italy.
+ *
+ * A degree of latitude is ~111 km and the answer is discarded beyond 5 km, so
+ * 0.1° in each direction is a generous envelope even at Mediterranean
+ * longitudes. Cached per rounded box so panning does not re-query.
+ */
+const BOX_DEG = 0.1
+const cache = new Map<string, RawSite[]>()
 
-async function fetchAllSites(): Promise<RawSite[]> {
-  if (cachedSites) return cachedSites
+async function fetchSitesNear(coords: Coordinates): Promise<RawSite[]> {
+  const key = `${coords.lat.toFixed(1)},${coords.lng.toFixed(1)}`
+  const hit = cache.get(key)
+  if (hit) return hit
 
   const params = new URLSearchParams({
-    where: "countryCode='ES'",
+    where:
+      `latitude BETWEEN ${coords.lat - BOX_DEG} AND ${coords.lat + BOX_DEG}` +
+      ` AND longitude BETWEEN ${coords.lng - BOX_DEG} AND ${coords.lng + BOX_DEG}`,
     outFields: 'bathingWaterName,countryCode,bwWaterCategory,longitude,latitude,qualityStatus,bathingWaterIdentifier',
     returnGeometry: 'false',
     f: 'json',
@@ -39,8 +56,9 @@ async function fetchAllSites(): Promise<RawSite[]> {
   if (!res.ok) throw new Error('EEA bathing water API failed')
   const data = await res.json()
   const features: { attributes: RawSite }[] = data.features ?? []
-  cachedSites = features.map(f => f.attributes)
-  return cachedSites
+  const sites = features.map(f => f.attributes)
+  cache.set(key, sites)
+  return sites
 }
 
 function haversineKm(a: Coordinates, b: { lat: number; lng: number }): number {
@@ -68,7 +86,7 @@ function normaliseRating(status: string): BathingWaterResult['rating'] {
 }
 
 export async function getNearestBathingSite(coords: Coordinates): Promise<BathingWaterResult | null> {
-  const sites = await fetchAllSites()
+  const sites = await fetchSitesNear(coords)
 
   let nearest: { site: RawSite; distanceKm: number } | null = null
   for (const site of sites) {

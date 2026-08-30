@@ -1,55 +1,108 @@
-# Interface Redesign — Work Handoff
+# Fire and Rain — Work Handoff
 
-**Last updated:** 2026-07-25
-**Worktree:** `/Users/editachavez/Projects/water-risk/.claude/worktrees/interface-redesign`
-**Branch:** `worktree-interface-redesign`
+**Last updated:** 2026-07-29
+**Worktree:** `/Users/editachavez/Projects/water-risk/.claude/worktrees/fire-and-rain`
+**Branch:** `worktree-fire-and-rain` (branched from `main` at `ca294b0`)
 
 ## Where this stands
 
-Design and planning are **done and committed**. Implementation is **not yet started** — we are at the very beginning of Task 1.
+The interface redesign that the previous version of this file described as "not yet started" **is shipped**. That entry was stale for four merges; it is replaced below. See "What the previous handoff got wrong" if you are resuming from an older branch.
 
-- Spec: `docs/superpowers/specs/2026-07-24-water-risk-interface-design.md` (approved, amended: map-first entry, "What does this mean?" AI framing, calm-but-distinctive §12.0, serverless AI proxy in scope, concurrent-worktree integration).
-- Plan: `docs/superpowers/plans/2026-07-24-interface-redesign.md` — **17 tasks, TDD, the source of truth for execution.** Follow it step-by-step.
+Current work is the **Fire and Rain** program: water risk and fire risk side by side, expanding from Andalucía to best-effort Mediterranean coverage.
+
+- Spec: `docs/superpowers/specs/2026-07-29-fire-and-rain-design.md` (approved).
+- Design handoff: `plans/design_handoff_fire_and_rain/` — read its `CHANGELOG.md` first. It is a **patch** on the shipped design, not a rebuild; anything not listed there is unchanged.
+- Build order: **P0 → P1 → P2 → P4 → P5**. P3 (Live news) is deferred; only the `news` tab shell lands, in P1.
 
 ## Git state
 
-Working tree clean. `git log --oneline -6`:
-
 ```
-42e3878 Merge branch 'worktree-reservoir-data-audit' into worktree-interface-redesign
-afcb611 Merge branch 'worktree-new-water-data-sources' into worktree-interface-redesign
-8263503 (from new-water-data-sources) wire 4 new data sources
-d00629b docs: add interface redesign implementation plan
-62d6913 (from new-water-data-sources) bathing water card
-0276683 (from reservoir-data-audit) match reservoirs by supply system
+7e5f407 fix: implement the missing setPage and goToSearch store actions
+ca294b0 Merge pull request #7 from edichavezz/worktree-ai-explanations
+a511890 Merge branch 'main' into worktree-ai-explanations
+6adccf6 Merge pull request #11 from edichavezz/worktree-data-layers-fix
+8dc1381 Merge pull request #10 from edichavezz/worktree-about-page
+0a482cc chore: refresh reservoir data from REDIAM (2026-07-29)
 ```
 
-Both concurrent agent branches (`worktree-new-water-data-sources`, `worktree-reservoir-data-audit`) have been merged in. **At the start of every task, re-run the Global Constraints sync** (see plan) — those agents may push more.
+Baseline verified green in this worktree: `npx tsc --noEmit` clean, 31 test files / 145 tests passing.
 
-## What changed vs. the plan's assumptions (READ before Task 1)
+## What the previous handoff got wrong (READ before starting)
 
-The merge from `worktree-reservoir-data-audit` **already added test tooling**, so Task 1 is largely pre-done:
+The prior file said "nothing implemented yet — no redesign source files exist". That was true of `worktree-interface-redesign`; it has not been true of `main` since PR #10. **Do not branch from `worktree-interface-redesign`** — it is behind `main` by four merges and lacks everything below.
 
-- `vitest` (^4.1.10) is in devDependencies; `"test": "vitest run"` script exists.
-- Existing test files already in the repo: `app/src/services/reservoirs.test.ts`, `app/src/data/supplySystems.test.ts`, `app/scripts/fetch-reservoirs.test.mjs`.
-- `app/vite.config.ts` was modified by that branch (it configures vitest there). **I was about to read it when interrupted — read `app/vite.config.ts` first.**
+Already on `main`, and all of it is load-bearing for this program:
 
-**Task 1 remaining work:** only add the component-test pieces the plan lists that aren't present yet — `jsdom`, `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `@types/node`, plus a jsdom `environment` + `setupFiles` for jest-dom matchers. Decide whether to keep vitest config in `vite.config.ts` (where the reservoir branch put it) or split into `vitest.config.ts` as the plan wrote — **prefer extending the existing `vite.config.ts` setup** to avoid fighting the other branch's config. Confirm the existing `.test.ts` files still pass after adding jsdom.
+- **`api/wms-proxy.ts` + `server/wmsProxyCore.ts`** — an allow-listed WMS relay with edge caching and an `UPSTREAMS` table. Each new fire overlay is ~6 lines in that table. Keep the allow-list-by-layer-name discipline; it is what stops the proxy being an SSRF hole.
+- **`src/services/wmsSample.ts`** — `sampleUrl`/`samplePixel` read the centre pixel of a tiny WMS `GetMap`. **This is the single most reusable thing in the repo for this program**: both EFFIS and Copernicus EDO have broken `GetFeatureInfo`, and this is how we get point values out of them anyway.
+- **`src/components/About/AboutPage.tsx`** — About is a real page, not a dialog. The conflict between the identity spec and the design handoffs is resolved in favour of the page.
+- **`src/registry/ordering.ts`** (`rankByAvailability`), `AudienceSwitcher`, and a flood service rewritten onto pixel sampling — the old "error renders as safe" bug is fixed.
 
-Other merge-in facts that affect later tasks:
-- `getNearbyReservoirs` signature/behavior changed on the reservoir branch (now supply-system matching with proximity fallback, live data in `app/src/data/reservoirs.generated.json`). **Task 5 registry adapter for `reservoirs` must call the CURRENT signature** — verify in `app/src/services/reservoirs.ts` before writing the adapter.
-- `proj4` is now a dependency (reservoir branch).
-- New data sources (SINAC water quality, coastal DPH, groundwater, bathing water) are all present with services + types; the plan's registry (Task 5) already accounts for all seven datasets.
+One fix was needed before any work could start: `setPage` and `goToSearch` were declared on `AppStore` and consumed by `AppHeader`, `AboutPage` and `routeSync`, but never implemented, so `tsc --noEmit` failed on `main`. Fixed in `7e5f407`.
 
 ## How to resume
 
-1. Re-read the plan's **Global Constraints** block and run the branch-sync check.
-2. `cat app/vite.config.ts` to see the current vitest setup.
-3. Finish Task 1 (add jsdom + Testing Library only; don't duplicate vitest).
-4. Proceed Task 2 → 17 exactly as written, committing after each with the `Co-Authored-By: Claude Fable 5` trailer.
-5. All app commands run from `app/`. Verify each task with `npx tsc --noEmit && npx vitest run && npm run build`.
-6. After Task 17, invoke `superpowers:finishing-a-development-branch`.
+1. `cd app && npm install` if this is a fresh checkout of the worktree.
+2. Read the spec, then `plans/design_handoff_fire_and_rain/CHANGELOG.md`.
+3. Work the phases in order. Each phase gets its own plan in `docs/superpowers/plans/`, and P0 has an internal 8-step migration order that must be followed — each step compiles and passes tests before the next.
+4. Verify every step with `npx tsc --noEmit && npx vitest run && npm run build`, run from `app/`.
+5. Commit with the `Co-Authored-By: Claude Opus 5` trailer.
 
-## Task tracker
+## Phase tracker
 
-Tasks 1–17 map 1:1 to the plan. Task 1 in progress; 2–17 pending. Nothing implemented yet — no redesign source files exist beyond the merged data-source work.
+| Phase | State |
+|---|---|
+| P0 — dismantle the coverage gate | **Done.** Verified in the browser: Marseille returns live drought + bathing water with the Spain-only sources visibly unsupported; Ronda unchanged. |
+| P1 — visual patch + hazard families | **Done.** Rebrand, warm palette, Petrona titles, two-circle mark, hazard field + pills, two-group layers card, family-grouped list with a collapsing empty tail, Live news tab shell. |
+| P2 — fire datasets | **Done.** EFFIS fire danger (point class + overlay), EFFIS burnt-area history (30 km, live), curated prevention plans for 13 regions across ES/FR/IT. Verified in the browser at Ronda: 22 mapped fires, INFOCA plan, danger class. |
+| P3 — live news | **Deferred**, tab shell only. Research done: `specs/2026-07-30-live-news-research.md`. Last-week + most-recent-first + Europe-only are all easy; a radius is not, and quota is the real constraint. |
+| P4 — water widening + supply graph | **Partly done.** VigiEau restrictions and the Hub'Eau registry tier ship, and supply answers now carry provenance. MITECO's Spain-national reservoir pipeline and the `basin` tier do not. |
+| P5 — About page redo | **Structure done.** Contour band removed, data grouped by hazard family, copy corrected where it had become false. **The voice is still the user's to set.** |
+
+## Notes for whoever picks this up
+
+- **EFFIS is fetched directly, not through the WMS proxy.** It sends one
+  well-formed CORS header; only Copernicus EDO needs relaying (it sends ACAO
+  twice). Do not "tidy" EFFIS into the UPSTREAMS table — it would add a hop for
+  nothing.
+- **The FWI layer is `ecmwf007.fwi`.** `ecmwf.fwi.fwi` is advertised in
+  GetCapabilities, answers 200 at every date, and paints nothing.
+- **At "Low" danger the overlay is nearly invisible** over the pale basemap, by
+  design — a hazard layer that shouts when there is no hazard is worse. Zoom out
+  to continental scale to confirm it is working; North Africa shows High/Very
+  high while Europe is green.
+- **Two fire pieces were scoped but not built**: NASA FIRMS active hotspots
+  (needs a free MAP_KEY registered at firms.modaps.eosdis.nasa.gov, and a
+  serverless proxy since the key is secret), and the WUI/vulnerable-areas layer
+  (published datasets exist but only as journal-supplement downloads, so they
+  need a one-off simplify-and-ship step). Neither blocks anything.
+
+## Confirmed with the user
+
+- **"Barriers prone to wildfires" means vulnerable areas** — the wildland-urban
+  interface — which is what P2 was built toward. **Firebreaks** (*cortafuegos*,
+  DFCI tracks) are wanted too, as a later addition: they are largely absent from
+  free pan-European sources, but France's DFCI networks are the most developed
+  and are the place to start looking.
+
+## What P4 left undone
+
+- **MITECO's Spain-national reservoir pipeline.** Still a weekly 11.3 MB ZIP
+  containing an Access `.mdb`; the schema is unverified and it needs a
+  build-time job modelled on `fetch-reservoirs.mjs`. Until it lands, Spanish
+  reservoir levels are Andalucía-only.
+- **The `basin` tier.** The provenance model has a slot for it and the copy and
+  guardrail tests are written, but nothing returns it: it needs river-basin
+  district polygons, which is also what `PlaceContext.basin` is waiting on.
+  Both should land together.
+- **SINAC.** Spain's equivalent of the Hub'Eau registry tier. The listing
+  endpoint is verified working and keyless, keyed on INE codes; whether its
+  detail page names source reservoirs is still the open question below. It
+  would need an INE gazetteer, since Nominatim gives no INE code.
+
+## Open unknowns
+
+- **SINAC detail page** (`informacionAbastecimientoActionDetalleRed.do`) timed out three times at 120s during research. Whether it names source reservoirs decides whether Spain's registry tier carries a reservoir edge or only a system name. Spike before P4's Spain leg.
+- **The MITECO `.mdb` schema** is unverified. Budget a spike before building that pipeline.
+- **River-basin-district boundaries** — EEA WISE assumed, HydroBASINS level 5 is the public-domain fallback. Nothing downstream depends on which wins.
+- **`PlaceContext.basin` is declared but never populated.** The polygon lookup was deliberately deferred out of P0: its only consumer today is one line of the AI prompt, and it becomes load-bearing in P4 for the basin-tier reservoir fallback. Land `lookupBasin` there, with the code that needs it.
