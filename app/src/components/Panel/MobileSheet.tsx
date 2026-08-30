@@ -45,10 +45,10 @@ export default function MobileSheet() {
       <div className="mb-2.5 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate font-display text-base font-semibold leading-tight text-ink">
-            {location.municipio || location.displayName.split(',')[0]}
+            {location.municipality || location.displayName.split(',')[0]}
           </p>
-          {location.provincia && (
-            <p className="truncate text-[11.5px] text-muted">{location.provincia}</p>
+          {location.provinceName && (
+            <p className="truncate text-[11.5px] text-muted">{location.provinceName}</p>
           )}
         </div>
         {/* Explicit controls, not gesture-only (spec §11.3) */}

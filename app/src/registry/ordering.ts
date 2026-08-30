@@ -29,27 +29,43 @@ export function hasResult(result: DatasetResult | undefined): boolean {
 }
 
 /**
- * Whether a dataset applies to the place currently being looked at.
+ * Whether the panel should list this dataset at all.
  *
- * Two things rule one out: the coverage record for this area not listing it,
- * or the check itself coming back `not_applicable` — a coastal layer for an
- * inland town. Either way there is nothing to say and nothing to draw, so the
- * panel omits the row *and* the layer tray disables the toggle. Sharing one
- * predicate is what stops those two drifting apart and offering a map layer
- * for a dataset the panel will not even list.
- *
- * Deliberately narrower than `hasResult`: `unavailable` and `error` mean this
- * point has no reading, not that the layer paints nothing. The flood and
- * drought rasters still show the zones around a location that sits outside
- * one, which is often the reason to turn them on.
+ * Only `not_applicable` rules a row out — the question does not arise here, so
+ * there is nothing to say. `unsupported` deliberately stays listed: the
+ * question is real and we have no source, and hiding that would let absence
+ * read as absence of risk.
  */
-export function isApplicableHere(
+export function isListedHere(
   id: DatasetId,
-  coverage: { datasets: DatasetId[] } | null,
   results: Partial<Record<DatasetId, DatasetResult>>,
 ): boolean {
-  if (coverage && coverage.datasets.length > 0 && !coverage.datasets.includes(id)) return false
   return results[id]?.status !== 'not_applicable'
+}
+
+/**
+ * Whether the layer tray should offer this dataset's map layer.
+ *
+ * Stricter than `isListedHere`, and the gap between them is the point: an
+ * `unsupported` dataset still earns a visible row saying we have no source,
+ * but there is nothing to paint, so the toggle is disabled rather than
+ * offering a layer that would draw nothing.
+ *
+ * Deliberately looser than `hasResult`, though: `unavailable` and `error` mean
+ * this *point* has no reading, not that the layer paints nothing. The flood and
+ * drought rasters still show the zones around a location that sits outside one,
+ * which is often the reason to turn them on.
+ */
+export function isDrawableHere(
+  id: DatasetId,
+  results: Partial<Record<DatasetId, DatasetResult>>,
+): boolean {
+  const status = results[id]?.status
+  // These two layers are meaningful only for the exact dated response fetched
+  // for this search. Unlike a static flood-zone raster, an unavailable current
+  // slice must not fall back to painting some service default.
+  if (id === 'fireDanger' || id === 'activeFire') return status === 'available'
+  return status !== 'not_applicable' && status !== 'unsupported'
 }
 
 /**

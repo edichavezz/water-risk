@@ -1,4 +1,5 @@
-import type { Coordinates, Reservoir, SearchResult } from '../types'
+import type { Coordinates, Reservoir } from '../types'
+import type { PlaceContext } from '../types/place'
 import { SUPPLY_SYSTEMS } from '../data/supplySystems'
 import generated from '../data/reservoirs.generated.json'
 
@@ -122,9 +123,9 @@ export function getAllReservoirsGeoJSON(): GeoJSON.FeatureCollection {
  * reads as an answer to the one they did. An empty result is the honest state,
  * and SUPPLY_SYSTEMS covers ~133 of Andalucía's ~785 municipalities today.
  */
-export function getReservoirsForLocation(location: SearchResult): Reservoir[] {
+export function getReservoirsForLocation(location: PlaceContext): Reservoir[] {
   const coords = location.coordinates
-  const municipio = location.municipio ? normalizeMunicipio(location.municipio) : ''
+  const municipio = location.municipality ? normalizeMunicipio(location.municipality) : ''
 
   if (!municipio) return []
 

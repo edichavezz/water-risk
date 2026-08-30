@@ -8,8 +8,11 @@ export interface EvidenceItem {
   summary: string
 }
 
+/** Mirrors `Language` in src/types — the wire format cannot import from the app. */
+export type InterpretLanguage = 'en' | 'es' | 'fr' | 'it' | 'el' | 'ar'
+
 export interface InterpretRequest {
-  language: 'en' | 'es'
+  language: InterpretLanguage
   audience: 'resident_owner' | 'buyer_investor' | null
   scope: string // 'location' or a dataset id
   location: { name: string; municipio?: string; provincia?: string; basin?: string }
@@ -29,9 +32,28 @@ const AUDIENCE_FRAMING: Record<'resident_owner' | 'buyer_investor', string> = {
     'The reader is thinking about buying here and has not decided yet. Point out what would matter before signing, where the evidence supports it — whether the place sits in a mapped flood zone, what that can mean for insurance, and what a property lawyer would check. Explain any official term in plain words the first time you use it.',
 }
 
+/**
+ * One line per interface language.
+ *
+ * Every one of them repeats the same instruction in a different direction: the
+ * official names in this data are Spanish, French and Italian, and translating
+ * them is what makes an answer uncheckable. A reader told about "the national
+ * flood map" can find nothing; told "SNCZI", they can. So the name stays and
+ * the meaning gets explained — including in the two languages, Greek and
+ * Arabic, whose readers share no alphabet with the source documents.
+ */
+const LANGUAGE_INSTRUCTION: Record<InterpretLanguage, string> = {
+  en: 'Write in English. When a source or term only exists in Spanish, French or Italian, give the plain English meaning first and the original name in brackets.',
+  es: 'Write in Spanish, in plain everyday Spanish. Keep official Spanish names as they are, but explain what each one means in ordinary words.',
+  fr: 'Write in French, in plain everyday French. Keep official French names (VigiEau, the arrêté, the préfecture) as they are. For a Spanish or Italian source, give the plain French meaning first and the original name in brackets.',
+  it: 'Write in Italian, in plain everyday Italian. Keep official Italian names as they are. For a Spanish or French source, give the plain Italian meaning first and the original name in brackets.',
+  el: 'Write in Greek, in plain everyday Greek. Do not transliterate or translate the official names of sources and legal instruments — write SNCZI, EFFIS, VigiEau, servidumbre de protección in the Latin alphabet exactly as published, and explain what each one is in Greek the first time. A transliterated name cannot be looked up.',
+  ar: 'Write in Arabic, in plain everyday Modern Standard Arabic. Do not transliterate or translate the official names of sources and legal instruments — write SNCZI, EFFIS, VigiEau, servidumbre de protección in the Latin alphabet exactly as published, and explain what each one is in Arabic the first time. A transliterated name cannot be looked up. Keep numbers, dates and units in Latin digits so they match the source pages.',
+}
+
 export function buildSystemPrompt(req: InterpretRequest): string {
   const lines = [
-    'You explain public water data about one place in Spain to someone who has never looked at water data before. Imagine saying it out loud to a neighbour.',
+    'You explain public water data about one place in the Mediterranean to someone who has never looked at water data before. Imagine saying it out loud to a neighbour.',
     'How to write it:',
     '- Open with the bottom line in one plain sentence.',
     '- Short sentences. Everyday words.',
@@ -46,11 +68,14 @@ export function buildSystemPrompt(req: InterpretRequest): string {
     '- Do not explain a reading away with outside or seasonal knowledge ("that is normal for summer"). If the evidence says a level is below its average, that is what you report.',
     '- Do not state what a bank, insurer or public body will require or charge. Say what the reader could ask them instead.',
     '- Never invent an overall risk score, a rating, or a combined verdict.',
+    // The app now answers anywhere in the Mediterranean, so a place with one
+    // reading and six gaps is a normal case rather than an edge case. Say the
+    // picture is thin when it is, instead of writing one dataset up into a
+    // confident summary of the place.
+    '- Say how much of the picture you actually have. Where most checks have no source for this place, open by saying the picture is thin, and never let one reading stand in for the whole place.',
     '- Do not promise that something is legally, financially or physically safe. Where certainty matters, say plainly who can confirm it.',
     req.audience ? AUDIENCE_FRAMING[req.audience] : '',
-    req.language === 'es'
-      ? 'Write in Spanish, in plain everyday Spanish. Keep official Spanish names as they are, but explain what each one means in ordinary words.'
-      : 'Write in English. When a source or term only exists in Spanish, give the plain English meaning first and the Spanish name in brackets.',
+    LANGUAGE_INSTRUCTION[req.language] ?? LANGUAGE_INSTRUCTION.en,
     'Write 80-140 words. Then give 3 follow-up questions, phrased the way the reader would ask them, short, each one opening a different direction.',
   ]
   return lines.filter(Boolean).join('\n')

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DATASETS } from '../../registry/datasets'
+import type { HazardFamily } from '../../types/workspace'
 import { useAppStore } from '../../store/useAppStore'
 import { APP_NAME } from '../Header/identity'
 
@@ -56,12 +57,14 @@ function SourceChips() {
    the data section can never claim a check the app does not actually run. The
    prose lives in `about.dataItems.<id>`; the source and its link come from the
    registry entry. Hairline-divided, matching the panel's dataset list. */
-function DataQuestions() {
+function DataQuestions({ hazard }: { hazard: HazardFamily }) {
   const { t } = useTranslation()
-  const ordered = [...DATASETS].sort((a, b) => a.defaultOrder - b.defaultOrder)
+  const ordered = [...DATASETS]
+    .filter(d => d.hazard === hazard)
+    .sort((a, b) => a.defaultOrder - b.defaultOrder)
 
   return (
-    <ul className="mt-5 border-b border-hairline-soft">
+    <ul className="mt-3 border-b border-hairline-soft">
       {ordered.map(d => (
         <li key={d.id} className="border-t border-hairline-soft py-3.5">
           <h3 className="font-display text-[15px] font-semibold leading-snug text-ink">
@@ -90,6 +93,19 @@ function DataQuestions() {
         </li>
       ))}
     </ul>
+  )
+}
+
+function FamilyHeading({ hazard }: { hazard: HazardFamily }) {
+  const { t } = useTranslation()
+  return (
+    <h3
+      className={`mt-8 text-[11px] font-bold uppercase tracking-[.06em] ${
+        hazard === 'fire' ? 'text-accent' : 'text-primary'
+      }`}
+    >
+      {t(`hazard.${hazard}`)}
+    </h3>
   )
 }
 
@@ -174,8 +190,13 @@ export default function AboutPage() {
         <p className="mt-2 max-w-[600px] text-sm text-muted">{t('about.subhead')}</p>
       </div>
 
-      {/* Decorative contour band standing in for a hero image. */}
-      <div aria-hidden className="topo-divider mx-6 mb-10 mt-5 h-[60px] sm:mx-12" />
+      {/* The same teal→terracotta rule as the header, so the page opens on the
+          two hazards rather than on decoration. Replaces a contour band that
+          rendered as three washed-out rings and read as a loading state. */}
+      <div
+        aria-hidden
+        className="mx-6 mb-10 mt-7 h-[3px] rounded-full bg-gradient-to-r from-primary to-accent sm:mx-12"
+      />
 
       <div className="grid gap-10 px-6 pb-24 sm:px-12 md:grid-cols-[200px_1fr]">
         <nav aria-label={t('about.navHeading')} className="hidden md:block">
@@ -232,7 +253,10 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-[#33424C]">{t('about.coverageBody')}</p>
             </div>
 
-            <DataQuestions />
+            <FamilyHeading hazard="water" />
+            <DataQuestions hazard="water" />
+            <FamilyHeading hazard="fire" />
+            <DataQuestions hazard="fire" />
           </section>
 
           {/* ── The AI ───────────────────────────────────────────────── */}

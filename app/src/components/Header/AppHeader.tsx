@@ -5,7 +5,11 @@ import { APP_NAME } from './identity'
 
 /* The app mark: a teal droplet-circle with a smaller terracotta one tucked
    into its bottom-right. Drawn in CSS rather than shipped as an asset, so it
-   inherits the palette tokens along with everything else. */
+   inherits the palette tokens along with everything else.
+
+   Deliberately physical `left`/`right` rather than the logical `start`/`end`
+   used everywhere else: a logotype is a fixed shape, and mirroring it in
+   Arabic would make it a different mark rather than a translated one. */
 function AppMark() {
   return (
     <span aria-hidden className="relative block h-[26px] w-[26px] shrink-0">
@@ -36,7 +40,7 @@ export default function AppHeader() {
         <p className="hidden truncate text-[12.5px] text-muted sm:block">{t('app.tagline')}</p>
       </div>
 
-      <div className="ml-auto flex shrink-0 items-center gap-2.5">
+      <div className="ms-auto flex shrink-0 items-center gap-2.5">
         {/* One destination at a time: the About pill on the map, a back link
             on About. Either way only `page` moves — the map keeps its camera,
             its layers and any active search. */}

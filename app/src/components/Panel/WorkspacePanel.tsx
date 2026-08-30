@@ -21,17 +21,17 @@ export default function WorkspacePanel() {
        when it had four rows to show. `max-h` keeps a long list scrollable
        without ever forcing the panel to fill the viewport. */
     <aside
-      className={`absolute left-8 top-[88px] z-10 hidden max-h-[calc(100dvh-7.5rem)] flex-col overflow-y-auto rounded-2xl bg-canvas p-5 shadow-[0_10px_28px_rgba(30,42,56,.16)] transition-[width] duration-[var(--dur-panel)] md:flex ${
+      className={`absolute start-8 top-[88px] z-10 hidden max-h-[calc(100dvh-7.5rem)] flex-col overflow-y-auto rounded-2xl bg-canvas p-5 shadow-[0_10px_28px_rgba(30,42,56,.16)] transition-[width] duration-[var(--dur-panel)] md:flex ${
         WIDTH_BY_DEPTH[panelDepth]
       } max-w-[calc(100vw-4rem)]`}
     >
       <header className="mb-3.5 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate font-display text-[17px] font-semibold leading-tight text-ink">
-            {location.municipio || location.displayName.split(',')[0]}
+            {location.municipality || location.displayName.split(',')[0]}
           </p>
-          {location.provincia && (
-            <p className="truncate text-[11.5px] text-muted">{location.provincia}</p>
+          {location.provinceName && (
+            <p className="truncate text-[11.5px] text-muted">{location.provinceName}</p>
           )}
         </div>
         <button

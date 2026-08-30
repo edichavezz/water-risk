@@ -1,24 +1,37 @@
-import type { SearchResult } from '../../types'
+import type { PlaceContext } from '../../types/place'
 import type { DatasetId } from '../../types/workspace'
 import { useAppStore, type SearchOrigin } from '../../store/useAppStore'
 import { orderedDatasets, getDataset } from '../../registry/datasets'
 import { runProfile } from '../../services/orchestrator'
 
-// Enters the searched state and fetches the applicable datasets. Outside
-// coverage it shows the location but runs no dataset fetches and applies no
-// risk styling (spec §15.2).
+// Results belong to the search that started them. A slow multi-tile source can
+// otherwise finish after a later search and overwrite the new place's panel
+// and map data.
+let searchGeneration = 0
+
+/**
+ * Enters the searched state and runs the profile.
+ *
+ * There is no coverage gate here any more. Every dataset is handed to the
+ * orchestrator, which fetches the ones that apply and records an honest status
+ * for the rest — so a search in Marseille returns a real list with visible gaps
+ * rather than the "outside coverage" dead end it used to hit.
+ */
 export async function submitLocation(
-  location: SearchResult,
+  location: PlaceContext,
   origin: SearchOrigin = 'query',
 ): Promise<void> {
+  const generation = ++searchGeneration
   const store = useAppStore.getState()
   store.beginSearch(location, origin)
-  const coverage = useAppStore.getState().coverage
-  if (!coverage?.supported) return
   const datasets = orderedDatasets(location, useAppStore.getState().audience)
-    .filter(d => coverage.datasets.includes(d.id))
   await runProfile(location, datasets, {
-    onResult: (id, result) => useAppStore.getState().setResult(id, result),
+    onResult: (id, result) => {
+      const current = useAppStore.getState()
+      if (generation === searchGeneration && current.location === location) {
+        current.setResult(id, result)
+      }
+    },
   })
 }
 
@@ -26,7 +39,13 @@ export async function submitLocation(
 export async function retryDataset(id: DatasetId): Promise<void> {
   const { location } = useAppStore.getState()
   if (!location) return
+  const generation = searchGeneration
   await runProfile(location, [getDataset(id)], {
-    onResult: (dsId, result) => useAppStore.getState().setResult(dsId, result),
+    onResult: (dsId, result) => {
+      const current = useAppStore.getState()
+      if (generation === searchGeneration && current.location === location) {
+        current.setResult(dsId, result)
+      }
+    },
   })
 }

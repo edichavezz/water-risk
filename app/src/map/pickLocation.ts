@@ -1,9 +1,10 @@
 import type maplibregl from 'maplibre-gl'
 import maplibre from 'maplibre-gl'
 import i18n from '../i18n'
-import type { Coordinates, SearchResult } from '../types'
+import type { Coordinates } from '../types'
+import type { PlaceContext } from '../types/place'
 import { reverseGeocode } from '../services/geocoding'
-import { lookupCoverage } from '../services/coverage'
+import { coverageProfile, type DetailTier } from '../services/coverage'
 import { submitLocation } from '../components/Entry/submitLocation'
 
 // Layers that own their own click behaviour. A click landing on one of these
@@ -11,7 +12,7 @@ import { submitLocation } from '../components/Entry/submitLocation'
 const INTERACTIVE_LAYERS = ['reservoirs-circle']
 
 export type PickState =
-  | { status: 'found'; result: SearchResult; inCoverage: boolean }
+  | { status: 'found'; result: PlaceContext; tier: DetailTier }
   | { status: 'empty' }
 
 export function hitsInteractiveLayer(
@@ -33,7 +34,7 @@ export function createPickResolver() {
       const result = await reverseGeocode(coords).catch(() => null)
       if (seq !== current) return null
       if (!result) return { status: 'empty' }
-      return { status: 'found', result, inCoverage: lookupCoverage(coords).supported }
+      return { status: 'found', result, tier: coverageProfile(result).tier }
     },
   }
 }
@@ -47,7 +48,7 @@ function loadingContent(): HTMLElement {
   return el
 }
 
-function stateContent(state: PickState, onConfirm: (r: SearchResult) => void): HTMLElement {
+function stateContent(state: PickState, onConfirm: (r: PlaceContext) => void): HTMLElement {
   const el = document.createElement('div')
   el.className = 'pick-popup'
 
@@ -56,17 +57,19 @@ function stateContent(state: PickState, onConfirm: (r: SearchResult) => void): H
     return el
   }
 
-  const { result, inCoverage } = state
+  const { result, tier } = state
   const name = document.createElement('div')
   name.className = 'pick-popup__name'
-  name.textContent = result.municipio || result.displayName.split(',')[0]
-  if (result.provincia) name.textContent += ` · ${result.provincia}`
+  name.textContent = result.municipality || result.displayName.split(',')[0]
+  if (result.provinceName) name.textContent += ` · ${result.provinceName}`
   el.append(name)
 
-  if (!inCoverage) {
+  // Says what the reader will get here rather than refusing them. Detailed
+  // places need no note; the absence is the good case.
+  if (tier !== 'detailed') {
     const note = document.createElement('div')
     note.className = 'pick-popup__note'
-    note.textContent = i18n.t('map.pickOutsideCoverage')
+    note.textContent = i18n.t(`map.pickTier.${tier}`)
     el.append(note)
   }
 

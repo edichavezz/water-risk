@@ -6,11 +6,11 @@ vi.mock('../services/geocoding')
 
 const ecija = {
   displayName: 'Écija, Sevilla', coordinates: { lat: 37.54, lng: -5.08 },
-  municipio: 'Écija', provincia: 'Sevilla', basin: 'guadalquivir' as const,
+  municipality: 'Écija', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 const madrid = {
   displayName: 'Madrid', coordinates: { lat: 40.42, lng: -3.7 },
-  municipio: 'Madrid', provincia: 'Madrid',
+  municipality: 'Madrid', countryCode: 'es', provinceName: 'Madrid',
 }
 
 beforeEach(() => vi.resetAllMocks())
@@ -55,16 +55,18 @@ describe('hitsInteractiveLayer', () => {
 })
 
 describe('pick resolver', () => {
-  it('reports a place inside coverage', async () => {
+  it('reports how detailed a picked place is', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue(ecija)
     const state = await createPickResolver().resolve(ecija.coordinates)
-    expect(state).toEqual({ status: 'found', result: ecija, inCoverage: true })
+    expect(state).toEqual({ status: 'found', result: ecija, tier: 'detailed' })
   })
 
-  it('reports a place outside coverage without discarding it', async () => {
+  // Outside the detailed region the pick is still a real, searchable place —
+  // the popup says what the reader will get, it does not turn them away.
+  it('reports a thinner tier without discarding the pick', async () => {
     vi.mocked(geocoding.reverseGeocode).mockResolvedValue(madrid)
     const state = await createPickResolver().resolve(madrid.coordinates)
-    expect(state).toMatchObject({ status: 'found', inCoverage: false })
+    expect(state).toMatchObject({ status: 'found', tier: 'partial' })
   })
 
   it('reports an empty pick where no address resolves', async () => {

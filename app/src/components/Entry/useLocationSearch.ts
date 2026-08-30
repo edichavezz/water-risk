@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react'
 import { geocodeAddress } from '../../services/geocoding'
-import type { SearchResult } from '../../types'
+import type { PlaceContext } from '../../types/place'
 
 export function useLocationSearch() {
   const [query, setQuery] = useState('')
-  const [suggestions, setSuggestions] = useState<SearchResult[]>([])
+  const [suggestions, setSuggestions] = useState<PlaceContext[]>([])
   const [searching, setSearching] = useState(false)
   const [failed, setFailed] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)

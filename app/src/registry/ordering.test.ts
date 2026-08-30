@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hasResult, rankByAvailability } from './ordering'
+import { hasResult, isDrawableHere, rankByAvailability } from './ordering'
 import type { DatasetDef } from './datasets'
 import type { DatasetId, DatasetResult } from '../types/workspace'
 
@@ -72,5 +72,13 @@ describe('rankByAvailability', () => {
       }
       previous = { order, results }
     }
+  })
+})
+
+describe('dated live layers', () => {
+  it('draws current fire layers only when their requested result is available', () => {
+    expect(isDrawableHere('fireDanger', { fireDanger: { status: 'unavailable' } })).toBe(false)
+    expect(isDrawableHere('activeFire', { activeFire: { status: 'error' } })).toBe(false)
+    expect(isDrawableHere('activeFire', { activeFire: { status: 'available', data: {} } })).toBe(true)
   })
 })

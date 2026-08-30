@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type maplibregl from 'maplibre-gl'
 import { applyReservoirHighlight, fitReservoirsInView, fitPadding } from './dataLayers'
 import { getReservoirsForLocation, allReservoirCodEsts } from '../services/reservoirs'
-import type { SearchResult } from '../types'
+import type { PlaceContext } from '../types/place'
 
 interface StateCall { id: string; state: Record<string, boolean> }
 
@@ -22,11 +22,11 @@ function fakeMap(overrides: Partial<Record<string, unknown>> = {}) {
   return { map: map as unknown as maplibregl.Map, calls, moves }
 }
 
-const SEVILLA: SearchResult = {
+const SEVILLA: PlaceContext = {
   displayName: 'Sevilla, Andalucía, Spain',
   coordinates: { lat: 37.3891, lng: -5.9845 },
-  municipio: 'Sevilla',
-  provincia: 'Sevilla',
+  municipality: 'Sevilla', countryCode: 'es',
+  provinceName: 'Sevilla',
 }
 
 describe('reservoir results', () => {

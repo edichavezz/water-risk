@@ -1,0 +1,541 @@
+{
+  "app": {
+    "tagline": "Rischio idrico e di incendio nel Mediterraneo",
+    "navAbout": "Informazioni",
+    "nav": "Sezioni",
+    "backToMap": "Torna alla mappa",
+    "language": "Lingua"
+  },
+  "layers": {
+    "button": "Livelli della mappa",
+    "primaryHeading": "Livello di rischio principale",
+    "contextHeading": "Contesto",
+    "none": "Nessuno",
+    "readabilityWarning": "Due livelli sovrapposti possono rendere la mappa difficile da leggere.",
+    "close": "Chiudi",
+    "unavailable": "Nessun livello disponibile",
+    "collapse": "Comprimi i livelli",
+    "expand": "Espandi i livelli",
+    "legendHeading": "Legenda",
+    "noData": "Nulla da mostrare qui",
+    "primaryNote": "Uno alla volta, fra i due.",
+    "mixedFamilyWarning": "Un livello incendio e uno idrico insieme possono essere difficili da leggere."
+  },
+  "risk": {
+    "title": "Profilo di rischio",
+    "flood": {
+      "title": "Rischio di alluvione",
+      "inZone100": "Questo punto è in area allagabile con tempo di ritorno di 100 anni",
+      "inZone500": "Questo punto è in area allagabile con tempo di ritorno di 500 anni",
+      "inZone10": "Questo punto è in area allagabile ad alto rischio (tempo di ritorno di 10 anni)",
+      "notInZone": "Nessuna area allagabile registrata per questo punto",
+      "source": "Fonte: SNCZI (MITERD)",
+      "caveat": "I dati successivi alla DANA del 2024 potrebbero non essere ancora recepiti ovunque."
+    },
+    "drought": {
+      "title": "Stato di siccità",
+      "none": "Nessuna condizione di siccità",
+      "watch": "Sorveglianza siccità",
+      "warning": "Avviso di siccità",
+      "alert": "Allerta siccità",
+      "partial_recovery": "Ripresa parziale",
+      "recovery": "In ripresa",
+      "unknown": "Stato sconosciuto",
+      "source": "Fonte: Osservatorio europeo della siccità (Copernicus) — aggiornamento settimanale"
+    },
+    "reservoirs": {
+      "title": "Invasi nelle vicinanze",
+      "fill": "{{percent}}% di riempimento",
+      "historical": "media storica: {{mean}}%",
+      "noData": "Nessun dato sugli invasi disponibile nelle vicinanze",
+      "asOf": "REDIAM (Junta de Andalucía) — dati al {{date}}"
+    },
+    "waterQuality": {
+      "title": "Acqua potabile",
+      "compliant": "Conforme",
+      "minor_issues": "Anomalie lievi",
+      "non_compliant": "Non conforme",
+      "unknown": "Nessun dato",
+      "source": "Fonte: SINAC (Ministero della Salute spagnolo) — dati annuali {{year}} (campione illustrativo, non il dataset ufficiale completo)",
+      "sourceType": {
+        "surface": "Acqua superficiale",
+        "groundwater": "Acqua sotterranea",
+        "mixed": "Mista",
+        "desalination": "Dissalazione"
+      },
+      "noData": "Dati sull'approvvigionamento non disponibili per questo comune"
+    },
+    "coastalFlood": {
+      "title": "Fascia costiera",
+      "inServidumbre": "Entro la fascia di protezione costiera di 20 m — si applicano vincoli edilizi",
+      "inPolicia": "Entro la fascia costiera di 100 m — possono applicarsi vincoli urbanistici",
+      "clear": "Fuori da qualsiasi fascia costiera cartografata",
+      "source": "Fonte: demanio marittimo (MITERD)"
+    },
+    "groundwater": {
+      "title": "Acque sotterranee",
+      "overexploited": "Entro l'acquifero {{unit}}, dichiarato sovrasfruttato. I prelievi possono essere limitati.",
+      "clear": "Nessun sovrasfruttamento di acquiferi dichiarato in questa zona",
+      "noData": "Nessun dato di unità idrogeologica per questo punto",
+      "source": "Fonte: unità idrogeologiche IGME (classificazione annuale) — campione illustrativo di unità sovrasfruttate note, non il dataset ufficiale completo"
+    },
+    "aiSummary": {
+      "title": "Che cosa significa per te",
+      "loading": "Generazione della sintesi di rischio..."
+    },
+    "questions": {
+      "title": "Domande da fare",
+      "loading": "Generazione delle domande..."
+    },
+    "bathingWater": {
+      "title": "Acque di balneazione",
+      "excellent": "Acque di balneazione eccellenti",
+      "good": "Buone acque di balneazione",
+      "sufficient": "Sufficienti — rispettano gli standard minimi UE",
+      "poor": "Scarse — potrebbero non rispettare gli standard UE",
+      "unknown": "Non valutate questa stagione",
+      "distance": "A {{distance}} km",
+      "source": "Fonte: direttiva UE sulle acque di balneazione (AEA) — stagione {{year}}"
+    },
+    "fireDanger": {
+      "low": "Pericolo di incendio previsto basso",
+      "moderate": "Pericolo di incendio previsto moderato",
+      "high": "Pericolo di incendio previsto alto",
+      "very_high": "Pericolo di incendio previsto molto alto",
+      "extreme": "Pericolo di incendio previsto estremo",
+      "very_extreme": "Pericolo di incendio previsto molto estremo",
+      "unknown": "Nessuna previsione disponibile"
+    },
+    "waterRestrictions": {
+      "vigilance": "Sorveglianza",
+      "alerte": "Allerta",
+      "alerte_renforcee": "Allerta rafforzata",
+      "crise": "Crisi"
+    }
+  },
+  "registry": {
+    "flood": {
+      "name": "Aree allagabili fluviali",
+      "cadence": "Aggiornato con i cicli cartografici dello SNCZI",
+      "resolution": "Poligoni di allagamento cartografati (T10 / T100 / T500)",
+      "limitations": [
+        "Non mostra allagamenti da acque meteoriche né lampo",
+        "Non mostra i problemi di drenaggio del singolo immobile",
+        "Non mostra gli allagamenti avvenuti in passato"
+      ]
+    },
+    "drought": {
+      "name": "Stato di siccità",
+      "cadence": "Aggiornato ogni 10 giorni (indicatore combinato di siccità)",
+      "resolution": "Griglia di circa 5 km",
+      "limitations": [
+        "Non mostra le limitazioni idriche locali in vigore",
+        "Non mostra direttamente i livelli di invasi o falde"
+      ]
+    },
+    "reservoirs": {
+      "name": "Invasi di approvvigionamento",
+      "cadence": "Dati REDIAM in tempo reale, dove disponibili",
+      "resolution": "Invasi che alimentano la rete di questo comune",
+      "limitations": [
+        "Le reti di approvvigionamento sono ricostruite a mano e coprono parte dell'Andalusia",
+        "Non indica quale invaso della rete arrivi al tuo rubinetto",
+        "I valori sono un'istantanea, non un andamento settimanale"
+      ]
+    },
+    "waterQuality": {
+      "name": "Qualità dell'acqua potabile",
+      "cadence": "Rendicontazione annuale SINAC",
+      "resolution": "Livello comunale",
+      "limitations": [
+        "Non dice nulla sull'impianto idrico del tuo edificio",
+        "Non copre i pozzi privati",
+        "Il campione copre un numero limitato di comuni"
+      ]
+    },
+    "coastalFlood": {
+      "name": "Zonizzazione di tutela costiera",
+      "cadence": "Aggiornato con le revisioni della zonizzazione costiera REDIAM",
+      "resolution": "Tratti di gestione e profili rilevati, solo Andalusia",
+      "limitations": [
+        "Non conferma se un immobile ricada nella fascia di servidumbre o di policía",
+        "Il deslinde nazionale che risponderebbe a questo non è disponibile",
+        "Non mostra proiezioni di mareggiate né di innalzamento del mare",
+        "Copre solo l'Andalusia"
+      ]
+    },
+    "groundwater": {
+      "name": "Stato delle acque sotterranee",
+      "cadence": "Classificazione annuale IGME",
+      "resolution": "Poligoni di unità idrogeologiche",
+      "limitations": [
+        "Non mostra la legittimità né la concessione dei singoli pozzi",
+        "Non mostra i livelli attuali della falda"
+      ]
+    },
+    "bathingWater": {
+      "name": "Acque di balneazione",
+      "cadence": "Valutazione annuale della stagione balneare UE",
+      "resolution": "Singoli punti di monitoraggio",
+      "limitations": [
+        "Non riflette le condizioni di un giorno specifico",
+        "L'anno di valutazione è approssimativo per questa fonte"
+      ]
+    },
+    "fireDanger": {
+      "name": "Previsione del pericolo di incendio",
+      "cadence": "Richiesto in tempo reale per oggi (indice meteo-incendi EFFIS)",
+      "resolution": "Griglia di circa 8 km",
+      "limitations": [
+        "Non indica se un incendio è in corso adesso",
+        "Descrive il meteo che alimenta il fuoco, non la vegetazione né il terreno al tuo indirizzo",
+        "È una classe di previsione, non una misura"
+      ]
+    },
+    "activeFire": {
+      "name": "Rilevamenti satellitari recenti di incendi",
+      "cadence": "Aggiornato dopo i passaggi del satellite NOAA-20 (NASA FIRMS / VIIRS)",
+      "resolution": "Pixel di anomalia termica da 375 m entro 30 km",
+      "limitations": [
+        "Un rilevamento termico non è un incendio boschivo confermato",
+        "Nuvole, fumo e l’intervallo tra i passaggi possono nascondere gli incendi",
+        "Anche il calore industriale e altre superfici calde possono essere rilevati"
+      ]
+    },
+    "fireHistory": {
+      "name": "Incendi passati nelle vicinanze",
+      "cadence": "Aggiornato durante la stagione (aree bruciate EFFIS)",
+      "resolution": "Perimetri mappati da satellite; la completezza varia per incendio e stagione",
+      "limitations": [
+        "Alcuni incendi, soprattutto quelli piccoli, possono mancare: la loro assenza non prova nulla",
+        "Registra dove il fuoco è passato, non dove è probabile che vada",
+        "I perimetri derivano dal satellite e sono approssimativi"
+      ]
+    },
+    "firePrevention": {
+      "name": "Piano di prevenzione",
+      "cadence": "Verificato a mano; la data è indicata accanto al link",
+      "resolution": "Regionale",
+      "limitations": [
+        "Rimanda al piano pubblicato; non ne riassume gli obblighi",
+        "Non dice nulla sul rischio a questo indirizzo",
+        "L'esistenza di un piano non prova che sia finanziato né applicato"
+      ]
+    },
+    "waterRestrictions": {
+      "name": "Limitazioni idriche in vigore",
+      "cadence": "Aggiornato ogni giorno dai decreti prefettizi (VigiEau)",
+      "resolution": "Zona di limitazione, definita dal dipartimento",
+      "limitations": [
+        "Solo Francia — Spagna e Italia pubblicano le limitazioni senza un flusso comune",
+        "Indica il livello in vigore, non ciò che tu personalmente puoi fare",
+        "Il decreto è la fonte che fa fede; questo ne è un riassunto"
+      ]
+    }
+  },
+  "map": {
+    "hoverHint": "Seleziona per il dettaglio",
+    "reservoir": {
+      "storage": "{{stored}} di {{capacity}} hm³ invasati",
+      "basin": "Bacino: {{basin}}",
+      "vsAverage": "media {{years}} anni {{mean}}% — {{gap}} punti {{direction}}",
+      "above": "sopra",
+      "below": "sotto",
+      "asOf": "Livello al {{date}}"
+    },
+    "pickLoading": "Ricerca di questo luogo…",
+    "pickSearchHere": "Cerca qui",
+    "pickNoPlace": "Nessun luogo trovato qui",
+    "pickTier": {
+      "detailed": "Dati dettagliati qui",
+      "partial": "Alcune verifiche disponibili qui",
+      "minimal": "Dati limitati qui"
+    }
+  },
+  "legend": {
+    "source": "Fonte: {{source}}",
+    "flood": {
+      "t10": "Area a 10 anni",
+      "t100": "Area a 100 anni",
+      "t500": "Area a 500 anni"
+    },
+    "drought": {
+      "title": "Indicatore combinato di siccità",
+      "watch": "Sorveglianza",
+      "warning": "Avviso",
+      "alert": "Allerta"
+    },
+    "coastalFlood": {
+      "perfiles": "Profili della fascia di tutela",
+      "tramos": "Tratti di gestione"
+    },
+    "groundwater": {
+      "over": "Unità dichiarata sovrasfruttata"
+    },
+    "reservoirs": {
+      "title": "Riempimento degli invasi",
+      "supply": "Alimenta questa zona",
+      "other": "Altri invasi",
+      "low": "<25%",
+      "mid": "25–60%",
+      "high": ">60%"
+    },
+    "fireDanger": {
+      "low": "Basso",
+      "moderate": "Moderato",
+      "high": "Alto",
+      "very_high": "Molto alto",
+      "extreme": "Estremo",
+      "very_extreme": "Molto estremo"
+    },
+    "fireHistory": {
+      "burnt": "Area bruciata"
+    },
+    "activeFire": {
+      "detection": "Rilevamento termico recente"
+    }
+  },
+  "entry": {
+    "supporting": "Dati pubblici su alluvioni, siccità, invasi, qualità dell'acqua e incendi boschivi.",
+    "locationLabel": "CAP, comune o indirizzo",
+    "audiencePrompt": "Che cosa ti porta qui?",
+    "optional": "Facoltativo",
+    "changeLater": "Potrai cambiarlo più avanti",
+    "resident": "Ci vivo o ne sono proprietario/a",
+    "buyer": "Sto valutando di comprare o investire",
+    "submit": "Controlla questa zona",
+    "exploreHint": "oppure clicca in un punto qualsiasi della mappa",
+    "coverageNote": "Funziona in tutto il Mediterraneo, con il massimo dettaglio in Andalusia. Altrove l'app indica quali verifiche non ha potuto fare.",
+    "keyAvailable": "Più dettaglio qui",
+    "keyUnavailable": "Meno archivi locali",
+    "noResults": "Luogo non trovato. Prova con un comune vicino o con un CAP."
+  },
+  "about": {
+    "title": "Informazioni su {{name}}",
+    "introHeading": "Acqua e fuoco, per un luogo, in una pagina",
+    "introLead": "I paesi mediterranei pubblicano moltissimo su acqua e incendi. È solo sparso: le mappe di allagamento in un ministero, gli indicatori di siccità e incendio in un'agenzia europea, i livelli degli invasi presso l'autorità di bacino, i decreti di limitazione in prefettura. Ognuno è pubblico, e ognuno costa fatica da leggere.",
+    "introBodyOne": "Fire and Rain interroga tutte queste fonti su un solo punto della mappa. Digita un CAP, un comune o un indirizzo e ottieni una pagina sola: se il punto ricade in un'area allagabile cartografata, se la zona è in siccità, che cosa dice la previsione del pericolo di incendio e se i terreni vicini hanno già bruciato, quali invasi o reti alimentano il rubinetto e quali limitazioni sono in vigore.",
+    "introBodyTwo": "Perché farlo? Perché acqua e fuoco sono in silenzio due delle domande più grandi su un luogo, qui, e di solito emergono solo quando sono già costose: dopo un'alluvione, durante un divieto di irrigazione, in una brutta estate di incendi, o a metà dell'acquisto di una casa. Questo strumento esiste per potersele porre presto, gratis e senza sapere nulla di idrologia.",
+    "introCta": "Provalo",
+    "introCtaHint": "Ti porta alla mappa, pronta per un CAP o un nome di luogo.",
+    "aiHeading": "Come viene usata l'IA",
+    "aiBodyOne": "Ogni cifra di questo sito viene da un dataset pubblico, mai da un modello. L'IA ha esattamente un compito, alla fine di tutto: quando lo chiedi, un modello Claude riceve i risultati già presenti sullo schermo e ne scrive una lettura breve in linguaggio semplice, insieme ad alcune domande su cui vale la pena tornare.",
+    "aiBodyTwo": "Gli viene chiesto di nominare la fonte dietro ogni punto, di distinguere ciò che i dati dicono da ciò che sta deducendo, di lasciare intatta ogni riserva, di ammettere quando i dati non possono rispondere e di non inventare mai un punteggio di rischio complessivo. Nulla viene generato finché non premi il pulsante, e la sintesi non sostituisce mai i dati: i numeri originali e le loro fonti restano sulla pagina perché tu possa verificarli.",
+    "aiAudienceHeading": "A che cosa serve la domanda «proprietario o acquirente»",
+    "aiAudienceBody": "L'app fa una sola domanda facoltativa: se vivi qui o ne sei proprietario/a, oppure se stai pensando di comprare. Serve a due cose, e a nient'altro. Primo, riordina le verifiche perché compaiano per prime quelle che di solito ti interessano di più — chi compra tende a volere siccità e invasi in cima, chi ci abita alluvioni e acqua potabile. Secondo, viene passata al modello come inquadramento: a chi è proprietario/a vanno i passi pratici e a chi rivolgersi; a chi compra, il taglio legale e assicurativo, come la nota simple, l'area allagabile dello SNCZI o il Consorcio de Compensación de Seguros.",
+    "aiAudienceNote": "Puoi saltarla o cambiarla quando vuoi. Non modifica mai i dati sottostanti — solo l'ordine in cui sono mostrati e il tono della sintesi. Non c'è alcun account né alcun profilo conservato.",
+    "dataHeading": "Che cosa chiediamo, e a chi",
+    "dataIntro": "Non servono conoscenze pregresse. Ogni riga è una domanda semplice su un luogo, ciò che l'app verifica per rispondere e l'ente pubblico da cui viene la risposta. Prima l'acqua, poi il fuoco.",
+    "dataQuestionLabel": "La domanda",
+    "dataAnswerLabel": "Come rispondiamo",
+    "dataSourceLabel": "Fonte",
+    "dataItems": {
+      "flood": {
+        "question": "La piena di un fiume può arrivare fin qui?",
+        "answer": "La Spagna cartografa le aree che un fiume dovrebbe allagare, per frequenza: all'incirca una volta ogni 10, 100 o 500 anni. Verifichiamo se il tuo punto ricade in una di quelle aree, e in quale. Esserne fuori non è una garanzia: gli allagamenti da fognature, valloni e temporali improvvisi spesso non sono cartografati affatto."
+      },
+      "drought": {
+        "question": "Questa zona è in siccità in questo momento?",
+        "answer": "Un indicatore satellitare che combina quanta pioggia è caduta, quanto è secco il suolo e quanto appare stressata la vegetazione, aggiornato lungo tutto l'anno. Dice lo stato dell'area ampia oggi, non quello di un singolo giardino."
+      },
+      "reservoirs": {
+        "question": "Da dove viene l'acqua del rubinetto e quanta riserva c'è?",
+        "answer": "Ricostruiamo quali invasi alimentano davvero questa zona, poi mostriamo quanto è pieno ciascuno adesso accanto alla sua media di lungo periodo per questo periodo dell'anno. La cifra da guardare è lo stare ben sotto la media: è su quello che si basano le limitazioni."
+      },
+      "waterQuality": {
+        "question": "L'acqua del rubinetto è potabile?",
+        "answer": "Il registro nazionale dell'acqua di consumo annota se la rete di ciascun comune ha rispettato gli standard di legge e se l'acqua parta da una fonte superficiale, sotterranea o mista. Mostriamo il dato più recente per il comune."
+      },
+      "coastalFlood": {
+        "question": "È troppo vicino al mare?",
+        "answer": "La costa spagnola ha fasce tutelate per legge — circa 20 m di servidumbre e 100 m di policía verso l'interno dalla battigia — dove costruire è vincolato e dove la linea di costa è destinata a muoversi. Verifichiamo se il punto vi ricada."
+      },
+      "groundwater": {
+        "question": "L'acqua sotterranea viene usata più in fretta di quanto si ricarichi?",
+        "answer": "Alcuni acquiferi sono ufficialmente dichiarati sovrasfruttati: ogni anno se ne estrae più di quanto la natura restituisca. Trovarsi dentro uno conta per i pozzi, per l'irrigazione e per la sicurezza dell'approvvigionamento nel lungo periodo. Verifichiamo se il punto vi ricada."
+      },
+      "bathingWater": {
+        "question": "La spiaggia più vicina è abbastanza pulita per farci il bagno?",
+        "answer": "Le spiagge e i punti di balneazione monitorati in tutta Europa ricevono ogni anno una valutazione della qualità dell'acqua, basata su anni di campionamenti. Mostriamo la valutazione del punto monitorato più vicino e a che distanza si trova."
+      },
+      "fireDanger": {
+        "question": "Quanto è pericoloso il meteo-incendi qui in questo momento?",
+        "answer": "Il sistema europeo di informazione sugli incendi boschivi prevede ogni giorno con quanta facilità un incendio si innescherebbe e si propagherebbe date le condizioni meteo — caldo, vento, umidità e quanto si è seccato il terreno. Leggiamo la classe corrispondente al tuo punto. Descrive le condizioni, non se qualcosa stia bruciando."
+      },
+      "activeFire": {
+        "question": "Un satellite ha rilevato di recente calore simile a un incendio nelle vicinanze?",
+        "answer": "Lo strumento VIIRS della NASA segnala i pixel insolitamente caldi dopo ogni passaggio. Mostriamo i rilevamenti attribuibili alla vegetazione entro 30 km nelle ultime 24 ore, con l’ora UTC registrata. Sono anomalie termiche, non incendi confermati, e nuvole o intervalli tra i passaggi possono nascondere un incendio."
+      },
+      "fireHistory": {
+        "question": "Questa zona ha già bruciato?",
+        "answer": "I satelliti cartografano il contorno degli incendi più grandi in Europa. Elenchiamo quelli registrati entro 30 km, con la loro estensione e quanto tempo fa. Gli incendi piccoli non entrano mai in questo registro, quindi un elenco corto non prova un passato tranquillo."
+      },
+      "firePrevention": {
+        "question": "La mia regione ha un piano antincendio boschivo?",
+        "answer": "Quasi tutte le regioni mediterranee ne pubblicano uno — INFOCA in Andalusia, i PPFCI nel sud della Francia, i piani AIB in Italia. Nessuno è leggibile da una macchina, quindi questa è una lista di link controllata a mano, con la data dell'ultima verifica."
+      },
+      "waterRestrictions": {
+        "question": "Posso innaffiare il giardino?",
+        "answer": "In Francia i prefetti emanano decreti che limitano l'uso dell'acqua durante la siccità, e sono vincolanti. Cerchiamo il livello in vigore nel tuo punto — per i corsi d'acqua, le falde e la rete potabile separatamente — e rimandiamo al decreto stesso. Anche Spagna e Italia limitano l'acqua, ma lo pubblicano per bacino o per regione, senza un flusso comune leggibile."
+      }
+    },
+    "coverageHeading": "Dove funziona",
+    "coverageBody": "L'app risponde in tutto il Mediterraneo, ma non ovunque con la stessa profondità. L'Andalusia ha il massimo: reti di approvvigionamento ricostruite a mano e livelli degli invasi aggiornati ogni giorno. Nel resto della Spagna trovi i livelli nazionali di allagamento e acque sotterranee. In Francia e in Italia i registri europei di siccità e acque di balneazione. Dove una verifica non ha fonte, l'app lo dice invece di togliere la riga.",
+    "disclaimerHeading": "Non è consulenza professionale",
+    "disclaimerBody": "Queste sono informazioni di contesto, non consulenza legale, finanziaria o peritale. Non basarti solo su di esse per un acquisto, una decisione assicurativa o una pratica urbanistica. Conferma sempre con la fonte ufficiale e con un professionista qualificato.",
+    "makerHeading": "Chi l'ha fatto, e perché",
+    "makerBodyOne": "Sono Edita Chávez. Ho costruito Water Risk Explorer come progetto per il corso studio di Terra.do, che ti chiede di prendere una domanda climatica che ti stia davvero a cuore e di realizzare qualcosa di concreto a partire da lì.",
+    "makerBodyTwo": "La mia era questa: vivendo in Spagna, l'acqua torna di continuo nelle conversazioni e quasi mai con dei numeri accanto. I dati per rispondere esistono già e sono già pubblici. Semplicemente non erano utilizzabili dalle persone di cui parlano. Questo è il mio tentativo di renderli utilizzabili — è un progetto personale, non un servizio commerciale, e continuerà a cambiare.",
+    "makerSiteLabel": "editachavez.com",
+    "makerSiteSuffix": "raccoglie il resto del mio lavoro.",
+    "makerCourseLabel": "Terra.do",
+    "navHeading": "In questa pagina",
+    "secTool": "Lo strumento",
+    "secData": "I dati",
+    "secAi": "L'IA",
+    "secMe": "Io",
+    "subhead": "Che cos'è, da dove vengono i dati, come funziona l'IA e chi l'ha fatto."
+  },
+  "panel": {
+    "noResultGroup": "Nessun risultato per questo punto",
+    "audienceLabel": "Stai leggendo come",
+    "audienceResident": "Ci vivo o ne sono proprietario/a",
+    "audienceBuyer": "Sto comprando",
+    "publicData": "Dati pubblici",
+    "aiTab": "Che cosa significa?",
+    "back": "Tutti i dati pubblici",
+    "explain": "Spiega questo risultato",
+    "sourceLink": "Vedi la fonte originale",
+    "doesNotShow": "Non mostra",
+    "geography": "Geografia",
+    "cadence": "Aggiornato",
+    "drought": {
+      "asOf": "Lettura del {{date}}",
+      "dateUnknown": "Non è stato possibile determinare la data di questa lettura",
+      "stale": "Questa lettura ha {{days}} giorni. Copernicus pubblica l'indicatore ogni 10 giorni, quindi questo flusso sembra aver smesso di aggiornarsi: considera il livello come storico, non attuale."
+    },
+    "coastal": {
+      "classification": "Zonizzazione",
+      "sensitivity": "Sensibilità DPMT",
+      "location": "Localizzazione",
+      "profile": "Profilo più vicino",
+      "notAVerdict": "Questa è la zonizzazione di tutela costiera in vigore attorno a questo punto. Non conferma se un immobile specifico ricada nella fascia di servidumbre o di policía: per quello serve il deslinde nazionale, al momento non disponibile.",
+      "officialProfile": "Profilo ufficiale (PDF)"
+    },
+    "home": "Nuova ricerca",
+    "mapLayer": "Livello della mappa",
+    "summary": {
+      "flood": {
+        "inZone": "Dentro l'area allagabile fluviale T{{period}} cartografata",
+        "outZone": "Fuori dalle aree allagabili fluviali T10, T100 e T500 cartografate",
+        "detailNote": "Nessun poligono ufficiale di allagamento fluviale interseca il punto selezionato."
+      },
+      "reservoirs": {
+        "headline": "{{name}} · {{percent}}% di riempimento",
+        "supplyScope": "Evidenziati sulla mappa: gli invasi che alimentano {{system}}, che serve questa zona.",
+        "noSupplyRecord": "Nessuna rete di approvvigionamento ancora registrata per questo comune",
+        "avg": "media {{years}} anni {{mean}}%",
+        "comparisonLabel": "{{gap}} punti {{direction}} la media di {{years}} anni",
+        "registry": "Rete registrata: {{network}}",
+        "registryMany": "{{count}} reti registrate servono questo comune",
+        "basin": "{{count}} invasi nello stesso distretto idrografico — collegamento di approvvigionamento sconosciuto"
+      },
+      "coastalFlood": {
+        "servidumbre": "Entro la fascia di tutela costiera di 20 m",
+        "policia": "Entro la fascia costiera di 100 m",
+        "zoning": "Zonizzazione di tutela costiera: {{zoning}}",
+        "nearZone": "Entro la zonizzazione di tutela costiera a {{location}}",
+        "inZoning": "Entro la zonizzazione di tutela costiera cartografata",
+        "noZoning": "Nessuna zonizzazione di tutela costiera raggiunge questo punto"
+      },
+      "groundwater": {
+        "over": "Dentro {{unit}}, dichiarata sovrasfruttata",
+        "clear": "Fuori da qualsiasi unità dichiarata sovrasfruttata"
+      },
+      "bathingWater": {
+        "site": "{{name}} · {{rating}} · {{km}} km"
+      },
+      "waterQuality": {
+        "value": "{{compliance}} · {{year}}"
+      },
+      "fireHistory": {
+        "none": "Nessun incendio cartografato entro {{km}} km dal {{since}}",
+        "count": "{{count}} incendi cartografati entro {{km}} km — il più grande {{largest}} ha, il più recente il {{date}}"
+      },
+      "activeFire": {
+        "none": "Nessun rilevamento termico satellitare entro {{km}} km nelle ultime {{hours}} ore",
+        "count": "{{count}} rilevamento termico entro {{km}} km nelle ultime 24 ore — il più recente il {{date}}",
+        "count_other": "{{count}} rilevamenti termici entro {{km}} km nelle ultime 24 ore — il più recente il {{date}}"
+      },
+      "firePrevention": {
+        "plan": "{{region}} pubblica {{plan}}"
+      },
+      "waterRestrictions": {
+        "level": "{{level}} — limitazioni in vigore in {{zone}}"
+      }
+    },
+    "newsTab": "Notizie",
+    "noResultCount": "{{count}} verifiche senza fonte qui — mostrale",
+    "preventionCheckedAt": "Link verificato il {{date}}",
+    "fireDanger": {
+      "forDate": "Previsione per il {{date}}"
+    }
+  },
+  "states": {
+    "loading": "Consultazione della fonte…",
+    "unavailable": "Nessun risultato attuale disponibile",
+    "not_applicable": "Non pertinente per questo luogo",
+    "unsupported": "Nessuna fonte copre ancora questo aspetto qui",
+    "error": "Non è stato possibile raggiungere la fonte",
+    "retry": "Riprova",
+    "unsupportedReason": "Nessuna fonte copre ancora questo aspetto in {{country}}"
+  },
+  "ai": {
+    "assistedLabel": "Assistito dall'IA",
+    "titleLocation": "Che cosa possono significare i dati di questo luogo",
+    "titleDataset": "Che cosa può significare «{{dataset}}»",
+    "basis": "In base a: {{sources}}",
+    "loading": "Generazione dell'interpretazione…",
+    "error": "Non è stato possibile generare l'interpretazione.",
+    "stale": "La lingua è cambiata. Rigenerare l'interpretazione?",
+    "staleAudience": "Hai cambiato per chi è pensata. Rigenerare la spiegazione?",
+    "regenerate": "Rigenera",
+    "followUpLabel": "Fai una domanda su questi dati",
+    "followUpSend": "Chiedi",
+    "suggested": "Domande che potresti fare"
+  },
+  "sheet": {
+    "expand": "Espandi i risultati",
+    "collapse": "Mostra la mappa",
+    "signals": "Risultati chiave"
+  },
+  "hazard": {
+    "water": "Acqua",
+    "fire": "Incendio"
+  },
+  "coverage": {
+    "tier": {
+      "detailed": "Dettagliato qui: {{count}} verifiche su {{total}}. È dove l'app ha il maggior numero di archivi locali.",
+      "partial": "Parziale qui: {{count}} verifiche su {{total}}. Mancano gli archivi locali di approvvigionamento e acqua potabile.",
+      "minimal": "Limitato qui: {{count}} verifiche su {{total}}. Sono disponibili solo i livelli su scala europea."
+    },
+    "detailRegionLabel": "Più dettaglio qui"
+  },
+  "news": {
+    "loading": "Ricerca di notizie recenti…",
+    "windowWeek": "Titoli dell'ultima settimana che citano quest'area.",
+    "windowMonth": "Niente nell'ultima settimana: si mostra l'ultimo mese.",
+    "empty": "Nessuna notizia trovata per quest'area nell'ultimo mese. Non significa che non sia successo nulla: i piccoli comuni sono poco coperti dalle fonti che possiamo consultare.",
+    "unreachableTitle": "Impossibile raggiungere la fonte delle notizie",
+    "unreachableBody": "Il servizio di notizie limita le richieste e ha respinto la nostra. Questo non dice nulla sull'area: riprova tra poco.",
+    "disclaimer": "I titoli sono raccolti automaticamente da fonti di informazione pubbliche: individuati per nome del luogo e non verificati.",
+    "sourceNote": "Fonte: GDELT. Questi articoli citano questo luogo per nome: la ricerca è per nome, non per distanza."
+  },
+  "supply": {
+    "curated": "Alimentato da {{system}}. Questi invasi sono stati ricostruiti a mano dalle pubblicazioni del gestore stesso.",
+    "officialRegistry": "Il registro nazionale dell'acqua di consumo indica quale rete serve questo comune. Non indica quali invasi alimentino quella rete, quindi non viene mostrato alcun livello.",
+    "basin": "Nessun collegamento di approvvigionamento confermato per questo luogo. Questi sono gli invasi più grandi dello stesso distretto idrografico — potrebbero alimentare il tuo rubinetto oppure no.",
+    "none": "Non sappiamo quali invasi alimentino questo luogo.",
+    "networksLabel": "Reti di distribuzione"
+  }
+}

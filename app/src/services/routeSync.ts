@@ -10,12 +10,20 @@ export async function applyRouteToStore(route: RouteState): Promise<void> {
   if (route.lat === undefined || route.lng === undefined) return
   const loc = await reverseGeocode({ lat: route.lat, lng: route.lng }).catch(() => null)
   if (!loc) return
-  await submitLocation(loc)
+  // Deliberately not awaited yet. `submitLocation` calls `beginSearch`
+  // synchronously and only then waits on every dataset fetch, so awaiting here
+  // would leave a shared `?mode=news` or `?mode=ai` link sitting on Public data
+  // for as long as the slowest source takes — and the URL, which the store
+  // writes back continuously, would flip to `mode=data` in the meantime and
+  // lose the mode on the next reload.
+  const profile = submitLocation(loc)
   const after = useAppStore.getState()
-  if (route.ds && after.coverage?.supported) after.selectDataset(route.ds)
+  if (route.ds) after.selectDataset(route.ds)
   // Restores the AI *mode* only — generation still requires an explicit
   // opt-in, so a shared link never auto-generates interpretation (§9.4).
-  if (route.mode === 'ai' && after.coverage?.supported) useAppStore.getState().openAiMode()
+  if (route.mode === 'ai') after.openAiMode()
+  if (route.mode === 'news') after.openNewsMode()
+  await profile
 }
 
 export function subscribeStoreToRoute(): () => void {
@@ -26,7 +34,7 @@ export function subscribeStoreToRoute(): () => void {
     const route: RouteState = s.view === 'searched' && s.location
       ? {
           page,
-          q: s.location.municipio || s.location.displayName,
+          q: s.location.municipality || s.location.displayName,
           lat: s.location.coordinates.lat,
           lng: s.location.coordinates.lng,
           aud: s.audience ?? undefined,

@@ -22,6 +22,10 @@ describe('layer plan', () => {
     expect(v.has('reservoirs-circle')).toBe(true)
   })
 
+  it('includes the recent thermal-detection point layer as fire context', () => {
+    expect(visibleLayerIds(null, ['activeFire'])).toEqual(new Set(['active-fire-circle']))
+  })
+
   it('groundwater contributes no layers — its geometry was fabricated', () => {
     // The four polygons this drew were hand-drawn rectangles standing in for
     // IGME units, three of them outside Andalucía, so the map was asserting

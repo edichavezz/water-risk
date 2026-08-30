@@ -10,7 +10,7 @@ vi.mock('../../services/orchestrator', () => ({ runProfile: vi.fn(async () => {}
 
 const sevilla = {
   displayName: 'Sevilla', coordinates: { lat: 37.39, lng: -5.98 },
-  municipio: 'Sevilla', provincia: 'Sevilla', basin: 'guadalquivir' as const,
+  municipality: 'Sevilla', countryCode: 'es', provinceName: 'Sevilla', basin: { id: 'ES050', name: 'Guadalquivir' },
 }
 
 beforeEach(() => {
@@ -60,5 +60,56 @@ describe('dataset list', () => {
     await user.click(screen.getByRole('button', { name: /river flood zones/i }))
     expect(useAppStore.getState().panelDepth).toBe('detail')
     expect(useAppStore.getState().primaryLayer).toBe('flood')
+  })
+})
+
+describe('outside the detailed region', () => {
+  const marseille = {
+    displayName: 'Marseille, France',
+    coordinates: { lat: 43.29, lng: 5.37 },
+    municipality: 'Marseille', countryCode: 'fr', region: 'FR-PAC',
+    provinceName: 'Bouches-du-Rhône',
+  }
+
+  // The behaviour the coverage gate used to make impossible: this search
+  // returned no rows at all and a "not available for this area" screen.
+  it('still renders a list, and says how much of it is covered', async () => {
+    useAppStore.setState(useAppStore.getInitialState())
+    useAppStore.getState().beginSearch(marseille)
+    const { coverage } = useAppStore.getState()
+    for (const id of coverage!.unsupported) {
+      useAppStore.getState().setResult(id, { status: 'unsupported' })
+    }
+    useAppStore.getState().setResult('drought', {
+      status: 'available',
+      data: { level: 'watch', label: 'Watch', updatedAt: '2026-07-20', source: 'Copernicus EDO' },
+    })
+
+    render(<DatasetList />)
+
+    // Eight of twelve in Marseille: Copernicus drought, the EEA bathing-water
+    // register, both EFFIS fire layers, NASA's recent detections, the PACA
+    // prevention plan, the VigiEau restriction level, and Hub'Eau supply.
+    expect(screen.getByText(/partial here: 8 of 12 checks/i)).toBeInTheDocument()
+
+    // Five empty rows is past the collapse threshold, so the tail is behind a
+    // count. It must still state that the checks have no source — a collapsed
+    // row the reader never opens cannot be allowed to read as "fine".
+    const disclosure = screen.getByRole('button', { name: /checks have no source here/i })
+    expect(disclosure).toBeInTheDocument()
+    expect(screen.queryByText(/no source covers this here yet/i)).not.toBeInTheDocument()
+
+    await userEvent.setup().click(disclosure)
+    expect(screen.getAllByText(/no source covers this here yet/i).length).toBeGreaterThan(0)
+  })
+
+  // "Missing data never looks safe": an unsupported row must stay on screen,
+  // under the divider, rather than being dropped like a not_applicable one.
+  it('keeps unsupported rows visible below the divider', () => {
+    useAppStore.setState(useAppStore.getInitialState())
+    useAppStore.getState().beginSearch(marseille)
+    useAppStore.getState().setResult('flood', { status: 'unsupported' })
+    render(<DatasetList />)
+    expect(screen.getByText(/no result for this location/i)).toBeInTheDocument()
   })
 })

@@ -49,9 +49,12 @@
   --color-danger: #AD4942;
 
   --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-  /* Rounded display face for the wordmark, panel location name, dataset and
-     section headings. Body/data stay on Atkinson for legibility. */
-  --font-display: "Fredoka", "Atkinson Hyperlegible", system-ui, sans-serif;
+  /* Display face for the wordmark, panel location name, dataset and section
+     headings. Body/data stay on Atkinson for legibility.
+     Petrona, not Fredoka: the handoff tried Fredoka first and rejected it as
+     too rounded and playful for a hazard tool, and Instrument Serif as too
+     thin to hold at ~12.5px. Petrona reads warm and stays legible that small. */
+  --font-display: "Petrona", Georgia, serif;
 }
 
 :root {
@@ -66,6 +69,20 @@
 body {
   margin: 0;
   @apply font-sans text-ink bg-page;
+}
+
+/* Atkinson Hyperlegible and Petrona are both Latin-only here — Fontsource
+   publishes no Greek or Arabic subset for either — so those scripts fall
+   through to `system-ui` glyph by glyph. For Greek that is fine and needs no
+   rule. Arabic needs one: left to `sans-serif` it can land on a face with no
+   Arabic at all and render tofu, so name the system faces, and give it a little
+   more leading, because Arabic's ascenders and descenders collide at the
+   line-height Latin copy is set at. Overriding the theme variable rather than
+   `font-family` keeps every `font-sans`/`font-display` utility following along. */
+:root:lang(ar) {
+  --font-sans: "SF Arabic", "Geeza Pro", "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-display: "SF Arabic", "Geeza Pro", "Noto Naskh Arabic", Georgia, serif;
+  line-height: 1.7;
 }
 
 :focus-visible {
@@ -84,20 +101,6 @@ body {
 .maplibregl-ctrl-top-right,
 .maplibregl-ctrl-top-left {
   top: 67px;
-}
-
-/* ── Topographic contour pattern ──────────────────────────────────────────
-   Purely decorative concentric "contour rings", built from stacked
-   radial-gradients. Used for the About page's divider band, which replaces a
-   photo hero. Three clusters, alternating teal and terracotta. */
-.topo-divider {
-  background-image:
-    radial-gradient(circle at 8% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 8% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px),
-    radial-gradient(circle at 40% 50%, transparent 0 16px, rgb(193 102 61 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 40% 50%, transparent 0 30px, rgb(193 102 61 / .20) 31px 33px, transparent 34px),
-    radial-gradient(circle at 72% 50%, transparent 0 16px, rgb(43 110 134 / .30) 17px 19px, transparent 20px),
-    radial-gradient(circle at 72% 50%, transparent 0 30px, rgb(43 110 134 / .20) 31px 33px, transparent 34px);
 }
 
 /* ── Map location picker ──────────────────────────────────────────────────
@@ -141,7 +144,9 @@ body {
   color: var(--color-ink);
 }
 
-.reservoir-popup__name { font-weight: 700; padding-right: 12px; }
+/* Logical, so the gap stays on the side away from MapLibre's close button,
+   which the popup itself mirrors under dir="rtl". */
+.reservoir-popup__name { font-weight: 700; padding-inline-end: 12px; }
 .reservoir-popup__pct {
   font-size: 20px;
   font-weight: 700;
