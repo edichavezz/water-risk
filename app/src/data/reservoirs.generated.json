@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-01",
+  "fetchedAt": "2026-09-02",
   "reservoirs": [
     {
       "codEst": "E01",
@@ -10,11 +10,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.1744,
       "lng": -2.7959,
-      "fillPercent": 76.2,
-      "storedHm3": 385.61,
+      "fillPercent": 76.1,
+      "storedHm3": 384.63,
       "capacityHm3": 505.7,
-      "mean5yr": 28.9,
-      "mean10yr": 37.6
+      "mean5yr": 28.7,
+      "mean10yr": 37.4
     },
     {
       "codEst": "E02",
@@ -25,11 +25,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0435,
       "lng": -2.9522,
-      "fillPercent": 60.3,
-      "storedHm3": 3.84,
+      "fillPercent": 60,
+      "storedHm3": 3.82,
       "capacityHm3": 6.4,
-      "mean5yr": 57.9,
-      "mean10yr": 61.5
+      "mean5yr": 57.7,
+      "mean10yr": 61.3
     },
     {
       "codEst": "E03",
@@ -40,8 +40,8 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.8581,
       "lng": -2.6502,
-      "fillPercent": 19.5,
-      "storedHm3": 22.77,
+      "fillPercent": 19.4,
+      "storedHm3": 22.69,
       "capacityHm3": 117,
       "mean5yr": 10.5,
       "mean10yr": 11.6
@@ -55,11 +55,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.8038,
       "lng": -2.7876,
-      "fillPercent": 94.5,
-      "storedHm3": 29.61,
+      "fillPercent": 94.4,
+      "storedHm3": 29.58,
       "capacityHm3": 31.3,
-      "mean5yr": 49.7,
-      "mean10yr": 66.1
+      "mean5yr": 49.3,
+      "mean10yr": 65.9
     },
     {
       "codEst": "E05",
@@ -70,11 +70,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.7622,
       "lng": -2.9031,
-      "fillPercent": 55.1,
-      "storedHm3": 29.67,
+      "fillPercent": 54.8,
+      "storedHm3": 29.52,
       "capacityHm3": 53.9,
-      "mean5yr": 31.7,
-      "mean10yr": 34.1
+      "mean5yr": 31.5,
+      "mean10yr": 33.9
     },
     {
       "codEst": "E06",
@@ -85,11 +85,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.56,
       "lng": -2.9542,
-      "fillPercent": 60.4,
-      "storedHm3": 344.75,
+      "fillPercent": 60.3,
+      "storedHm3": 344.58,
       "capacityHm3": 571,
       "mean5yr": 25.2,
-      "mean10yr": 32.9
+      "mean10yr": 32.8
     },
     {
       "codEst": "E07",
@@ -100,11 +100,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.313,
       "lng": -3.2535,
-      "fillPercent": 46.3,
-      "storedHm3": 26.83,
+      "fillPercent": 46.1,
+      "storedHm3": 26.77,
       "capacityHm3": 58,
-      "mean5yr": 16.2,
-      "mean10yr": 28.9
+      "mean5yr": 16.1,
+      "mean10yr": 28.8
     },
     {
       "codEst": "E12",
@@ -115,8 +115,8 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.4079,
       "lng": -3.0392,
-      "fillPercent": 76.8,
-      "storedHm3": 3.18,
+      "fillPercent": 76.6,
+      "storedHm3": 3.17,
       "capacityHm3": 4.1,
       "mean5yr": 72.1,
       "mean10yr": 69.8
@@ -130,11 +130,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.1616,
       "lng": -3.4782,
-      "fillPercent": 45.7,
-      "storedHm3": 74.25,
+      "fillPercent": 45.6,
+      "storedHm3": 74.09,
       "capacityHm3": 162.6,
-      "mean5yr": 20.5,
-      "mean10yr": 25.3
+      "mean5yr": 20.3,
+      "mean10yr": 25.1
     },
     {
       "codEst": "E14",
@@ -145,11 +145,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.1797,
       "lng": -3.5701,
-      "fillPercent": 72.5,
-      "storedHm3": 179.12,
+      "fillPercent": 72.3,
+      "storedHm3": 178.62,
       "capacityHm3": 247.1,
-      "mean5yr": 32.9,
-      "mean10yr": 36.5
+      "mean5yr": 32.8,
+      "mean10yr": 36.4
     },
     {
       "codEst": "E15",
@@ -160,11 +160,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.3636,
       "lng": -2.914,
-      "fillPercent": 82.6,
-      "storedHm3": 284.74,
+      "fillPercent": 82.5,
+      "storedHm3": 284.32,
       "capacityHm3": 344.8,
-      "mean5yr": 27.5,
-      "mean10yr": 36.8
+      "mean5yr": 27.4,
+      "mean10yr": 36.6
     },
     {
       "codEst": "E16",
@@ -175,11 +175,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0917,
       "lng": -3.5124,
-      "fillPercent": 72.4,
-      "storedHm3": 355.52,
+      "fillPercent": 72.2,
+      "storedHm3": 354.63,
       "capacityHm3": 491.1,
       "mean5yr": 18.9,
-      "mean10yr": 22.8
+      "mean10yr": 22.7
     },
     {
       "codEst": "E17",
@@ -190,11 +190,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.6328,
       "lng": -3.7289,
-      "fillPercent": 84.8,
-      "storedHm3": 28.28,
+      "fillPercent": 84.7,
+      "storedHm3": 28.24,
       "capacityHm3": 33.4,
       "mean5yr": 30.8,
-      "mean10yr": 38.7
+      "mean10yr": 38.6
     },
     {
       "codEst": "E19",
@@ -205,11 +205,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.1607,
       "lng": -3.8054,
-      "fillPercent": 61.1,
-      "storedHm3": 85.63,
+      "fillPercent": 60.9,
+      "storedHm3": 85.33,
       "capacityHm3": 140.1,
-      "mean5yr": 36.4,
-      "mean10yr": 40.4
+      "mean5yr": 36.3,
+      "mean10yr": 40.3
     },
     {
       "codEst": "E23",
@@ -220,11 +220,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.2248,
       "lng": -3.9741,
-      "fillPercent": 61.1,
-      "storedHm3": 198.51,
+      "fillPercent": 60.7,
+      "storedHm3": 197.38,
       "capacityHm3": 325.1,
-      "mean5yr": 25,
-      "mean10yr": 30.2
+      "mean5yr": 24.8,
+      "mean10yr": 30.1
     },
     {
       "codEst": "E26",
@@ -235,11 +235,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0664,
       "lng": -4.2495,
-      "fillPercent": 78.4,
-      "storedHm3": 179.31,
+      "fillPercent": 78,
+      "storedHm3": 178.38,
       "capacityHm3": 228.7,
-      "mean5yr": 32.6,
-      "mean10yr": 32.4
+      "mean5yr": 32.5,
+      "mean10yr": 32.3
     },
     {
       "codEst": "E27",
@@ -250,10 +250,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0917,
       "lng": -4.3391,
-      "fillPercent": 69.3,
-      "storedHm3": 14.19,
+      "fillPercent": 69.1,
+      "storedHm3": 14.15,
       "capacityHm3": 20.5,
-      "mean5yr": 41.2,
+      "mean5yr": 41.1,
       "mean10yr": 53
     },
     {
@@ -265,11 +265,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0216,
       "lng": -4.4424,
-      "fillPercent": 70,
-      "storedHm3": 116.8,
+      "fillPercent": 69.9,
+      "storedHm3": 116.75,
       "capacityHm3": 167,
-      "mean5yr": 21.8,
-      "mean10yr": 25.6
+      "mean5yr": 21.7,
+      "mean10yr": 25.4
     },
     {
       "codEst": "E29",
@@ -281,10 +281,10 @@
       "lat": 38.042,
       "lng": -4.6732,
       "fillPercent": 83.2,
-      "storedHm3": 120.84,
+      "storedHm3": 120.78,
       "capacityHm3": 145.2,
-      "mean5yr": 55.4,
-      "mean10yr": 56.9
+      "mean5yr": 55.3,
+      "mean10yr": 56.8
     },
     {
       "codEst": "E30",
@@ -295,11 +295,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.9557,
       "lng": -4.6269,
-      "fillPercent": 51.5,
-      "storedHm3": 82.52,
+      "fillPercent": 51.4,
+      "storedHm3": 82.27,
       "capacityHm3": 160.1,
-      "mean5yr": 37.7,
-      "mean10yr": 38.1
+      "mean5yr": 37.5,
+      "mean10yr": 38
     },
     {
       "codEst": "E31",
@@ -311,10 +311,10 @@
       "lat": 37.6391,
       "lng": -4.0117,
       "fillPercent": 46.3,
-      "storedHm3": 7.84,
+      "storedHm3": 7.83,
       "capacityHm3": 16.9,
-      "mean5yr": 38.9,
-      "mean10yr": 41.7
+      "mean5yr": 38.8,
+      "mean10yr": 41.6
     },
     {
       "codEst": "E32",
@@ -325,11 +325,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.6387,
       "lng": -4.2265,
-      "fillPercent": 84.1,
-      "storedHm3": 122.77,
+      "fillPercent": 83.9,
+      "storedHm3": 122.52,
       "capacityHm3": 146,
-      "mean5yr": 17.9,
-      "mean10yr": 28.2
+      "mean5yr": 17.7,
+      "mean10yr": 28
     },
     {
       "codEst": "E33",
@@ -340,11 +340,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.258,
       "lng": -5.2229,
-      "fillPercent": 77.8,
-      "storedHm3": 30.73,
+      "fillPercent": 77.7,
+      "storedHm3": 30.67,
       "capacityHm3": 39.5,
-      "mean5yr": 37,
-      "mean10yr": 47
+      "mean5yr": 36.9,
+      "mean10yr": 46.9
     },
     {
       "codEst": "E34",
@@ -355,11 +355,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0861,
       "lng": -4.9254,
-      "fillPercent": 79.9,
-      "storedHm3": 224.85,
+      "fillPercent": 79.7,
+      "storedHm3": 224.23,
       "capacityHm3": 281.3,
       "mean5yr": 29.9,
-      "mean10yr": 35.3
+      "mean10yr": 35.2
     },
     {
       "codEst": "E35",
@@ -370,11 +370,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 38.0206,
       "lng": -4.7991,
-      "fillPercent": 61.6,
-      "storedHm3": 1.01,
+      "fillPercent": 61,
+      "storedHm3": 1,
       "capacityHm3": 1.6,
       "mean5yr": 64.8,
-      "mean10yr": 64.7
+      "mean10yr": 64.6
     },
     {
       "codEst": "E36",
@@ -385,8 +385,8 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.8267,
       "lng": -5.0441,
-      "fillPercent": 76.9,
-      "storedHm3": 633.07,
+      "fillPercent": 76.8,
+      "storedHm3": 632.07,
       "capacityHm3": 823.4,
       "mean5yr": 17.6,
       "mean10yr": 22.8
@@ -400,11 +400,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.9018,
       "lng": -5.2107,
-      "fillPercent": 81.5,
-      "storedHm3": 267.38,
+      "fillPercent": 81.4,
+      "storedHm3": 266.98,
       "capacityHm3": 328,
-      "mean5yr": 35.5,
-      "mean10yr": 43.7
+      "mean5yr": 35.4,
+      "mean10yr": 43.6
     },
     {
       "codEst": "E39",
@@ -415,10 +415,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.8414,
       "lng": -5.3493,
-      "fillPercent": 74.3,
-      "storedHm3": 45.42,
+      "fillPercent": 74.1,
+      "storedHm3": 45.31,
       "capacityHm3": 61.1,
-      "mean5yr": 39.6,
+      "mean5yr": 39.5,
       "mean10yr": 46.4
     },
     {
@@ -430,11 +430,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.1593,
       "lng": -3.4796,
-      "fillPercent": 83.2,
-      "storedHm3": 58.24,
+      "fillPercent": 83.1,
+      "storedHm3": 58.16,
       "capacityHm3": 70,
-      "mean5yr": 61.6,
-      "mean10yr": 61.2
+      "mean5yr": 61.4,
+      "mean10yr": 61
     },
     {
       "codEst": "E42",
@@ -445,11 +445,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.2032,
       "lng": -3.4379,
-      "fillPercent": 51.2,
-      "storedHm3": 6.93,
+      "fillPercent": 50.6,
+      "storedHm3": 6.85,
       "capacityHm3": 13.5,
-      "mean5yr": 59.5,
-      "mean10yr": 65.1
+      "mean5yr": 59.2,
+      "mean10yr": 64.9
     },
     {
       "codEst": "E44",
@@ -460,11 +460,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.3992,
       "lng": -3.7217,
-      "fillPercent": 81.8,
-      "storedHm3": 32.86,
+      "fillPercent": 81.5,
+      "storedHm3": 32.75,
       "capacityHm3": 40.2,
       "mean5yr": 13.1,
-      "mean10yr": 25.1
+      "mean10yr": 24.9
     },
     {
       "codEst": "E45",
@@ -475,11 +475,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.2748,
       "lng": -3.6832,
-      "fillPercent": 59.9,
-      "storedHm3": 8.1,
+      "fillPercent": 59.2,
+      "storedHm3": 8.01,
       "capacityHm3": 13.5,
-      "mean5yr": 35.6,
-      "mean10yr": 39.5
+      "mean5yr": 35.5,
+      "mean10yr": 39.3
     },
     {
       "codEst": "E46",
@@ -490,11 +490,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 36.9961,
       "lng": -3.8934,
-      "fillPercent": 71.9,
-      "storedHm3": 65.42,
+      "fillPercent": 71.7,
+      "storedHm3": 65.27,
       "capacityHm3": 91,
       "mean5yr": 23.4,
-      "mean10yr": 34.1
+      "mean10yr": 34
     },
     {
       "codEst": "E48",
@@ -505,11 +505,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.2762,
       "lng": -4.3871,
-      "fillPercent": 76.1,
-      "storedHm3": 700.04,
+      "fillPercent": 75.9,
+      "storedHm3": 698.74,
       "capacityHm3": 920.2,
-      "mean5yr": 19.2,
-      "mean10yr": 28.2
+      "mean5yr": 19.1,
+      "mean10yr": 28.1
     },
     {
       "codEst": "E54",
@@ -520,10 +520,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.748,
       "lng": -5.4847,
-      "fillPercent": 59.8,
-      "storedHm3": 60.39,
+      "fillPercent": 59.6,
+      "storedHm3": 60.19,
       "capacityHm3": 100.9,
-      "mean5yr": 32.2,
+      "mean5yr": 32.1,
       "mean10yr": 34.4
     },
     {
@@ -535,11 +535,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.1297,
       "lng": -5.2434,
-      "fillPercent": 67.6,
-      "storedHm3": 42.64,
+      "fillPercent": 67.4,
+      "storedHm3": 42.52,
       "capacityHm3": 63.1,
       "mean5yr": 11.3,
-      "mean10yr": 19.1
+      "mean10yr": 19
     },
     {
       "codEst": "E56",
@@ -550,10 +550,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.7697,
       "lng": -5.6853,
-      "fillPercent": 69.4,
-      "storedHm3": 93.42,
+      "fillPercent": 69.3,
+      "storedHm3": 93.33,
       "capacityHm3": 134.6,
-      "mean5yr": 56,
+      "mean5yr": 55.9,
       "mean10yr": 61.8
     },
     {
@@ -565,11 +565,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.9841,
       "lng": -5.9542,
-      "fillPercent": 82.6,
-      "storedHm3": 177.32,
+      "fillPercent": 82.4,
+      "storedHm3": 176.93,
       "capacityHm3": 214.6,
-      "mean5yr": 40.4,
-      "mean10yr": 50.2
+      "mean5yr": 40.3,
+      "mean10yr": 50.1
     },
     {
       "codEst": "E58",
@@ -580,11 +580,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.7229,
       "lng": -5.8827,
-      "fillPercent": 86.3,
-      "storedHm3": 160.08,
+      "fillPercent": 86.2,
+      "storedHm3": 159.92,
       "capacityHm3": 185.6,
-      "mean5yr": 71.9,
-      "mean10yr": 76.4
+      "mean5yr": 71.7,
+      "mean10yr": 76.3
     },
     {
       "codEst": "E61",
@@ -595,11 +595,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.9079,
       "lng": -6.4517,
-      "fillPercent": 81.5,
-      "storedHm3": 104.81,
+      "fillPercent": 81.4,
+      "storedHm3": 104.75,
       "capacityHm3": 128.7,
-      "mean5yr": 38.4,
-      "mean10yr": 52.8
+      "mean5yr": 38.1,
+      "mean10yr": 52.6
     },
     {
       "codEst": "E62",
@@ -610,8 +610,8 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.7979,
       "lng": -6.2789,
-      "fillPercent": 79.5,
-      "storedHm3": 139.31,
+      "fillPercent": 79.4,
+      "storedHm3": 139.08,
       "capacityHm3": 175.3,
       "mean5yr": 43.5,
       "mean10yr": 58.8
@@ -625,10 +625,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.6649,
       "lng": -6.1857,
-      "fillPercent": 65.9,
-      "storedHm3": 38.07,
+      "fillPercent": 65.6,
+      "storedHm3": 37.89,
       "capacityHm3": 57.8,
-      "mean5yr": 67.1,
+      "mean5yr": 67.2,
       "mean10yr": 71.4
     },
     {
@@ -640,11 +640,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.7178,
       "lng": -6.0882,
-      "fillPercent": 56.1,
-      "storedHm3": 32.98,
+      "fillPercent": 55.7,
+      "storedHm3": 32.74,
       "capacityHm3": 58.8,
-      "mean5yr": 38.7,
-      "mean10yr": 41.2
+      "mean5yr": 38.6,
+      "mean10yr": 41.1
     },
     {
       "codEst": "E65",
@@ -655,10 +655,10 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.5653,
       "lng": -6.0503,
-      "fillPercent": 77.7,
-      "storedHm3": 27.22,
+      "fillPercent": 78.8,
+      "storedHm3": 27.61,
       "capacityHm3": 35,
-      "mean5yr": 61.9,
+      "mean5yr": 62,
       "mean10yr": 71.9
     },
     {
@@ -670,11 +670,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.5322,
       "lng": -6.2838,
-      "fillPercent": 79.7,
-      "storedHm3": 16.22,
+      "fillPercent": 79.6,
+      "storedHm3": 16.2,
       "capacityHm3": 20.3,
-      "mean5yr": 39.7,
-      "mean10yr": 44.3
+      "mean5yr": 39.6,
+      "mean10yr": 44.1
     },
     {
       "codEst": "E68",
@@ -685,11 +685,11 @@
       "basin": "GUADALQUIVIR",
       "lat": 37.0428,
       "lng": -5.7582,
-      "fillPercent": 22.2,
-      "storedHm3": 10.71,
+      "fillPercent": 22,
+      "storedHm3": 10.6,
       "capacityHm3": 48.2,
-      "mean5yr": 21.7,
-      "mean10yr": 20.4
+      "mean5yr": 21.6,
+      "mean10yr": 20.3
     },
     {
       "codEst": "E69",
@@ -701,10 +701,10 @@
       "lat": 36.8554,
       "lng": -5.3895,
       "fillPercent": 67.5,
-      "storedHm3": 150.37,
+      "storedHm3": 150.24,
       "capacityHm3": 222.7,
-      "mean5yr": 18.3,
-      "mean10yr": 40.9
+      "mean5yr": 18.2,
+      "mean10yr": 40.8
     },
     {
       "codEst": "E70",
@@ -715,11 +715,11 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.7906,
       "lng": -5.7613,
-      "fillPercent": 67.6,
-      "storedHm3": 135.33,
+      "fillPercent": 67.4,
+      "storedHm3": 135,
       "capacityHm3": 200.2,
-      "mean5yr": 24.6,
-      "mean10yr": 29.3
+      "mean5yr": 24.5,
+      "mean10yr": 29.2
     },
     {
       "codEst": "E71",
@@ -733,7 +733,7 @@
       "fillPercent": 92.5,
       "storedHm3": 13.5,
       "capacityHm3": 14.6,
-      "mean5yr": 90.9,
+      "mean5yr": 90.8,
       "mean10yr": 91.8
     },
     {
@@ -745,11 +745,11 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.6613,
       "lng": -5.5618,
-      "fillPercent": 70.5,
-      "storedHm3": 95.37,
+      "fillPercent": 70.3,
+      "storedHm3": 95.13,
       "capacityHm3": 135.3,
-      "mean5yr": 56.4,
-      "mean10yr": 57.2
+      "mean5yr": 56.3,
+      "mean10yr": 57.1
     },
     {
       "codEst": "E73",
@@ -760,8 +760,8 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.6684,
       "lng": -5.7867,
-      "fillPercent": 85.8,
-      "storedHm3": 686.89,
+      "fillPercent": 85.7,
+      "storedHm3": 686.04,
       "capacityHm3": 800.3,
       "mean5yr": 28.9,
       "mean10yr": 40.1
@@ -775,11 +775,11 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.3747,
       "lng": -5.7419,
-      "fillPercent": 79.2,
-      "storedHm3": 164.58,
+      "fillPercent": 79.1,
+      "storedHm3": 164.38,
       "capacityHm3": 207.7,
-      "mean5yr": 18.6,
-      "mean10yr": 31.3
+      "mean5yr": 18.5,
+      "mean10yr": 31.2
     },
     {
       "codEst": "E76",
@@ -790,11 +790,11 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.2993,
       "lng": -5.7746,
-      "fillPercent": 81,
-      "storedHm3": 35.62,
+      "fillPercent": 80.9,
+      "storedHm3": 35.56,
       "capacityHm3": 44,
-      "mean5yr": 21.5,
-      "mean10yr": 31.9
+      "mean5yr": 21.3,
+      "mean10yr": 31.8
     },
     {
       "codEst": "E77",
@@ -805,11 +805,11 @@
       "basin": "GUADALETE - BARBATE",
       "lat": 36.1538,
       "lng": -5.6499,
-      "fillPercent": 76.6,
-      "storedHm3": 3.4,
+      "fillPercent": 76.1,
+      "storedHm3": 3.38,
       "capacityHm3": 4.4,
-      "mean5yr": 55.9,
-      "mean10yr": 53
+      "mean5yr": 55.7,
+      "mean10yr": 52.8
     },
     {
       "codEst": "S03",
@@ -820,11 +820,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.2324,
       "lng": -5.5439,
-      "fillPercent": 69,
-      "storedHm3": 54.63,
+      "fillPercent": 68.8,
+      "storedHm3": 54.47,
       "capacityHm3": 79.2,
       "mean5yr": 35.7,
-      "mean10yr": 41.5
+      "mean10yr": 41.4
     },
     {
       "codEst": "S08",
@@ -835,11 +835,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.3077,
       "lng": -5.4625,
-      "fillPercent": 83.3,
-      "storedHm3": 69.24,
+      "fillPercent": 83.2,
+      "storedHm3": 69.16,
       "capacityHm3": 83.2,
-      "mean5yr": 50.4,
-      "mean10yr": 51.5
+      "mean5yr": 50.3,
+      "mean10yr": 51.4
     },
     {
       "codEst": "S16",
@@ -850,11 +850,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.5354,
       "lng": -4.9608,
-      "fillPercent": 62.2,
-      "storedHm3": 35.78,
+      "fillPercent": 61.8,
+      "storedHm3": 35.55,
       "capacityHm3": 57.5,
-      "mean5yr": 60.4,
-      "mean10yr": 63.3
+      "mean5yr": 60.1,
+      "mean10yr": 63
     },
     {
       "codEst": "S19",
@@ -865,8 +865,8 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.8047,
       "lng": -4.4957,
-      "fillPercent": 34.6,
-      "storedHm3": 7.51,
+      "fillPercent": 34.5,
+      "storedHm3": 7.49,
       "capacityHm3": 21.7,
       "mean5yr": 43.4,
       "mean10yr": 48.9
@@ -880,10 +880,10 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.7594,
       "lng": -4.4315,
-      "fillPercent": 103.5,
-      "storedHm3": 14.49,
+      "fillPercent": 103.3,
+      "storedHm3": 14.46,
       "capacityHm3": 14,
-      "mean5yr": 39.5,
+      "mean5yr": 39.4,
       "mean10yr": 44.4
     },
     {
@@ -896,10 +896,10 @@
       "lat": 36.9398,
       "lng": -4.8008,
       "fillPercent": 93.8,
-      "storedHm3": 143.79,
+      "storedHm3": 143.78,
       "capacityHm3": 153.3,
-      "mean5yr": 46.5,
-      "mean10yr": 52
+      "mean5yr": 46.4,
+      "mean10yr": 51.9
     },
     {
       "codEst": "S30",
@@ -910,11 +910,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.9414,
       "lng": -4.7977,
-      "fillPercent": 91.4,
-      "storedHm3": 114.95,
+      "fillPercent": 91.2,
+      "storedHm3": 114.61,
       "capacityHm3": 125.7,
-      "mean5yr": 28.2,
-      "mean10yr": 45.3
+      "mean5yr": 28.1,
+      "mean10yr": 45.2
     },
     {
       "codEst": "S31",
@@ -925,11 +925,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.9336,
       "lng": -4.8036,
-      "fillPercent": 69.7,
-      "storedHm3": 46.37,
+      "fillPercent": 69.6,
+      "storedHm3": 46.25,
       "capacityHm3": 66.5,
-      "mean5yr": 39,
-      "mean10yr": 44.6
+      "mean5yr": 38.7,
+      "mean10yr": 44.3
     },
     {
       "codEst": "S37",
@@ -941,10 +941,10 @@
       "lat": 36.86,
       "lng": -4.1621,
       "fillPercent": 86.6,
-      "storedHm3": 142.38,
+      "storedHm3": 142.27,
       "capacityHm3": 164.4,
-      "mean5yr": 20.8,
-      "mean10yr": 27.4
+      "mean5yr": 20.7,
+      "mean10yr": 27.3
     },
     {
       "codEst": "S51",
@@ -955,11 +955,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.8598,
       "lng": -3.495,
-      "fillPercent": 92.4,
-      "storedHm3": 97.37,
+      "fillPercent": 92.2,
+      "storedHm3": 97.18,
       "capacityHm3": 105.4,
-      "mean5yr": 65,
-      "mean10yr": 70
+      "mean5yr": 64.8,
+      "mean10yr": 69.8
     },
     {
       "codEst": "S58",
@@ -970,11 +970,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.8758,
       "lng": -3.0268,
-      "fillPercent": 18.1,
-      "storedHm3": 11.36,
+      "fillPercent": 18,
+      "storedHm3": 11.33,
       "capacityHm3": 62.9,
       "mean5yr": 11.8,
-      "mean10yr": 11.7
+      "mean10yr": 11.6
     },
     {
       "codEst": "S64",
@@ -985,11 +985,11 @@
       "basin": "MEDITERRÁNEO",
       "lat": 36.9153,
       "lng": -3.5401,
-      "fillPercent": 73.3,
-      "storedHm3": 38.79,
+      "fillPercent": 73.2,
+      "storedHm3": 38.74,
       "capacityHm3": 52.9,
-      "mean5yr": 73.8,
-      "mean10yr": 70.7
+      "mean5yr": 73.7,
+      "mean10yr": 70.6
     },
     {
       "codEst": "S84",
@@ -1001,10 +1001,10 @@
       "lat": 37.3278,
       "lng": -1.8972,
       "fillPercent": 8.4,
-      "storedHm3": 13.21,
+      "storedHm3": 13.25,
       "capacityHm3": 157.9,
       "mean5yr": 13,
-      "mean10yr": 11.3
+      "mean10yr": 11.1
     },
     {
       "codEst": "T01",
@@ -1015,11 +1015,11 @@
       "basin": "TINTO - ODIEL - PIEDRAS",
       "lat": 37.5585,
       "lng": -7.5209,
-      "fillPercent": 60.5,
-      "storedHm3": 206.39,
+      "fillPercent": 60.2,
+      "storedHm3": 205.55,
       "capacityHm3": 341.4,
-      "mean5yr": 47,
-      "mean10yr": 47.2
+      "mean5yr": 46.9,
+      "mean10yr": 47.1
     },
     {
       "codEst": "T03",
@@ -1030,11 +1030,11 @@
       "basin": "TINTO - ODIEL - PIEDRAS",
       "lat": 37.3667,
       "lng": -7.2663,
-      "fillPercent": 69.7,
-      "storedHm3": 41.49,
+      "fillPercent": 69.9,
+      "storedHm3": 41.59,
       "capacityHm3": 59.5,
-      "mean5yr": 66.2,
-      "mean10yr": 58.1
+      "mean5yr": 66,
+      "mean10yr": 58
     },
     {
       "codEst": "T04",
@@ -1048,8 +1048,8 @@
       "fillPercent": 21.1,
       "storedHm3": 2.53,
       "capacityHm3": 12,
-      "mean5yr": 35.1,
-      "mean10yr": 47.5
+      "mean5yr": 34.7,
+      "mean10yr": 47.2
     },
     {
       "codEst": "T05",
@@ -1060,11 +1060,11 @@
       "basin": "TINTO - ODIEL - PIEDRAS",
       "lat": 37.4491,
       "lng": -6.5727,
-      "fillPercent": 79.4,
-      "storedHm3": 14.29,
+      "fillPercent": 79.2,
+      "storedHm3": 14.26,
       "capacityHm3": 18,
-      "mean5yr": 43,
-      "mean10yr": 47.5
+      "mean5yr": 42.9,
+      "mean10yr": 47.3
     },
     {
       "codEst": "T06",
@@ -1075,11 +1075,11 @@
       "basin": "TINTO - ODIEL - PIEDRAS",
       "lat": 37.6673,
       "lng": -6.5093,
-      "fillPercent": 66.7,
-      "storedHm3": 28.43,
+      "fillPercent": 66.4,
+      "storedHm3": 28.32,
       "capacityHm3": 42.6,
-      "mean5yr": 61.7,
-      "mean10yr": 69.2
+      "mean5yr": 60.7,
+      "mean10yr": 68.6
     },
     {
       "codEst": "T07",
@@ -1091,10 +1091,10 @@
       "lat": 37.6204,
       "lng": -7.3954,
       "fillPercent": 86.2,
-      "storedHm3": 547.08,
+      "storedHm3": 546.95,
       "capacityHm3": 634.4,
       "mean5yr": 41,
-      "mean10yr": 55.1
+      "mean10yr": 55
     }
   ]
 }
