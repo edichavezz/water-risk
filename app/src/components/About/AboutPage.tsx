@@ -4,8 +4,8 @@ import { DATASETS } from '../../registry/datasets'
 import { useAppStore } from '../../store/useAppStore'
 import { APP_NAME } from '../Header/identity'
 
-const PERSONAL_SITE = 'https://editachavez.com'
-const COURSE_URL = 'https://terra.do'
+const PERSONAL_SITE = 'https://editachavez.com/'
+const COURSE_URL = 'https://studio.terra.do/'
 
 /* The four sections, in reading order. The ids double as the mini-nav's
    anchors and as the scroll-spy's keys. */
@@ -265,7 +265,18 @@ export default function AboutPage() {
               />
               <div>
                 <SubHeading>{t('about.makerHeading')}</SubHeading>
-                <p className="text-sm leading-relaxed text-[#33424C]">{t('about.makerBodyOne')}</p>
+                <p className="text-sm leading-relaxed text-[#33424C]">
+                  {t('about.makerBodyOne')}{' '}
+                  <a
+                    href={COURSE_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary underline"
+                  >
+                    {t('about.makerCourseLabel')}
+                  </a>{' '}
+                  {t('about.makerBodyOneSuffix')}
+                </p>
               </div>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-[#33424C]">{t('about.makerBodyTwo')}</p>
@@ -278,15 +289,7 @@ export default function AboutPage() {
               >
                 {t('about.makerSiteLabel')}
               </a>{' '}
-              {t('about.makerSiteSuffix')}{' '}
-              <a
-                href={COURSE_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-primary underline"
-              >
-                {t('about.makerCourseLabel')}
-              </a>
+              {t('about.makerSiteSuffix')}
             </p>
             {cta}
           </section>
