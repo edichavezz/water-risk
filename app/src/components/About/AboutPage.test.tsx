@@ -58,13 +58,13 @@ describe('AboutPage', () => {
     render(<AboutPage />)
     expect(screen.getByRole('link', { name: 'editachavez.com' })).toHaveAttribute(
       'href',
-      'https://editachavez.com',
+      'https://editachavez.com/',
     )
     expect(screen.getByRole('link', { name: 'Terra.do' })).toHaveAttribute(
       'href',
-      'https://terra.do',
+      'https://studio.terra.do/',
     )
-    expect(screen.getByText(/Edita Chávez/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Hi, I'm Edita/ })).toBeInTheDocument()
   })
 
   it('sends the reader to the map, asking for the search field, without clearing state', async () => {
