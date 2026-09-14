@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Petrona:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#EDE7DA;font-family:'Atkinson Hyperlegible',system-ui,sans-serif}
+  .dv-turn{padding:40px 44px 32px}
+  .dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+  .dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1E2A38;color:#fff;border-radius:4px;text-decoration:none}
+  .dv-tname{font:600 15px/1.2 'Atkinson Hyperlegible',sans-serif;color:#1E2A38}
+  .dv-tsub{font:400 13px/1.5 'Atkinson Hyperlegible',sans-serif;color:#5C6B72;margin:0 0 24px;max-width:760px}
+  .dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+  .dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(30,42,56,.09);color:#1E2A38;border-radius:5px;text-decoration:none}
+  .dv-olabel{font:600 12px/1.3 'Atkinson Hyperlegible',sans-serif;color:#1E2A38}
+  .dv-odesc{font:400 11.5px/1.4 'Atkinson Hyperlegible',sans-serif;color:#5C6B72;max-width:300px}
+  .dv-card{background:#fff;border:1px solid rgba(30,42,56,.1);border-radius:10px;box-shadow:0 2px 10px rgba(30,42,56,.08);overflow:hidden}
+  .dv-opt:target .dv-oid{background:#2B6E86;color:#fff}
+  .dv-next{margin:26px 0 0;font:12px/1.6 'Atkinson Hyperlegible',sans-serif;color:rgba(30,42,56,.55);max-width:800px}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t6">
+  <div class="dv-thd"><a class="dv-tid" href="#t6">6</a><span class="dv-tname">Title font options — more readable than Instrument Serif</span></div>
+  <p class="dv-tsub">Same three sizes side by side for each candidate: the wordmark, a tab label, and a dataset title. All are warmer/more distinctive than a generic UI sans, but hold up better at small sizes than Instrument Serif's thin, high-contrast strokes.</p>
+  <div class="dv-opts">
+
+    <div class="dv-opt" id="6a">
+      <div class="dv-olabel"><a class="dv-oid" href="#6a">6a</a> Newsreader — warm editorial serif</div>
+      <div class="dv-card" style="width:280px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;600;700&display=swap" rel="stylesheet">
+        <div style="font:600 30px 'Newsreader',serif;color:#1E2A38">Fire and Rain</div>
+        <div style="font:700 13px 'Newsreader',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;padding-bottom:6px;width:fit-content">Public data</div>
+        <div style="font:700 13px 'Newsreader',serif;color:#1E2A38">Wildfire risk zone</div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="6b">
+      <div class="dv-olabel"><a class="dv-oid" href="#6b">6b</a> Petrona — humanist serif, good x-height</div>
+      <div class="dv-card" style="width:280px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <link href="https://fonts.googleapis.com/css2?family=Petrona:wght@400;600;700&display=swap" rel="stylesheet">
+        <div style="font:600 30px 'Petrona',serif;color:#1E2A38">Fire and Rain</div>
+        <div style="font:700 13px 'Petrona',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;padding-bottom:6px;width:fit-content">Public data</div>
+        <div style="font:700 13px 'Petrona',serif;color:#1E2A38">Wildfire risk zone</div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="6c">
+      <div class="dv-olabel"><a class="dv-oid" href="#6c">6c</a> Zilla Slab — sturdy slab serif</div>
+      <div class="dv-card" style="width:280px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+        <div style="font:600 30px 'Zilla Slab',serif;color:#1E2A38">Fire and Rain</div>
+        <div style="font:700 13px 'Zilla Slab',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;padding-bottom:6px;width:fit-content">Public data</div>
+        <div style="font:700 13px 'Zilla Slab',serif;color:#1E2A38">Wildfire risk zone</div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="6d">
+      <div class="dv-olabel"><a class="dv-oid" href="#6d">6d</a> Space Grotesk — modern geometric sans</div>
+      <div class="dv-card" style="width:280px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+        <div style="font:600 30px 'Space Grotesk',sans-serif;color:#1E2A38">Fire and Rain</div>
+        <div style="font:700 13px 'Space Grotesk',sans-serif;color:#1E2A38;border-bottom:2px solid #2B6E86;padding-bottom:6px;width:fit-content">Public data</div>
+        <div style="font:700 13px 'Space Grotesk',sans-serif;color:#1E2A38">Wildfire risk zone</div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Pick one (e.g. "go with 6b") and I'll apply it everywhere titles currently use Instrument Serif.</p>
+</section>
+
+<section class="dv-turn" id="t5">
+  <div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Concept: "Fire and Rain" — water + fire, Mediterranean-wide, live news</span></div>
+  <p class="dv-tsub">Same teal/terracotta language now carries real meaning: teal for water hazards, terracotta for fire hazards, both in one unified risk profile per place. <a class="dv-oid" href="#5a">5a</a> is the full rebrand; <a class="dv-oid" href="#5c">5c</a> is a subtler naming alternative that keeps today's identity as primary; <a class="dv-oid" href="#5b">5b</a> details the live-news tab.</p>
+  <div class="dv-opts">
+
+    <!-- ============ 5a — full rebrand, unified water+fire profile ============ -->
+    <div class="dv-opt" id="5a">
+      <div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a> Full rebrand — unified water + fire list, two-layer-family map card</div>
+      <div class="dv-odesc">Droplet+flame mark, "Fire and Rain" wordmark, one dataset list mixing hazard families (color-coded dot), map layers split into Water / Fire groups. Example location moved to Crete to signal the wider Mediterranean scope.</div>
+      <div class="dv-card" style="width:490px;height:340px">
+        <div style="width:1440px;height:1000px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:28px;height:28px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:16px;height:16px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;transform:rotate(180deg);background:#C1663D"></span>
+            </span>
+            <span style="font:400 27px 'Petrona',serif;letter-spacing:.01em;color:#1E2A38">Fire and Rain</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Water and fire risk across the Mediterranean</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES · EL</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 30%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 30%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px),radial-gradient(circle at 80% 68%,transparent 0 26px,rgba(193,102,61,.2) 27px 29px,transparent 30px),radial-gradient(circle at 80% 68%,transparent 0 48px,rgba(193,102,61,.14) 49px 51px,transparent 52px)"></div>
+
+          <div style="position:absolute;left:32px;top:88px;width:340px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:20px 24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div><div style="font:600 17px 'Petrona',serif;color:#1E2A38">Chania</div><div style="font-size:11.5px;color:#5C6B72">Crete, Greece</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:18px;border-bottom:1px solid #E4DAC8;margin-bottom:14px">
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;margin-bottom:-1px">Public data</div>
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">What does this mean?</div>
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">Live news</div>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <div style="padding:10px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#C1663D;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Wildfire risk zone</span><span style="background:#F1DDCB;color:#8A5A34;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700">Fire</span><span style="border:1px solid #D8CFBC;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">High risk — dry pine forest, steep terrain nearby</div>
+              </div>
+              <div style="padding:10px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#C1663D;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Recent fire history</span><span style="background:#F1DDCB;color:#8A5A34;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700">Fire</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">2 fires within 15 km since 2020</div>
+              </div>
+              <div style="padding:10px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#C1663D;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Prevention measures</span><span style="background:#F1DDCB;color:#8A5A34;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700">Fire</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Firebreak maintained 4 km north; clearance rules apply</div>
+              </div>
+              <div style="padding:10px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#2B6E86;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Drought status</span><span style="background:#DCEAEE;color:#1F4F63;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700">Water</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Watch — below seasonal average</div>
+              </div>
+              <div style="padding:10px 2px;border-top:1px solid #E9E1CF;border-bottom:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#2B6E86;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Nearby reservoirs</span><span style="background:#DCEAEE;color:#1F4F63;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700">Water</span><span style="border:1px solid #D8CFBC;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Aposelemis · 41% full</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;right:24px;top:88px;width:236px;background:#FBF8F2;border-radius:14px;box-shadow:0 10px 26px rgba(30,42,56,.16);padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <span style="font:700 13px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Map layers</span>
+              <span style="width:22px;height:22px;border-radius:50%;border:1px solid #E4DAC8;display:flex;align-items:center;justify-content:center;font-size:11px;color:#5C6B72">⌄</span>
+            </div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#C1663D;margin-bottom:7px">Fire</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#1E2A38;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid #C1663D;background:#C1663D;display:inline-block"></span>Wildfire risk zone</div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:4px;background:#C1663D;opacity:.5;display:inline-block"></span>Recent fire perimeters</div>
+            </div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#2B6E86;margin-bottom:7px">Water</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#1E2A38;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px;opacity:.5"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid #9FC3CC;display:inline-block"></span>Flood zones</div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:4px;background:#2B6E86;display:inline-block"></span>Reservoirs</div>
+            </div>
+            <div style="height:1px;background:#E9E1CF;margin-bottom:12px"></div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#8A8172;margin-bottom:7px">Legend</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:4px"><span style="width:10px;height:10px;background:#C1663D;opacity:.55;display:inline-block;border-radius:2px"></span>High wildfire risk</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38"><span style="width:10px;height:10px;border-radius:50%;background:#2B6E86;box-shadow:0 0 0 2px #1E2A38;display:inline-block"></span>Supplies this area</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 5b — Live news tab, detail ============ -->
+    <div class="dv-opt" id="5b">
+      <div class="dv-olabel"><a class="dv-oid" href="#5b">5b</a> "Live news" — third tab, per-place feed</div>
+      <div class="dv-odesc">A rolling feed of current stories for the searched place, each tagged by hazard color. Attribution line stays honest about it being pulled, not authored.</div>
+      <div class="dv-card" style="width:400px;height:340px">
+        <div style="width:1440px;height:1000px;transform:scale(0.278);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:28px;height:28px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:16px;height:16px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;transform:rotate(180deg);background:#C1663D"></span>
+            </span>
+            <span style="font:400 27px 'Petrona',serif;letter-spacing:.01em;color:#1E2A38">Fire and Rain</span>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 65% 40%,transparent 0 30px,rgba(193,102,61,.14) 31px 33px,transparent 34px)"></div>
+          <div style="position:absolute;left:32px;top:88px;width:420px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:20px 24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div><div style="font:600 17px 'Petrona',serif;color:#1E2A38">Chania</div><div style="font-size:11.5px;color:#5C6B72">Crete, Greece</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:18px;border-bottom:1px solid #E4DAC8;margin-bottom:16px">
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">Public data</div>
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">What does this mean?</div>
+              <div style="padding-bottom:9px;font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;border-bottom:2px solid #C1663D;margin-bottom:-1px">Live news</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="border-bottom:1px solid #E9E1CF;padding-bottom:12px">
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px">
+                  <span style="background:#F1DDCB;color:#8A5A34;border-radius:10px;padding:2px 8px;font-size:9.5px;font-weight:700">Fire</span>
+                  <span style="font-size:10.5px;color:#8A8172">3h ago · ekathimerini.com</span>
+                </div>
+                <div style="font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;line-height:1.4">Fire service raises alert level for Chania region as winds pick up</div>
+              </div>
+              <div style="border-bottom:1px solid #E9E1CF;padding-bottom:12px">
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px">
+                  <span style="background:#DCEAEE;color:#1F4F63;border-radius:10px;padding:2px 8px;font-size:9.5px;font-weight:700">Water</span>
+                  <span style="font-size:10.5px;color:#8A8172">1d ago · Crete Gazette</span>
+                </div>
+                <div style="font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;line-height:1.4">Aposelemis reservoir levels drop to 41% amid dry spring</div>
+              </div>
+              <div>
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px">
+                  <span style="background:#F1DDCB;color:#8A5A34;border-radius:10px;padding:2px 8px;font-size:9.5px;font-weight:700">Fire</span>
+                  <span style="font-size:10.5px;color:#8A8172">2d ago · Regional civil protection</span>
+                </div>
+                <div style="font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;line-height:1.4">New firebreak clearance completed near Akrotiri peninsula</div>
+              </div>
+            </div>
+            <p style="margin:14px 0 0;font-size:10.5px;color:#8A8172">Pulled automatically from public news sources — not verified by Fire and Rain.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 5c — subtler naming alternative ============ -->
+    <div class="dv-opt" id="5c">
+      <div class="dv-olabel"><a class="dv-oid" href="#5c">5c</a> Naming alt — "Fire and Rain" as tagline, identity stays put</div>
+      <div class="dv-odesc">Lower-risk rename: keep the current wordmark as the primary name, introduce "Fire and Rain" as the descriptive line beneath it. Easier to roll out; revisit a full rename once the fire side has real data.</div>
+      <div class="dv-card" style="width:490px;height:96px">
+        <div style="width:1440px;height:220px;transform:scale(0.34);transform-origin:top left;background:#FBF8F2">
+          <div style="height:88px;display:flex;align-items:center;padding:0 30px">
+            <span style="position:relative;width:28px;height:28px;flex:none;margin-right:14px">
+              <span style="position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:16px;height:16px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;transform:rotate(180deg);background:#C1663D"></span>
+            </span>
+            <div>
+              <div style="font:700 22px 'Petrona',serif;color:#1E2A38;line-height:1.1">Water Risk Explorer</div>
+              <div style="font-size:13px;color:#C1663D;font-weight:700">a Fire and Rain project</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Try next: "go with <a class="dv-oid" href="#5a">5a</a>, drop the Live news tab" · "mock the fire-risk dataset detail view" · "keep exploring naming"</p>
+</section>
+
+<section class="dv-turn" id="t4">
+  <div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">The list → detail → AI flow, with tabs kept consistent</span></div>
+  <p class="dv-tsub">Good instinct: the two tabs are a mode switch (public data vs. AI-assisted reading), independent of whether you're looking at the full list or one dataset's detail — so they stay visible in <a class="dv-oid" href="#4a">4a</a>, and "Explain this result" simply switches you to the same tab, scoped to that one dataset, shown in <a class="dv-oid" href="#4b">4b</a>.</p>
+  <div class="dv-opts">
+
+    <!-- ============ 4a — detail state, tabs restored ============ -->
+    <div class="dv-opt" id="4a">
+      <div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a> Detail — tabs stay put, "Public data" active</div>
+      <div class="dv-odesc">Back link now sits under the tabs, not replacing them — you can still jump straight to "What does this mean?" without the explain button.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px)"></div>
+
+          <div style="position:absolute;left:32px;top:88px;width:360px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:20px 24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div><div style="font:600 16px 'Petrona',serif;color:#1E2A38">Ronda</div><div style="font-size:11.5px;color:#5C6B72">Málaga</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:22px;border-bottom:1px solid #E4DAC8;margin-bottom:14px">
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;margin-bottom:-1px">Public data</div>
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">What does this mean?</div>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:#2B6E86;margin-bottom:14px">&larr;&nbsp; All public data</div>
+            <h2 style="margin:0 0 8px;font:600 20px 'Petrona',serif;color:#1E2A38">River flood zones</h2>
+            <p style="margin:0 0 14px;font-size:14px;color:#1E2A38">Inside the mapped T100 river-flood zone</p>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:11.5px;margin-bottom:16px">
+              <div style="font-weight:700;color:#8A8172">Updated</div><div style="color:#1E2A38">SNCZI cartography cycles</div>
+              <div style="font-weight:700;color:#8A8172">Source</div><div style="color:#1E2A38">SNCZI — MITERD</div>
+            </div>
+            <div style="border:1px solid #E9D9C2;border-radius:12px;padding:12px 14px;margin-bottom:16px">
+              <div style="font-size:11.5px;font-weight:700;color:#8A5A34;margin-bottom:5px">Does not show</div>
+              <ul style="margin:0;padding-left:16px;font-size:11.5px;color:#4A3A2C;line-height:1.6">
+                <li>Surface-water or flash flooding</li>
+                <li>Historical flood incidents</li>
+              </ul>
+            </div>
+            <div style="background:#2B6E86;color:#fff;border-radius:10px;padding:11px;text-align:center;font-weight:700;font-size:13px">Explain this result →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 4b — AI interpretation, scoped to one dataset ============ -->
+    <div class="dv-opt" id="4b">
+      <div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a> "What does this mean?" — scoped to the dataset just opened</div>
+      <div class="dv-odesc">Reached either by the tab directly or by "Explain this result" from 4a. Same panel, same location, tab indicator moved.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px)"></div>
+
+          <div style="position:absolute;left:32px;top:88px;width:360px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:20px 24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div><div style="font:600 16px 'Petrona',serif;color:#1E2A38">Ronda</div><div style="font-size:11.5px;color:#5C6B72">Málaga</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:22px;border-bottom:1px solid #E4DAC8;margin-bottom:16px">
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">Public data</div>
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;border-bottom:2px solid #C1663D;margin-bottom:-1px">What does this mean?</div>
+            </div>
+            <div style="display:inline-block;background:#F1DDCB;color:#8A5A34;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;margin-bottom:10px">AI-assisted</div>
+            <h2 style="margin:0 0 10px;font:600 17px 'Petrona',serif;color:#1E2A38">What "River flood zones" may mean</h2>
+            <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#33424C">This address sits inside the T100 zone, meaning a flood with roughly a 1-in-100 chance in any year has been mapped here. It doesn't confirm your specific building floods, only that the wider area does under that scenario.</p>
+            <p style="margin:0 0 14px;font-size:11px;color:#8A8172">Based on: SNCZI — MITERD</p>
+            <div style="font:700 11px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#8A8172;margin-bottom:8px">Questions you could ask</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+              <div style="border:1px solid #D8CFBC;border-radius:20px;padding:8px 14px;font-size:12px;color:#1E2A38">Has this address flooded before?</div>
+              <div style="border:1px solid #D8CFBC;border-radius:20px;padding:8px 14px;font-size:12px;color:#1E2A38">Does home insurance here cost more?</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <div style="flex:1;height:38px;border:1px solid #D8CFBC;border-radius:20px;background:#fff"></div>
+              <div style="width:38px;height:38px;border-radius:50%;background:#2B6E86;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Try next: "start building the real About page with my copy" · "show the mobile bottom-sheet version"</p>
+</section>
+
+<section class="dv-turn" id="t3">
+  <div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Refining <a class="dv-oid" href="#2a">2a</a>/<a class="dv-oid" href="#2b">2b</a>: elegant tabs, panel hugs content, merged collapsible layers+legend</span></div>
+  <p class="dv-tsub">Underline tabs instead of filled pills, a hairline dataset list instead of boxed rows, the panel sized to its content so the map stays open behind it, and legend folded into the layer tray as one collapsible card (chevron top-right; <a class="dv-oid" href="#3c">3c</a> shows it collapsed).</p>
+  <div class="dv-opts">
+
+    <!-- ============ 3a — results state, refined ============ -->
+    <div class="dv-opt" id="3a">
+      <div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a> Results state — underline tabs, hairline list, merged layers card</div>
+      <div class="dv-odesc">Panel height now matches its content. Layers + legend combined into one card with a collapse chevron.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px),radial-gradient(circle at 60% 35%,transparent 0 82px,rgba(43,110,134,.08) 83px 85px,transparent 86px)"></div>
+
+          <!-- workspace panel, height hugs content -->
+          <div style="position:absolute;left:32px;top:88px;width:340px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:20px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div><div style="font:600 17px 'Petrona',serif;color:#1E2A38">Ronda</div><div style="font-size:11.5px;color:#5C6B72">Málaga</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:22px;border-bottom:1px solid #E4DAC8;margin-bottom:14px">
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38;border-bottom:2px solid #2B6E86;margin-bottom:-1px">Public data</div>
+              <div style="padding-bottom:9px;font-size:13px;font-weight:700;font-family:'Petrona',serif;color:#9C8A6E">What does this mean?</div>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <div style="padding:11px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#2B6E86;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">River flood zones</span><span style="border:1px solid #D8CFBC;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Inside the mapped T100 river-flood zone</div>
+                <div style="font-size:10px;color:#8A8172;margin-left:16px">Updated with SNCZI cartography cycles</div>
+              </div>
+              <div style="padding:11px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#C1663D;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Drought status</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Drought watch</div>
+                <div style="font-size:10px;color:#8A8172;margin-left:16px">Updated every 10 days</div>
+              </div>
+              <div style="padding:11px 2px;border-top:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#2B6E86;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Supply reservoirs</span><span style="border:1px solid #D8CFBC;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Guadalhorce · 62% full</div>
+                <div style="font-size:10px;color:#8A8172;margin-left:16px">Live REDIAM data where available</div>
+              </div>
+              <div style="padding:11px 2px;border-top:1px solid #E9E1CF;border-bottom:1px solid #E9E1CF">
+                <div style="display:flex;align-items:center;gap:7px"><span style="color:#2B6E86;font-size:9px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Drinking water</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:3px 0 0 16px">Compliant · 2024</div>
+                <div style="font-size:10px;color:#8A8172;margin-left:16px">Annual SINAC reporting</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- merged layers + legend card, collapsible -->
+          <div style="position:absolute;right:24px;top:88px;width:236px;background:#FBF8F2;border-radius:14px;box-shadow:0 10px 26px rgba(30,42,56,.16);padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <span style="font:700 13px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Map layers</span>
+              <span style="width:22px;height:22px;border-radius:50%;border:1px solid #E4DAC8;display:flex;align-items:center;justify-content:center;font-size:11px;color:#5C6B72">⌄</span>
+            </div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#8A8172;margin-bottom:7px">Primary risk layer</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#1E2A38;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid #2B6E86;background:#2B6E86;display:inline-block"></span>River flood zones</div>
+              <div style="display:flex;align-items:center;gap:8px;opacity:.55"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid #C6BBA3;display:inline-block"></span>Coastal zone (unavailable)</div>
+            </div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#8A8172;margin-bottom:7px">Context</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#1E2A38;margin-bottom:14px"><span style="width:12px;height:12px;border-radius:4px;background:#2B6E86;display:inline-block"></span>Supply reservoirs</div>
+            <div style="height:1px;background:#E9E1CF;margin-bottom:12px"></div>
+            <div style="font:700 10.5px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#8A8172;margin-bottom:7px">Legend</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:4px"><span style="width:10px;height:10px;background:#2B6E86;opacity:.45;display:inline-block;border-radius:2px"></span>10-year zone</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:4px"><span style="width:10px;height:10px;background:#2B6E86;opacity:.4;display:inline-block;border-radius:2px"></span>100-year zone</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:8px"><span style="width:10px;height:10px;background:#2B6E86;opacity:.35;display:inline-block;border-radius:2px"></span>500-year zone</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:2px"><span style="width:10px;height:10px;border-radius:50%;background:#2B6E86;box-shadow:0 0 0 2px #1E2A38;display:inline-block"></span>Supplies this area</div>
+            <div style="font-size:10px;color:#8A8172;margin-top:6px">Source: SNCZI — MITERD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 3b — dataset detail, refined ============ -->
+    <div class="dv-opt" id="3b">
+      <div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a> Dataset detail — refined, panel hugs content</div>
+      <div class="dv-odesc">Lighter "does not show" treatment (outline, not filled), arrow-style back link, panel no longer stretches empty.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px)"></div>
+
+          <div style="position:absolute;left:32px;top:88px;width:360px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:24px">
+            <div style="font-size:12.5px;font-weight:700;color:#2B6E86;margin-bottom:16px">&larr;&nbsp; All public data</div>
+            <h2 style="margin:0 0 8px;font:600 21px 'Petrona',serif;color:#1E2A38">River flood zones</h2>
+            <p style="margin:0 0 16px;font-size:14px;color:#1E2A38">Inside the mapped T100 river-flood zone</p>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:11.5px;margin-bottom:18px">
+              <div style="font-weight:700;color:#8A8172">Updated</div><div style="color:#1E2A38">SNCZI cartography cycles</div>
+              <div style="font-weight:700;color:#8A8172">Geography</div><div style="color:#1E2A38">Mapped flood polygons (T10/T100/T500)</div>
+              <div style="font-weight:700;color:#8A8172">Source</div><div style="color:#1E2A38">SNCZI — MITERD</div>
+            </div>
+            <div style="border:1px solid #E9D9C2;border-radius:12px;padding:14px;margin-bottom:16px">
+              <div style="font-size:11.5px;font-weight:700;color:#8A5A34;margin-bottom:6px">Does not show</div>
+              <ul style="margin:0;padding-left:16px;font-size:11.5px;color:#4A3A2C;line-height:1.6">
+                <li>Surface-water or flash flooding</li>
+                <li>Property-level drainage problems</li>
+                <li>Historical flood incidents</li>
+              </ul>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:#2B6E86;text-decoration:underline;margin-bottom:16px">View original source</div>
+            <div style="background:#2B6E86;color:#fff;border-radius:10px;padding:11px;text-align:center;font-weight:700;font-size:13px">Explain this result</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 3c — layers card, collapsed ============ -->
+    <div class="dv-opt" id="3c">
+      <div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a> Layers card — collapsed</div>
+      <div class="dv-odesc">One tap on the chevron folds it to a small pill, leaving the whole map free to explore.</div>
+      <div class="dv-card" style="width:300px;height:200px">
+        <div style="width:900px;height:600px;transform:scale(0.333);transform-origin:top left;position:relative;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px)">
+          <div style="position:absolute;right:24px;top:24px;background:#FBF8F2;border-radius:24px;box-shadow:0 8px 20px rgba(30,42,56,.16);padding:10px 16px;display:flex;align-items:center;gap:10px">
+            <span style="font:700 13px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Map layers</span>
+            <span style="width:20px;height:20px;border-radius:50%;border:1px solid #E4DAC8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#5C6B72">⌃</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Try next: "start building the real About page with my copy" · "show the mobile bottom-sheet version" · "tune the merged layers card further"</p>
+</section>
+
+<section class="dv-turn" id="t2">
+  <div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Landing <a class="dv-oid" href="#1b">1b</a> matured: searched + detail states, new header</span></div>
+  <p class="dv-tsub">Reworked header: a small two-tone mark, a thin teal→terracotta accent line instead of a flat hairline, tighter grouping. Applied to <a class="dv-oid" href="#1b">1b</a>'s map, now shown in its two "opened" states — results panel with layer tray + legend, and a drilled-in dataset detail.</p>
+  <div class="dv-opts">
+
+    <!-- ============ 2a — Landing 1b: searched/results state ============ -->
+    <div class="dv-opt" id="2a">
+      <div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a> Results state — panel, layer tray open, legend</div>
+      <div class="dv-odesc">A place has been searched: dataset list on the left, the layer tray expanded top-right, legend bottom-left.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px),radial-gradient(circle at 60% 35%,transparent 0 82px,rgba(43,110,134,.08) 83px 85px,transparent 86px)"></div>
+
+          <!-- workspace panel -->
+          <div style="position:absolute;left:32px;top:88px;bottom:24px;width:340px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:18px;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <div><div style="font:700 15px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Ronda</div><div style="font-size:11.5px;color:#5C6B72">Málaga</div></div>
+              <span style="font-size:12px;font-weight:700;color:#2B6E86">New search</span>
+            </div>
+            <div style="display:flex;gap:4px;background:#F1DDCB;border-radius:10px;padding:4px;margin-bottom:12px">
+              <div style="flex:1;text-align:center;background:#fff;border-radius:8px;padding:8px;font-size:12.5px;font-weight:700;color:#2B6E86">Public data</div>
+              <div style="flex:1;text-align:center;padding:8px;font-size:12.5px;font-weight:700;color:#8A7250">What does this mean?</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;overflow:hidden">
+              <div style="background:#F4EEE1;border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="color:#2B6E86;font-size:10px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">River flood zones</span><span style="background:#fff;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:2px 0 0 16px">Inside the mapped T100 river-flood zone</div>
+                <div style="font-size:10px;color:#5C6B72;margin-left:16px">Updated with SNCZI cartography cycles</div>
+              </div>
+              <div style="background:#F4EEE1;border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="color:#C1663D;font-size:10px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Drought status</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:2px 0 0 16px">Drought watch</div>
+                <div style="font-size:10px;color:#5C6B72;margin-left:16px">Updated every 10 days</div>
+              </div>
+              <div style="background:#F4EEE1;border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="color:#2B6E86;font-size:10px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Supply reservoirs</span><span style="background:#fff;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:2px 0 0 16px">Guadalhorce · 62% full</div>
+                <div style="font-size:10px;color:#5C6B72;margin-left:16px">Live REDIAM data where available</div>
+              </div>
+              <div style="background:#F4EEE1;border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="color:#2B6E86;font-size:10px">●</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Drinking water</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:2px 0 0 16px">Compliant · 2024</div>
+                <div style="font-size:10px;color:#5C6B72;margin-left:16px">Annual SINAC reporting</div>
+              </div>
+              <div style="background:#F4EEE1;border-radius:10px;padding:9px 12px;opacity:.7">
+                <div style="display:flex;align-items:center;gap:6px"><span style="color:#8A9AA1;font-size:10px">○</span><span style="font-size:12.5px;font-weight:700;font-family:'Petrona',serif;color:#1E2A38">Groundwater</span><span style="background:#fff;border-radius:6px;padding:1px 6px;font-size:9px;color:#5C6B72">Map layer</span></div>
+                <div style="font-size:11.5px;color:#1E2A38;margin:2px 0 0 16px">Not inside a declared overexploited unit</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- layer tray, opened -->
+          <div style="position:absolute;right:24px;top:88px;width:230px;background:#FBF8F2;border-radius:14px;box-shadow:0 10px 26px rgba(30,42,56,.16);padding:16px">
+            <div style="font:700 11px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#5C6B72;margin-bottom:8px">Primary risk layer</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#1E2A38;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:13px;height:13px;border-radius:50%;border:1.5px solid #2B6E86;background:#2B6E86;display:inline-block"></span>River flood zones</div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:13px;height:13px;border-radius:50%;border:1.5px solid #C6BBA3;display:inline-block"></span>Drought status</div>
+              <div style="display:flex;align-items:center;gap:8px;opacity:.5"><span style="width:13px;height:13px;border-radius:50%;border:1.5px solid #C6BBA3;display:inline-block"></span>Coastal zone (unavailable)</div>
+            </div>
+            <div style="font:700 11px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#5C6B72;margin-bottom:8px">Context</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#1E2A38"><span style="width:13px;height:13px;border-radius:4px;background:#2B6E86;display:inline-block"></span>Supply reservoirs</div>
+          </div>
+
+          <!-- legend -->
+          <div style="position:absolute;left:32px;bottom:24px;width:210px;background:rgba(251,248,242,.96);border-radius:12px;box-shadow:0 4px 16px rgba(30,42,56,.14);padding:12px">
+            <div style="font-size:12px;font-weight:700;color:#1E2A38;margin-bottom:6px">River flood zones</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:3px"><span style="width:10px;height:10px;background:#2B6E86;opacity:.45;display:inline-block;border-radius:2px"></span>10-year zone</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38;margin-bottom:3px"><span style="width:10px;height:10px;background:#2B6E86;opacity:.4;display:inline-block;border-radius:2px"></span>100-year zone</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#1E2A38"><span style="width:10px;height:10px;background:#2B6E86;opacity:.35;display:inline-block;border-radius:2px"></span>500-year zone</div>
+            <div style="font-size:10px;color:#5C6B72;margin-top:6px">Source: SNCZI — MITERD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 2b — Landing 1b: dataset detail state ============ -->
+    <div class="dv-opt" id="2b">
+      <div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a> Dataset detail — drilled into "River flood zones"</div>
+      <div class="dv-odesc">Same header/map; panel swaps to a single dataset's detail: summary, source, cadence, limitations, and an AI explain action.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;z-index:2">
+            <span style="position:relative;width:26px;height:26px;flex:none;margin-right:12px">
+              <span style="position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:#2B6E86"></span>
+              <span style="position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#C1663D"></span>
+            </span>
+            <span style="font:700 19px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin:0 14px;width:1px;height:20px;background:#E4DAC8;display:inline-block"></span>
+            <span style="font-size:12.5px;color:#5C6B72">Public water data for Spain</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:64px;height:3px;background:linear-gradient(90deg,#2B6E86,#C1663D);z-index:2"></div>
+          <div style="position:absolute;top:67px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 60% 35%,transparent 0 30px,rgba(43,110,134,.16) 31px 33px,transparent 34px),radial-gradient(circle at 60% 35%,transparent 0 56px,rgba(43,110,134,.12) 57px 59px,transparent 60px)"></div>
+
+          <div style="position:absolute;left:32px;top:88px;bottom:24px;width:360px;background:#FBF8F2;border-radius:16px;box-shadow:0 10px 28px rgba(30,42,56,.16);padding:22px;overflow:hidden">
+            <div style="font-size:12.5px;font-weight:700;color:#2B6E86;margin-bottom:14px">← All public data</div>
+            <h2 style="margin:0 0 8px;font:700 19px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">River flood zones</h2>
+            <p style="margin:0 0 16px;font-size:14px;color:#1E2A38">Inside the mapped T100 river-flood zone</p>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:11.5px;margin-bottom:16px">
+              <div style="font-weight:700;color:#5C6B72">Updated</div><div style="color:#1E2A38">SNCZI cartography cycles</div>
+              <div style="font-weight:700;color:#5C6B72">Geography</div><div style="color:#1E2A38">Mapped flood polygons (T10/T100/T500)</div>
+              <div style="font-weight:700;color:#5C6B72">Source</div><div style="color:#1E2A38">SNCZI — MITERD</div>
+            </div>
+            <div style="background:#F1DDCB;border-radius:12px;padding:14px;margin-bottom:16px">
+              <div style="font-size:11.5px;font-weight:700;color:#4A3A2C;margin-bottom:6px">Does not show</div>
+              <ul style="margin:0;padding-left:16px;font-size:11.5px;color:#4A3A2C;line-height:1.6">
+                <li>Surface-water or flash flooding</li>
+                <li>Property-level drainage problems</li>
+                <li>Historical flood incidents</li>
+              </ul>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:#2B6E86;text-decoration:underline;margin-bottom:14px">View original source</div>
+            <div style="background:#DCEAEE;color:#2B6E86;border-radius:10px;padding:11px;text-align:center;font-weight:700;font-size:13px">Explain this result</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Try next: "add the AI-summary tab content" · "show the mobile bottom-sheet version" · "start building the real About page with my copy"</p>
+</section>
+
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Landing (map + search) &amp; About page — direction studies</span></div>
+  <p class="dv-tsub">Warm water palette (deep teal-blue + terracotta on a cream ground), Source Serif 4 for editorial headlines paired with your existing Atkinson Hyperlegible for UI/data. Landing options vary imagery + density; About options vary imagery + layout density, built around your four sections (tool / data / AI / me).</p>
+
+  <div class="dv-opts">
+
+    <!-- ============ 1a — Landing: Editorial photo, airy ============ -->
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a> Landing — editorial photo, airy</div>
+      <div class="dv-odesc">A photo strip warms up the entry card; generous whitespace, serif headline, vertically-centered card.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 32px;background:#FBF8F2;border-bottom:1px solid #E4DAC8;z-index:2">
+            <span style="font:700 21px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin-left:12px;font-size:13px;color:#5C6B72">Public water data for Spain, explained simply</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;top:64px;left:0;right:0;bottom:0;background:repeating-linear-gradient(128deg,#7CA3AE 0 26px,#5E8896 26px 52px)"></div>
+          <div style="position:absolute;right:20px;bottom:20px;font:11px/1.2 ui-monospace,monospace;color:#F7F1E7;opacity:.8">MAP — interactive basemap</div>
+          <div style="position:absolute;left:48px;top:50%;transform:translateY(-50%);width:400px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(30,42,56,.25);overflow:hidden">
+            <div style="height:120px;position:relative;background:repeating-linear-gradient(135deg,#C1663D 0 6px,#D98A5F 6px 12px,#6E93A0 12px 34px,#5E8896 34px 56px)">
+              <span style="position:absolute;left:14px;bottom:10px;font:11px/1.2 ui-monospace,monospace;color:#FBF8F2;letter-spacing:.02em">PHOTO — reservoir, Málaga</span>
+            </div>
+            <div style="padding:28px">
+              <h1 style="margin:0 0 8px;font:600 24px/1.25 'Petrona',serif;color:#1E2A38">What does the water say about this place?</h1>
+              <p style="margin:0 0 20px;font-size:14px;line-height:1.5;color:#5C6B72">Flood, drought, reservoir and water-quality records for anywhere in Spain — explained in plain language.</p>
+              <label style="display:block;font:700 13px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38;margin-bottom:6px">Postcode, town or address</label>
+              <div style="height:42px;border:1px solid #D8CFBC;border-radius:10px;margin-bottom:18px"></div>
+              <div style="font:700 13px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38;margin-bottom:8px">What brings you here? <span style="font-weight:400;color:#5C6B72;font-size:11px">optional</span></div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+                <div style="border:1.5px solid #2B6E86;background:#DCEAEE;border-radius:10px;padding:10px 14px;font-size:13px;color:#1E2A38">I live or own here</div>
+                <div style="border:1px solid #D8CFBC;border-radius:10px;padding:10px 14px;font-size:13px;color:#1E2A38">I'm considering buying or investing</div>
+              </div>
+              <div style="height:46px;border-radius:10px;background:#2B6E86;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">Check this area</div>
+              <p style="text-align:center;margin:10px 0 0;font-size:11px;color:#5C6B72">or click anywhere on the map</p>
+            </div>
+          </div>
+          <div style="position:absolute;right:24px;bottom:32px;width:220px;background:rgba(251,248,242,.95);border-radius:14px;box-shadow:0 4px 16px rgba(30,42,56,.15);padding:14px;font-size:12px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="width:11px;height:11px;border-radius:3px;background:#2B6E86;opacity:.7;display:inline-block"></span>Detailed data available</div>
+            <div style="display:flex;align-items:center;gap:8px;color:#5C6B72"><span style="width:11px;height:11px;border-radius:3px;background:#DDD3C0;display:inline-block"></span>Not yet available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 1b — Landing: Textural, efficient ============ -->
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a> Landing — topographic texture, efficient</div>
+      <div class="dv-odesc">No photography — contour-ring texture on the map, tighter docked card, bold sans heading, denser controls.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:60px;display:flex;align-items:center;padding:0 30px;background:#FBF8F2;border-bottom:1px solid #E4DAC8;z-index:2">
+            <span style="font:700 18px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Water Risk Explorer</span>
+            <span style="margin-left:12px;font-size:12px;color:#5C6B72">Check water risks for a place in Spain</span>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;top:60px;left:0;right:0;bottom:0;background:#DCEAEE;background-image:radial-gradient(circle at 32% 42%,transparent 0 30px,rgba(43,110,134,.18) 31px 33px,transparent 34px),radial-gradient(circle at 32% 42%,transparent 0 56px,rgba(43,110,134,.14) 57px 59px,transparent 60px),radial-gradient(circle at 32% 42%,transparent 0 82px,rgba(43,110,134,.1) 83px 85px,transparent 86px),radial-gradient(circle at 78% 70%,transparent 0 40px,rgba(193,102,61,.14) 41px 43px,transparent 44px),radial-gradient(circle at 78% 70%,transparent 0 70px,rgba(193,102,61,.1) 71px 73px,transparent 74px)"></div>
+          <div style="position:absolute;left:36px;top:76px;width:340px;background:#FBF8F2;border-radius:12px;box-shadow:0 8px 26px rgba(30,42,56,.14);overflow:hidden">
+            <div style="height:6px;background:repeating-linear-gradient(90deg,#2B6E86 0 16px,#C1663D 16px 20px)"></div>
+            <div style="padding:20px">
+              <h1 style="margin:0 0 6px;font:700 18px/1.3 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Check this location</h1>
+              <p style="margin:0 0 14px;font-size:12.5px;line-height:1.45;color:#5C6B72">Public data on flooding, drought, reservoirs and water quality.</p>
+              <label style="display:block;font:700 12px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38;margin-bottom:5px">Postcode, town or address</label>
+              <div style="height:36px;border:1px solid #D8CFBC;border-radius:8px;margin-bottom:12px"></div>
+              <div style="font:700 12px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38;margin-bottom:6px">What brings you here?</div>
+              <div style="display:flex;gap:8px;margin-bottom:14px">
+                <div style="flex:1;border:1.5px solid #2B6E86;background:#DCEAEE;border-radius:8px;padding:8px 6px;font-size:11.5px;color:#1E2A38;text-align:center">Resident / owner</div>
+                <div style="flex:1;border:1px solid #D8CFBC;border-radius:8px;padding:8px 6px;font-size:11.5px;color:#1E2A38;text-align:center">Buyer / investor</div>
+              </div>
+              <div style="height:38px;border-radius:8px;background:#2B6E86;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">Check this area</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:36px;bottom:24px;width:190px;background:rgba(251,248,242,.95);border-radius:10px;box-shadow:0 4px 14px rgba(30,42,56,.12);padding:12px;font-size:11px">
+            <div style="font-weight:700;color:#1E2A38;margin-bottom:4px">Coverage</div>
+            <div style="color:#5C6B72">Detailed results in Andalucía; other regions added over time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 1c — Landing: Hybrid warm minimal ============ -->
+    <div class="dv-opt" id="1c">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a> Landing — hybrid, color-blocked accent</div>
+      <div class="dv-odesc">Flat warm-blue map wash with one terracotta accent blob; balanced spacing between airy and dense.</div>
+      <div class="dv-card" style="width:490px;height:306px">
+        <div style="width:1440px;height:900px;transform:scale(0.34);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="position:absolute;inset:0 0 auto 0;height:64px;display:flex;align-items:center;padding:0 32px;background:#FBF8F2;border-bottom:1px solid #E4DAC8;z-index:2">
+            <span style="font:600 20px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#1E2A38">About</span>
+              <span style="border:1px solid #E4DAC8;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#5C6B72">EN · ES</span>
+            </div>
+          </div>
+          <div style="position:absolute;top:64px;left:0;right:0;bottom:0;background:linear-gradient(160deg,#CDE1E5,#9FC3CC)"></div>
+          <div style="position:absolute;top:64px;right:0;width:520px;height:420px;background:radial-gradient(circle at 70% 30%,rgba(193,102,61,.35),transparent 65%)"></div>
+          <div style="position:absolute;left:44px;top:50%;transform:translateY(-50%);width:380px;background:#fff;border-radius:16px;box-shadow:0 16px 40px rgba(30,42,56,.2);overflow:hidden">
+            <div style="position:absolute;top:-30px;right:-30px;width:110px;height:110px;border-radius:50%;background:#F1DDCB"></div>
+            <div style="padding:26px;position:relative">
+              <h1 style="margin:0 0 8px;font:600 21px/1.3 'Petrona',serif;color:#1E2A38">Know the water risk before you commit</h1>
+              <p style="margin:0 0 18px;font-size:13.5px;line-height:1.5;color:#5C6B72">Flood, drought, reservoir and quality records — explained simply.</p>
+              <label style="display:block;font:700 12.5px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38;margin-bottom:6px">Postcode, town or address</label>
+              <div style="height:40px;border:1px solid #D8CFBC;border-radius:10px;margin-bottom:16px"></div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
+                <div style="border:1.5px solid #C1663D;background:#F1DDCB;border-radius:10px;padding:9px 14px;font-size:12.5px;color:#1E2A38">I live or own here</div>
+                <div style="border:1px solid #D8CFBC;border-radius:10px;padding:9px 14px;font-size:12.5px;color:#1E2A38">I'm considering buying or investing</div>
+              </div>
+              <div style="height:44px;border-radius:10px;background:#2B6E86;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13.5px">Check this area</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 1d — About: Editorial photo hero ============ -->
+    <div class="dv-opt" id="1d">
+      <div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a> About — editorial photo hero, airy single column</div>
+      <div class="dv-odesc">Full-bleed photo hero, serif headline, generous single-column reading rhythm with a bio card for "About me".</div>
+      <div class="dv-card" style="width:403px;height:448px;overflow-y:auto">
+        <div style="width:1440px;height:1600px;transform:scale(0.28);transform-origin:top left;position:relative;background:#FBF8F2;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="height:64px;display:flex;align-items:center;padding:0 32px;background:#FBF8F2;border-bottom:1px solid #E4DAC8">
+            <span style="font:700 21px 'Petrona',serif;color:#1E2A38">Water Risk Explorer</span>
+            <div style="margin-left:auto;display:flex;gap:10px"><span style="border:1px solid #2B6E86;color:#2B6E86;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700">← Back to map</span></div>
+          </div>
+          <div style="height:340px;position:relative;background:repeating-linear-gradient(132deg,#7CA3AE 0 24px,#5E8896 24px 48px,#C1663D 48px 52px,#5E8896 52px 76px)">
+            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(30,42,56,.72),rgba(30,42,56,.15))"></div>
+            <div style="position:absolute;left:64px;bottom:44px;max-width:760px">
+              <h1 style="margin:0 0 10px;font:600 44px/1.15 'Petrona',serif;color:#fff">About Water Risk Explorer</h1>
+              <p style="margin:0;font-size:16px;color:#F1EADE">Why this tool exists, what it can and can't tell you, and where the numbers come from.</p>
+            </div>
+          </div>
+          <div style="max-width:760px;margin:0 auto;padding:64px 32px 100px">
+            <section style="margin-bottom:56px">
+              <h2 style="margin:0 0 14px;font:600 26px 'Petrona',serif;color:#1E2A38">About the tool</h2>
+              <p style="margin:0;font-size:15.5px;line-height:1.7;color:#33424C">A free tool for looking up what public data says about water where you live, or where you're thinking of buying. Enter a place in Spain and it gathers flood, drought, reservoir, supply and water-quality records for that spot, then explains them in plain language.</p>
+            </section>
+            <div style="height:1px;background:#E4DAC8;margin-bottom:56px"></div>
+            <section style="margin-bottom:56px">
+              <h2 style="margin:0 0 14px;font:600 26px 'Petrona',serif;color:#1E2A38">About the data</h2>
+              <p style="margin:0 0 20px;font-size:15.5px;line-height:1.7;color:#33424C">Detailed results are available for Andalucía. Elsewhere in Spain you'll still get nationwide layers such as flood zones and drought status, but local supply and water-quality records may be missing.</p>
+              <div style="display:flex;flex-direction:column;gap:0">
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #E4DAC8;font-size:14px"><span style="color:#1E2A38">River flood zones</span><span style="color:#2B6E86;text-decoration:underline">SNCZI — MITERD</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #E4DAC8;font-size:14px"><span style="color:#1E2A38">Drought status</span><span style="color:#2B6E86;text-decoration:underline">Copernicus EDO</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #E4DAC8;border-bottom:1px solid #E4DAC8;font-size:14px"><span style="color:#1E2A38">Drinking water quality</span><span style="color:#2B6E86;text-decoration:underline">SINAC</span></div>
+              </div>
+            </section>
+            <section style="margin-bottom:56px;background:#F1DDCB;border-radius:16px;padding:28px">
+              <h2 style="margin:0 0 14px;font:600 26px 'Petrona',serif;color:#1E2A38">About the AI summaries</h2>
+              <p style="margin:0;font-size:15.5px;line-height:1.7;color:#4A3A2C">The written interpretation is generated by a language model from the data shown on the page. It can be wrong or incomplete — every underlying figure and its source is shown so you can check it yourself.</p>
+            </section>
+            <section style="margin-bottom:40px;display:flex;gap:20px;align-items:flex-start">
+              <div style="width:72px;height:72px;border-radius:50%;flex:none;background:repeating-linear-gradient(45deg,#2B6E86 0 8px,#5E8896 8px 16px)"></div>
+              <div>
+                <h2 style="margin:0 0 8px;font:600 26px 'Petrona',serif;color:#1E2A38">About me</h2>
+                <p style="margin:0;font-size:15.5px;line-height:1.7;color:#33424C">Placeholder — your bio goes here: who built this, and why it matters to you.</p>
+              </div>
+            </section>
+            <p style="font-size:12.5px;color:#5C6B72;line-height:1.6">Not professional advice — this is background information, not legal, financial, or surveying advice.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 1e — About: Textural, compact two-column ============ -->
+    <div class="dv-opt" id="1e">
+      <div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a> About — textural divider, compact two-column</div>
+      <div class="dv-odesc">No photography — a contour-pattern divider under the title; sticky mini-nav + denser two-column reading layout.</div>
+      <div class="dv-card" style="width:403px;height:448px;overflow-y:auto">
+        <div style="width:1440px;height:1600px;transform:scale(0.28);transform-origin:top left;position:relative;background:#F7F1E7;font-family:'Atkinson Hyperlegible',sans-serif">
+          <div style="height:60px;display:flex;align-items:center;padding:0 32px;background:#FBF8F2;border-bottom:1px solid #E4DAC8">
+            <span style="font:700 18px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">Water Risk Explorer</span>
+            <div style="margin-left:auto"><span style="border:1px solid #2B6E86;color:#2B6E86;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700">← Back to map</span></div>
+          </div>
+          <div style="padding:48px 48px 0">
+            <h1 style="margin:0 0 8px;font:700 34px/1.2 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">About this tool</h1>
+            <p style="margin:0 0 20px;font-size:14.5px;color:#5C6B72;max-width:600px">What it is, where the data comes from, how the AI works, and who built it.</p>
+          </div>
+          <div style="height:56px;margin:0 48px 40px;background-image:radial-gradient(circle at 8% 50%,transparent 0 16px,rgba(43,110,134,.3) 17px 19px,transparent 20px),radial-gradient(circle at 8% 50%,transparent 0 30px,rgba(43,110,134,.2) 31px 33px,transparent 34px),radial-gradient(circle at 40% 50%,transparent 0 16px,rgba(193,102,61,.3) 17px 19px,transparent 20px),radial-gradient(circle at 40% 50%,transparent 0 30px,rgba(193,102,61,.2) 31px 33px,transparent 34px),radial-gradient(circle at 72% 50%,transparent 0 16px,rgba(43,110,134,.3) 17px 19px,transparent 20px),radial-gradient(circle at 72% 50%,transparent 0 30px,rgba(43,110,134,.2) 31px 33px,transparent 34px)"></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:40px;padding:0 48px 80px">
+            <div>
+              <div style="font:700 11px 'Atkinson Hyperlegible',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#5C6B72;margin-bottom:12px">On this page</div>
+              <div style="display:flex;flex-direction:column;gap:2px;font-size:13.5px">
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 0;color:#1E2A38;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#C1663D;display:inline-block"></span>The tool</div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 0;color:#5C6B72"><span style="width:6px;height:6px;border-radius:50%;background:transparent;display:inline-block"></span>The data</div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 0;color:#5C6B72"><span style="width:6px;height:6px;border-radius:50%;background:transparent;display:inline-block"></span>The AI</div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 0;color:#5C6B72"><span style="width:6px;height:6px;border-radius:50%;background:transparent;display:inline-block"></span>Me</div>
+              </div>
+            </div>
+            <div>
+              <section style="margin-bottom:32px">
+                <h2 style="margin:0 0 8px;font:700 17px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">The tool</h2>
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#33424C">A free tool for looking up what public data says about water where you live, or where you're thinking of buying — gathered and explained in plain language.</p>
+              </section>
+              <section style="margin-bottom:32px">
+                <h2 style="margin:0 0 8px;font:700 17px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">The data</h2>
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#33424C">Detailed results are available for Andalucía; other regions are added over time.</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <span style="border:1px solid #D8CFBC;border-radius:20px;padding:5px 12px;font-size:12px;color:#1E2A38">SNCZI — flood</span>
+                  <span style="border:1px solid #D8CFBC;border-radius:20px;padding:5px 12px;font-size:12px;color:#1E2A38">Copernicus — drought</span>
+                  <span style="border:1px solid #D8CFBC;border-radius:20px;padding:5px 12px;font-size:12px;color:#1E2A38">REDIAM — reservoirs</span>
+                  <span style="border:1px solid #D8CFBC;border-radius:20px;padding:5px 12px;font-size:12px;color:#1E2A38">SINAC — quality</span>
+                </div>
+              </section>
+              <section style="margin-bottom:32px">
+                <h2 style="margin:0 0 8px;font:700 17px 'Atkinson Hyperlegible',sans-serif;color:#1E2A38">The AI</h2>
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#33424C">Interpretations are generated by a language model from the data shown on the page. They can be wrong — every figure and source is shown so you can check it yourself.</p>
+              </section>
+              <section style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+                <div style="width:40px;height:40px;border-radius:8px;flex:none;background:repeating-linear-gradient(45deg,#C1663D 0 6px,#D98A5F 6px 12px)"></div>
+                <p style="margin:0;font-size:13.5px;line-height:1.5;color:#33424C"><span style="font-weight:700;color:#1E2A38">Me — </span>placeholder bio: who built this, in one line.</p>
+              </section>
+              <p style="font-size:11.5px;color:#5C6B72">Not professional advice — background information only.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Try next: "combine <a class="dv-oid" href="#1a">1a</a>'s card with <a class="dv-oid" href="#1c">1c</a>'s accent blob" · "make <a class="dv-oid" href="#1e">1e</a> the About page, <a class="dv-oid" href="#1a">1a</a> the landing" · "more warmth in the map" · "new directions"</p>
+</section>
+
+</x-dc>
+</body>
+</html>
