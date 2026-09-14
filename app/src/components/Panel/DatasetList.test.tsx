@@ -36,16 +36,19 @@ describe('dataset list', () => {
   it('lists rows with a reading before rows without, under a divider', () => {
     useAppStore.getState().setResult('flood', { status: 'unavailable' })
     useAppStore.getState().setResult('drought', { status: 'error', error: 'x' })
-    useAppStore.getState().setResult('reservoirs', { status: 'available', data: [] })
+    useAppStore.getState().setResult('reservoirs', {
+      status: 'available',
+      data: [{ name: 'Gergal', fillPercent: 57.7, historicalMeanPercent: 61 }],
+    })
     render(<DatasetList />)
 
-    const rendered = screen.getByText(/no result for this location/i)
-    expect(rendered).toBeInTheDocument()
+    const divider = screen.getByText(/no result for this location/i)
+    const withReading = screen.getByText(/supply reservoirs/i)
 
-    // Reservoirs (has a reading) must appear before the divider; the two
-    // empty rows after it.
-    const body = document.body.textContent ?? ''
-    expect(body.indexOf('Reservoir')).toBeLessThan(body.indexOf('No result for this location'))
+    // Compare DOM positions, not string offsets — a label that does not match
+    // yields -1 and would make an index comparison pass vacuously.
+    expect(divider.compareDocumentPosition(withReading) & Node.DOCUMENT_POSITION_PRECEDING)
+      .toBeTruthy()
   })
 
   it('shows no divider while everything is still loading', () => {
